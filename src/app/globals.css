@@ -2,25 +2,67 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
+  --accent: #c5f36a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-space-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Scroll kilitlenince scrollbar kaybolup sayfa kaymasın */
+html {
+  scrollbar-gutter: stable;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+/* Hizmet flyout'u (Radix Dialog) açılış/kapanış animasyonları */
+@keyframes ox-slide-in { from { transform: translateX(100%) } to { transform: translateX(0) } }
+@keyframes ox-slide-out { from { transform: translateX(0) } to { transform: translateX(100%) } }
+@keyframes ox-fade-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes ox-fade-out { from { opacity: 1 } to { opacity: 0 } }
+
+.ox-panel[data-state="open"] { animation: ox-slide-in 500ms ease-in-out; }
+.ox-panel[data-state="closed"] { animation: ox-slide-out 300ms ease-in-out; }
+.ox-overlay[data-state="open"] { animation: ox-fade-in 300ms ease-out; }
+.ox-overlay[data-state="closed"] { animation: ox-fade-out 300ms ease-in; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ox-panel,
+  .ox-overlay {
+    animation: none !important;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* --font-sans (@theme inline) sayfaya değişken olarak yazılmadığı için doğrudan next/font değişkeni */
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-optical-sizing: auto; /* büyük puntolarda Inter Display kesimi */
 }
