@@ -7,7 +7,7 @@ import type { ServicePage } from "./service-page-data";
 
 export function ServiceSteps({ steps, image }: { steps: ServicePage["steps"]; image: string }) {
   return (
-    <section className="relative z-10 -mt-12 rounded-t-[48px] bg-background px-4 py-24 md:px-[4.5vw] md:py-32">
+    <section data-dock="surec" className="relative z-10 -mt-12 rounded-t-[48px] bg-background px-4 py-24 md:px-[4.5vw] md:py-32">
       <div className="grid gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <h2 className="text-[clamp(32px,3.2vw,60px)] font-medium leading-[1.08] tracking-[-0.045em] text-[#111]">

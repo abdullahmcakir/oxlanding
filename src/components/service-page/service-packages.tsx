@@ -14,7 +14,7 @@ export function ServicePackages({ page }: { page: ServicePage }) {
   const { packages, service } = page;
 
   return (
-    <section id="paketler" className="scroll-mt-28 bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
+    <section id="paketler" data-dock="paketler" className="scroll-mt-28 bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
       <SplitHeading strong="Paketler." soft={`${service.title} için ihtiyacına uygun planı seç.`} />
 
       <div className="mt-14 grid gap-4 lg:grid-cols-3">

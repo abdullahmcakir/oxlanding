@@ -37,7 +37,7 @@ export function Process() {
   return (
     <MotionConfig reducedMotion="user">
       {/* pb: ilkeler bölümü -mt-12 ile 48px üstüne biner; kartların altındaki 110px boşluk korunsun diye +48px. */}
-      <section id="surec" className="relative overflow-hidden bg-[#111] px-4 pb-[158px] pt-[110px] md:px-[4.5vw]">
+      <section id="surec" data-dock="surec" className="relative overflow-hidden bg-[#111] px-4 pb-[158px] pt-[110px] md:px-[4.5vw]">
         {/* Hero fotoğrafının sağ yarısı: koşucu kadraj dışında, yalnız boş kulvarlar ve gölgeler kalır.
             Kutu bölümün iki katı genişlikte ve sağa yaslı; görsel ona göre kaplanınca sağ yarısı görünür. */}
         <div aria-hidden className="absolute inset-y-0 right-0 w-[200%]">

@@ -69,7 +69,7 @@ export function References() {
   const cardH = Math.max(460, Math.round(cardW / 2.24));
 
   return (
-    <section id="calismalar" className="bg-background pb-28 md:pb-36">
+    <section id="calismalar" data-dock="calismalar" className="bg-background pb-28 md:pb-36">
       <div className="flex flex-col gap-8 px-4 md:flex-row md:items-end md:justify-between md:px-[4.5vw]">
         <SplitHeading
           strong="Referanslar."

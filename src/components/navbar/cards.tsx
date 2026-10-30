@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { talepUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { PixelIcon } from "./pixel-icon";
 import { InstagramIcon, LinkedinIcon, XIcon } from "./social-icons";
@@ -93,19 +93,19 @@ export function AvailabilityCard({
         </div>
       </div>
 
-      <Link
-        href="#iletisim"
+      <a
+        href={talepUrl()}
         onClick={onNavigate}
         className="group flex items-center gap-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em]"
       >
         <span>
-          <span className="text-neutral-400">Toplantı</span>{" "}
-          <span className="text-white">ayarla</span>
+          <span className="text-neutral-400">Ücretsiz</span>{" "}
+          <span className="text-white">görüşme</span>
         </span>
         <span className="grid size-[30px] place-items-center rounded-full bg-[#1c2a14] transition-transform duration-300 group-hover:translate-x-1">
           <PixelIcon variant="arrow" className="size-[9px]" />
         </span>
-      </Link>
+      </a>
     </Card>
   );
 }

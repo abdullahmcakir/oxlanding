@@ -7,13 +7,14 @@ import { useIstanbulTime } from "@/hooks/use-istanbul-time";
 import { cn } from "@/lib/utils";
 import { AvailabilityCard, ContactCard } from "./cards";
 
+// Masaüstü navbar'la aynı sayfalar (navbar.tsx ITEMS)
 const MAIN_LINKS = [
   { label: "anasayfa", href: "/" },
-  { label: "hakkımızda", href: "#hakkimizda" },
-  { label: "hizmetler", href: "#hizmetler" },
-  { label: "çalışmalar", href: "#calismalar" },
-  { label: "blog", href: "#blog" },
-  { label: "iletişim", href: "#iletisim" },
+  { label: "hizmetler", href: "/paketler#hizmetler" },
+  { label: "paketler", href: "/paketler" },
+  { label: "çalışmalar", href: "/calismalar" },
+  { label: "hakkımızda", href: "/hakkimizda" },
+  { label: "iletişim", href: "/iletisim" },
 ];
 
 const LEGAL_LINKS = [

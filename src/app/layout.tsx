@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Space_Mono } from "next/font/google";
+import { CookieAsk } from "@/components/cookie/cookie-ask";
+import { DockProvider } from "@/components/dock/dock";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import "./globals.css";
 
@@ -28,7 +30,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${spaceMono.variable} antialiased`}
     >
       <body className="min-h-full">
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          {/* Sağ alttaki bağlama duyarlı asistan her sayfada; bölümler data-dock ile mesajını seçer */}
+          <DockProvider>{children}</DockProvider>
+          {/* Çerez sorusunu asistan sorar; analiz / pazarlama çerezleri yalnız onayla (cookie-consent.ts) */}
+          <CookieAsk />
+        </SmoothScroll>
       </body>
     </html>
   );

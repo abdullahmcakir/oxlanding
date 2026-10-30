@@ -46,6 +46,8 @@ export function Cta() {
   return (
     <section
       id="iletisim"
+      // İletişim bölümünün kendisi: sağ alttaki asistan burada aynı şeyi tekrar etmesin
+      data-dock="hide"
       className="relative overflow-hidden bg-background px-4 pb-14 pt-10 text-[#111] md:px-[4.5vw] md:pb-16"
       // Görsel boyutu: 9 kolon + 8 aralık (12px) içeriğin genişliğine sığar
       style={{ ["--tw" as string]: "calc((100vw - 9vw - 96px) / 9)", ["--th" as string]: "calc(var(--tw) * 1.316)" }}

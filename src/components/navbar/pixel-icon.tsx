@@ -10,10 +10,18 @@ const PATTERNS = {
   arrow: [0, 4, 6],
   down: [0, 2, 4],
   up: [4, 6, 8],
+  // /calismalar tür rozetleri
+  frame: [0, 1, 2, 3, 5, 6, 7, 8],
+  lines: [0, 1, 2, 6, 7],
+  quote: [0, 2, 3, 5],
+  diamond: [1, 3, 5, 7],
+  plus: [1, 3, 4, 5, 7],
 } as const;
 
+export type PixelIconVariant = keyof typeof PATTERNS;
+
 type Props = {
-  variant: keyof typeof PATTERNS;
+  variant: PixelIconVariant;
   className?: string;
   cellClassName?: string;
 };

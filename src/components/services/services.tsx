@@ -46,7 +46,7 @@ export function Services() {
   };
 
   return (
-    <section id="hizmetler" className="bg-background pb-28 md:pb-36">
+    <section id="hizmetler" data-dock="hizmetler" className="bg-background pb-28 md:pb-36">
       <div className="flex flex-col gap-8 px-4 md:flex-row md:items-end md:justify-between md:px-[4.5vw]">
         <SplitHeading
           strong="Hizmetlerimiz."

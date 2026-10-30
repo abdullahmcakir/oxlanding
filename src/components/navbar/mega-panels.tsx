@@ -3,37 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { Badge } from "@/components/feed/feed-badge";
+import { categoryOf, LATEST_ITEMS, type FeedItem } from "@/components/feed/feed-data";
 import { SERVICES } from "@/components/services/services-data";
 import { cn } from "@/lib/utils";
 import { PixelIcon } from "./pixel-icon";
-import {
-  AvailabilityCard,
-  Card,
-  ContactCard,
-  ImagePlaceholder,
-  Label,
-} from "./cards";
+import { Card, Label } from "./cards";
 
-// İçerikler yer tutucu; gerçek metinler/görseller gelince güncellenecek.
-
-const WORKS = [
-  { title: "E-ticaret markası için yeniden konumlandırma", tags: "Tasarım · Yazılım" },
-  { title: "Lansman kampanyası ile 3 ayda 4x dönüşüm", tags: "Reklam" },
-  { title: "Restoran zinciri için sosyal medya kimliği", tags: "İçerik · Tasarım" },
-];
-
-const BLOG_CATEGORIES = [
-  { title: "Blog", desc: "Reklam, tasarım ve yazılım üzerine yazılar." },
-  { title: "Rehberler", desc: "Adım adım uygulanabilir pratik rehberler." },
-  { title: "Vaka analizleri", desc: "Projelerin perde arkası ve sonuçları." },
-];
-
-const ARTICLES = [
-  "2026'da Meta reklamlarında işe yarayan 5 strateji",
-  "Landing page dönüşüm oranını artırmanın 7 yolu",
-];
-
-const ABOUT_LINKS = ["Ekip", "Süreç", "Kariyer", "İletişim"];
+// Paneller sitedeki gerçek sayfalara bağlı; içerikleri o sayfaların verisinden gelir.
 
 function MoreLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -132,103 +109,60 @@ export function ServicesPanel() {
   );
 }
 
+// /calismalar akışının en yeni 3 paylaşımı (en az biri çalışma).
+// Veri sayfanın kendisinden (feed-data) geliyor; akış güncellenince panel de güncellenir.
+// Rozetler sayfadakiyle aynı: çalışma yeşil, blog beyaz.
 export function WorkPanel() {
   return (
     <div className="grid grid-cols-[0.8fr_1fr_1fr_1fr] gap-1.5">
       <Card className="flex flex-col justify-between p-8">
         <div>
-          <Label>Son çalışmalar</Label>
+          <Label>Çalışmalar & yazılar</Label>
           <p className="mt-4 text-[19px] leading-snug tracking-[-0.02em] text-white">
-            Markalar için ürettiğimiz işlerden seçkiler.
+            İşlerimiz ve yazılarımız tek akışta. En yenileri burada.
           </p>
         </div>
-        <MoreLink href="#calismalar">Tümünü gör</MoreLink>
+        <MoreLink href="/calismalar">Tümünü gör</MoreLink>
       </Card>
-      {WORKS.map((w, i) => (
-        <Card key={w.title} className="p-2.5">
-          <Link href="#calismalar" className="group block">
-            <ImagePlaceholder
-              tone={i}
-              className="aspect-[4/3] transition-transform duration-500 group-hover:scale-[0.98]"
-            />
-            <div className="px-2 pb-2 pt-3.5">
-              <Label className="text-[10px] text-neutral-600">{w.tags}</Label>
-              <p className="mt-1.5 text-[15px] leading-snug tracking-[-0.01em] text-white">
-                {w.title}
-              </p>
-            </div>
-          </Link>
-        </Card>
+
+      {LATEST_ITEMS.map((item) => (
+        <FeedPreview key={item.title} item={item} />
       ))}
     </div>
   );
 }
 
-export function AboutPanel() {
-  return (
-    <div className="grid grid-cols-[1.3fr_1fr_1fr] gap-1.5">
-      <Card className="flex flex-col justify-between gap-10 p-8">
-        <div>
-          <Label>Ajans</Label>
-          <p className="mt-4 max-w-[340px] text-[22px] leading-[1.25] tracking-[-0.02em] text-white">
-            Reklam, tasarım ve yazılımı tek çatı altında topluyoruz.
-          </p>
-        </div>
-        <ul className="flex flex-wrap gap-x-6 gap-y-2">
-          {ABOUT_LINKS.map((label) => (
-            <li key={label}>
-              <Link
-                href="#hakkimizda"
-                className="font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-neutral-400 transition-colors hover:text-white"
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </Card>
-      <ContactCard />
-      <AvailabilityCard />
-    </div>
-  );
-}
+/** Çalışmalar panelindeki önizleme kartı: üstte görsel alanı (rozetiyle), altında küçük etiket + başlık. */
+function FeedPreview({ item }: { item: FeedItem }) {
+  // Görselsiz yazıda başlık zaten kutunun içinde; altta tekrarlanmasın
+  const kicker = item.type === "post" ? item.meta : item.tag;
+  const title = item.type === "post" ? "Devamını oku" : item.title;
 
-export function BlogPanel() {
   return (
-    <div className="grid grid-cols-[1fr_1fr_1fr] gap-1.5">
-      <Card className="p-8">
-        <Label>Kaynaklar</Label>
-        <ul className="mt-6 space-y-6">
-          {BLOG_CATEGORIES.map((c) => (
-            <li key={c.title}>
-              <Link href="#blog" className="group block">
-                <span className="block text-[17px] tracking-[-0.01em] text-white transition-transform duration-300 group-hover:translate-x-1">
-                  {c.title}
-                </span>
-                <span className="mt-1 block text-[13.5px] leading-snug text-neutral-500 transition-colors group-hover:text-neutral-300">
-                  {c.desc}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </Card>
-      {ARTICLES.map((title, i) => (
-        <Card key={title} className="p-2.5">
-          <Link href="#blog" className="group block">
-            <ImagePlaceholder
-              tone={i + 1}
-              className="aspect-[16/10] transition-transform duration-500 group-hover:scale-[0.98]"
+    <Card className="p-2.5">
+      <Link href={item.href ?? "/calismalar"} className="group block">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[10px] bg-[#111]">
+          {item.type === "image" ? (
+            <Image
+              src={item.image}
+              alt=""
+              fill
+              sizes="320px"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div className="px-2 pb-2 pt-3.5">
-              <Label className="text-[10px] text-neutral-600">Son yazı</Label>
-              <p className="mt-1.5 text-[16px] leading-snug tracking-[-0.01em] text-white">
-                {title}
-              </p>
+          ) : (
+            // Görselsiz yazı: sayfadaki gri blog kartının küçüğü
+            <div className="absolute inset-0 grid place-items-center bg-[#F5F5F5] px-6 pt-8 text-center">
+              <p className="text-[17px] font-medium leading-[1.2] tracking-[-0.025em] text-[#111]">{item.title}</p>
             </div>
-          </Link>
-        </Card>
-      ))}
-    </div>
+          )}
+          <Badge kind={categoryOf(item) === "calisma" ? "calisma" : "blog"} className="absolute left-2.5 top-2.5" />
+        </div>
+        <div className="px-2 pb-2 pt-3.5">
+          <Label className="truncate text-[10px] text-neutral-600">{kicker}</Label>
+          <p className="mt-1.5 line-clamp-2 text-[15px] leading-snug tracking-[-0.01em] text-white">{title}</p>
+        </div>
+      </Link>
+    </Card>
   );
 }

@@ -25,7 +25,7 @@ export function Packages() {
   };
 
   return (
-    <section id="paketler" className="bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
+    <section id="paketler" data-dock="paketler" className="bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
       <SplitHeading strong="Paketler." soft="Hangi aşamadaysan, yol haritanı oradan çiziyoruz." />
 
       <div className="mt-14 grid gap-4 lg:grid-cols-3">

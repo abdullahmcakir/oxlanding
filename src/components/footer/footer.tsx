@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 import { motion, useInView } from "motion/react";
 import { useLenis } from "lenis/react";
 import { Logo } from "@/components/navbar/logo";
+import { CookieSettingsButton } from "@/components/cookie/cookie-ask";
+import { LEGAL_DOCS } from "@/components/legal/legal-data";
 import { useIstanbulTime } from "@/hooks/use-istanbul-time";
 
 // Framer sitesindeki footer (clean-tuna-722417.framer.app) — katman yapısı, ölçüler ve animasyonlar
@@ -84,6 +87,14 @@ export function Footer() {
             <span className="block">{time ?? " "}</span>
             {/* Yıl, tarayıcıda çalışan saatten alınır (render'da new Date() önbellekli prerender'da donar) */}
             OX Dijital © {time ? time.slice(-4) : "    "}
+            <span className="mt-1 flex flex-wrap justify-end gap-x-3 text-[13px] text-white/50">
+              {LEGAL_DOCS.map((d) => (
+                <Link key={d.href} href={d.href} className="transition-colors hover:text-white">
+                  {d.label}
+                </Link>
+              ))}
+              <CookieSettingsButton className="transition-colors hover:text-white">Çerez tercihleri</CookieSettingsButton>
+            </span>
           </p>
         </div>
 

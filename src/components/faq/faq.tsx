@@ -44,7 +44,7 @@ export function Faq({ items = FAQ }: { items?: FaqItem[] }) {
   const baseId = useId();
 
   return (
-    <section id="sss" className="bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
+    <section id="sss" data-dock="sss" className="bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
       <h2 className="text-center text-[clamp(40px,4.6vw,88px)] font-medium leading-[1.05] tracking-[-0.045em] text-[#111]">
         Sık sorulanlar.
       </h2>
