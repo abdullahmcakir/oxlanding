@@ -4,18 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
-import { MiniGlyph, type Glyph } from "@/components/dock/pixel-matrix";
 import { LostPixel } from "./lost-pixel";
 
 // 404: iletişim sayfasıyla aynı koyu zemin. Ortada piksel "404" (bir pikseli düşmüş), altında kısa bir açıklama,
-// "ox" yazarak (dokunmatikte butonla) ana sayfaya dönüş ve en çok aranan sayfalara kısayollar. Pikseli yerine koyan, küçük bir şaka görür.
-
-const SHORTCUTS: { href: string; label: string; glyph: Glyph }[] = [
-  { href: "/paketler", label: "Paketler", glyph: "bag" },
-  { href: "/calismalar", label: "Çalışmalar", glyph: "frame" },
-  { href: "/blog", label: "Blog", glyph: "lines" },
-  { href: "/iletisim", label: "İletişim", glyph: "smile" },
-];
+// "ox" yazarak (dokunmatikte butonla) ana sayfaya dönüş. Pikseli yerine koyan, küçük bir şaka görür.
 
 const SECRET = "ox";
 
@@ -113,24 +105,6 @@ export function NotFoundView() {
             Ana sayfaya dön
           </Link>
         </div>
-
-        <nav aria-label="Kısayollar" className="mt-10 border-t border-white/10 pt-7">
-          <ul className="flex flex-wrap justify-center gap-2">
-            {SHORTCUTS.map((s) => (
-              <li key={s.href}>
-                <Link
-                  href={s.href}
-                  className="group flex items-center gap-2.5 rounded-full py-2 pl-2.5 pr-4 text-[14px] text-white/60 ring-1 ring-white/10 transition-colors hover:bg-white/[0.06] hover:text-white"
-                >
-                  <span className="text-white/40 transition-colors group-hover:text-accent">
-                    <MiniGlyph glyph={s.glyph} cell={2} />
-                  </span>
-                  {s.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
       </div>
     </section>
   );
