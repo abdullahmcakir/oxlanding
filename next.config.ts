@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Dokploy'da Docker ile: yalnız gereken dosyalar .next/standalone'a kopyalanır, imaj küçük kalır (Dockerfile)
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   images: {

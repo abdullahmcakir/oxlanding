@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+.vercel
+# Yerel env dosyaları imaja girmesin: build yerel kimliklerle derlenmesin, sırlar sızmasın
+.env*
+!.env.example
+*.md
+Dockerfile
+.dockerignore

@@ -32,8 +32,9 @@ export const metadata: Metadata = {
   // Görsel app/opengraph-image.tsx'ten gelir.
   openGraph: { type: "website", siteName: "OX Dijital", locale: "tr_TR" },
   twitter: { card: "summary_large_image" },
-  // Vercel yalnız demo (oxlanding.vercel.app); asıl site Dokploy'da. Demo, oxdijital.com'un kopyası olarak indekslenmesin.
-  ...(process.env.VERCEL && { robots: { index: false, follow: false } }),
+  // Demo ve test kopyaları oxdijital.com'un kopyası olarak indekslenmesin: Vercel (oxlanding.vercel.app) her zaman,
+  // Dokploy'daki bir test adresi NOINDEX=1 ile. Asıl sitede ikisi de yok.
+  ...((process.env.VERCEL || process.env.NOINDEX === "1") && { robots: { index: false, follow: false } }),
 };
 
 // Arama motorları için kurum bilgisi: ad, logo, iletişim ve sosyal hesaplar (sameAs) tek varlıkta birleşir.

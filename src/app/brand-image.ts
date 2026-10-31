@@ -4,6 +4,8 @@ import { join } from "node:path";
 // Favicon, Apple ikonu ve paylaşım görseli aynı dil: koyu zeminde beyaz OX logosu.
 // Logo saydam beyaz PNG (public/images/logo.png); data URI olarak gömülür.
 export async function logoSrc() {
+  // Önbelleksiz dosya okuması görselleri her istekte yeniden çizdirir; önbellekle build'de bir kez üretilir
+  "use cache";
   const data = await readFile(join(process.cwd(), "public/images/logo.png"));
   return `data:image/png;base64,${data.toString("base64")}`;
 }
