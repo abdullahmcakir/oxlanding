@@ -202,6 +202,9 @@ function loadTags() {
     fbq.loaded = true;
     fbq.version = "2.0";
     window.fbq = window._fbq = fbq;
+    // Otomatik yapılandırma kapalı: Meta buton tıklamalarını ve sayfa bilgilerini kendi tahminiyle olay saymasın,
+    // yalnız bizim gönderdiğimiz olaylar gitsin (init'ten önce çağrılmalı)
+    window.fbq("set", "autoConfig", false, META_PIXEL_ID);
     window.fbq("init", META_PIXEL_ID);
     loadScript("https://connect.facebook.net/en_US/fbevents.js");
   }
