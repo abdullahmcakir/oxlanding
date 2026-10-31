@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion, type Variants } from "motion/react";
+import { LEGAL_DOCS } from "@/components/legal/legal-data";
 import { useIstanbulTime } from "@/hooks/use-istanbul-time";
 import { cn } from "@/lib/utils";
 import { AvailabilityCard, ContactCard } from "./cards";
@@ -15,11 +16,6 @@ const MAIN_LINKS = [
   { label: "çalışmalar", href: "/calismalar" },
   { label: "hakkımızda", href: "/hakkimizda" },
   { label: "iletişim", href: "/iletisim" },
-];
-
-const LEGAL_LINKS = [
-  { label: "Gizlilik Politikası", href: "#" },
-  { label: "KVKK Aydınlatma Metni", href: "#" },
 ];
 
 const EASE = [0.76, 0, 0.24, 1] as const;
@@ -117,7 +113,7 @@ export function MenuOverlay({ onClose }: { onClose: () => void }) {
           </motion.ul>
 
           <motion.ul variants={fade} className="mt-10 space-y-1.5">
-            {LEGAL_LINKS.map((link) => (
+            {LEGAL_DOCS.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}

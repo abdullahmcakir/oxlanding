@@ -19,7 +19,11 @@ export async function generateMetadata({ params }: PageProps<"/calismalar/[slug]
   const { slug } = await params;
   const work = getWork(slug);
   if (!work) return {};
-  return { title: `${work.title} · OX Dijital`, description: `${work.summary}. ${work.challenge}` };
+  return {
+    title: `${work.title} · OX Dijital`,
+    description: `${work.summary}. ${work.challenge}`,
+    alternates: { canonical: `/calismalar/${slug}` },
+  };
 }
 
 // Hizmet sayfalarındaki gibi: bilinmeyen adres gerçek 404 dönsün diye parametre en üstte okunuyor.

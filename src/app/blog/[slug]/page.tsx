@@ -17,7 +17,11 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
   const { slug } = await params;
   const article = getArticle(slug);
   if (!article) return {};
-  return { title: `${article.title} · OX Dijital`, description: article.lede[0] };
+  return {
+    title: `${article.title} · OX Dijital`,
+    description: article.lede[0],
+    alternates: { canonical: `/blog/${slug}` },
+  };
 }
 
 // Hizmet ve çalışma sayfalarındaki gibi: bilinmeyen adres gerçek 404 dönsün diye parametre en üstte okunuyor.

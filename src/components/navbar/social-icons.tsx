@@ -36,3 +36,13 @@ export function LinkedinIcon() {
     </svg>
   );
 }
+
+export function BehanceIcon() {
+  return (
+    <svg {...common}>
+      <path d="M2.5 6h5a3 3 0 0 1 0 6h-5zM2.5 12h5.5a3 3 0 0 1 0 6H2.5z" />
+      <path d="M14.5 14.5h7a3.5 3.5 0 1 0-1.3 2.7" />
+      <path d="M15.5 7.5h5" />
+    </svg>
+  );
+}

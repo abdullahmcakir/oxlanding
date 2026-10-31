@@ -9,16 +9,11 @@ import { Logo } from "@/components/navbar/logo";
 import { CookieSettingsButton } from "@/components/cookie/cookie-ask";
 import { LEGAL_DOCS } from "@/components/legal/legal-data";
 import { useIstanbulTime } from "@/hooks/use-istanbul-time";
+import { SOCIALS, whatsappUrl } from "@/lib/links";
 
 // Framer sitesindeki footer (clean-tuna-722417.framer.app) — katman yapısı, ölçüler ve animasyonlar
-// canlı siteden ölçülerek birebir kuruldu. Alıntı Framer'daki yer tutucu; sağ alttaki bağlantılar YER TUTUCU.
-const LINKS = [
-  { label: "Instagram", href: "#" },
-  { label: "LinkedIn", href: "#" },
-  { label: "Behance", href: "#" },
-  { label: "X", href: "#" },
-  { label: "WhatsApp", href: "#" },
-];
+// canlı siteden ölçülerek birebir kuruldu. Alıntı Framer'daki yer tutucu.
+const LINKS = [...SOCIALS, { label: "WhatsApp", href: whatsappUrl() }];
 
 // Toz dokusu 660×371; 495px genişlikte döşenir → bir döşeme yüksekliği:
 const DUST_TILE_H = (495 * 371) / 660;
@@ -118,7 +113,12 @@ export function Footer() {
             <ul className="hidden flex-wrap justify-end gap-x-2.5 text-[16px] md:flex">
               {LINKS.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} className="transition-opacity hover:opacity-70">
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-opacity hover:opacity-70"
+                  >
                     {l.label}
                   </a>
                 </li>

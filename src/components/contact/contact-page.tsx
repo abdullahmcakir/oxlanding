@@ -2,7 +2,7 @@ import { Kalam } from "next/font/google";
 import { Reveal } from "@/components/about/about-cards";
 import { MiniGlyph, PixelMatrix } from "@/components/dock/pixel-matrix";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
-import { talepUrl } from "@/lib/links";
+import { SOCIALS, talepUrl } from "@/lib/links";
 import { ContactComposer } from "./contact-composer";
 import { GiantPixels } from "./giant-pixels";
 
@@ -12,7 +12,7 @@ import { GiantPixels } from "./giant-pixels";
 // Referanstaki renkli gradient yerine sitenin piksel dili: bütün zemini kaplayan büyük kare ızgara,
 // rastgele kareleri yanıp sönerek canlı durur (GiantPixels).
 // Harita gömülmez (sayfa açılır açılmaz Google'a veri gitmesin, çerez onayı gerekmesin): piksel harita + bağlantı.
-// İletişim bilgileri YER TUTUCU.
+// Telefon ve adres YER TUTUCU.
 
 const CONTACT = {
   email: "merhaba@oxdijital.com",
@@ -21,11 +21,7 @@ const CONTACT = {
   address: "Örnek Mah. Örnek Cad. No: 1, İstanbul",
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=Istanbul",
   hours: "Hafta içi 09:00–18:00",
-  socials: [
-    { label: "Instagram", href: "#" },
-    { label: "LinkedIn", href: "#" },
-    { label: "X", href: "#" },
-  ],
+  socials: SOCIALS,
 };
 
 const LABEL = "font-mono text-[11px] font-bold uppercase tracking-[0.12em]";
@@ -165,6 +161,8 @@ export function ContactPage() {
                 <li key={s.label}>
                   <a
                     href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block rounded-full bg-white/10 px-3.5 py-2 text-[13px] text-white/80 transition-colors hover:bg-white/15 hover:text-white"
                   >
                     {s.label}

@@ -1,15 +1,12 @@
-import { talepUrl } from "@/lib/links";
+import { SOCIALS as SOCIAL_LINKS, talepUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { PixelIcon } from "./pixel-icon";
-import { InstagramIcon, LinkedinIcon, XIcon } from "./social-icons";
+import { BehanceIcon, InstagramIcon, LinkedinIcon } from "./social-icons";
 
 // Menü ve mega panel kartlarının ortak dili: #171717 çerçeve içinde #070707 kartlar.
 
-const SOCIALS = [
-  { label: "X", href: "#", icon: XIcon },
-  { label: "Instagram", href: "#", icon: InstagramIcon },
-  { label: "LinkedIn", href: "#", icon: LinkedinIcon },
-];
+const ICONS = { Instagram: InstagramIcon, LinkedIn: LinkedinIcon, Behance: BehanceIcon };
+const SOCIALS = SOCIAL_LINKS.map((s) => ({ ...s, icon: ICONS[s.label] }));
 
 export function Card({
   className,
@@ -60,6 +57,8 @@ export function ContactCard({ className }: { className?: string }) {
           <li key={label}>
             <a
               href={href}
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label={label}
               className="text-neutral-500 transition-colors hover:text-white"
             >

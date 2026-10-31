@@ -21,3 +21,13 @@ export function whatsappUrl(text?: string) {
   const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "905000000000";
   return `https://wa.me/${number}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 }
+
+/** Sitenin yayındaki adresi: canonical, sitemap ve paylaşım görselleri bununla tam adrese çevrilir. */
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://oxdijital.com";
+
+/** Sosyal hesaplar: footer, menü kartı, iletişim sayfası ve arama motorları için kurum bilgisi (sameAs) buradan okur. */
+export const SOCIALS = [
+  { label: "Instagram", href: "https://www.instagram.com/oxdijital/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/ox-dijital" },
+  { label: "Behance", href: "https://www.behance.net/oxdijital" },
+] as const;

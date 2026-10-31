@@ -27,7 +27,11 @@ export async function generateMetadata({ params }: PageProps<"/hizmetler/[slug]"
   const { slug } = await params;
   const page = getServicePage(slug);
   if (!page) return {};
-  return { title: `${page.service.title} · OX Dijital`, description: page.service.description };
+  return {
+    title: `${page.service.title} · OX Dijital`,
+    description: page.service.description,
+    alternates: { canonical: `/hizmetler/${slug}` },
+  };
 }
 
 // Parametre en üstte okunuyor ki bilinmeyen adres gerçek 404 dönsün (Suspense içinde okununca 200 dönüyordu).

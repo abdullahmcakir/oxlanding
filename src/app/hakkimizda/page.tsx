@@ -15,6 +15,7 @@ import { Statement } from "@/components/statement/statement";
 export const metadata: Metadata = {
   title: "Hakkımızda · OX Dijital",
   description: "İstanbul merkezli dijital ajans. Reklam, tasarım ve yazılım tek çatı altında.",
+  alternates: { canonical: "/hakkimizda" },
 };
 
 // Yaklaşım: yeni kurulmuş bir marka kendini (rakam, kadro, tarihçe) değil, duruşunu anlatır.

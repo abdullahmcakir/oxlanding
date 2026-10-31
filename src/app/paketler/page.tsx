@@ -8,6 +8,7 @@ import { PLAN_FAQ } from "@/components/packages-page/packages-page-data";
 export const metadata: Metadata = {
   title: "Paketler · OX Dijital",
   description: "Her hizmetin paketlerini tek sayfada gör: kapsam, süre ve içerik. Kesin teklif ücretsiz görüşmede.",
+  alternates: { canonical: "/paketler" },
 };
 
 // Referanstaki kareli kâğıt zemin: başlık ve hizmet yığınlarının arkasında, aşağı doğru kaybolur
