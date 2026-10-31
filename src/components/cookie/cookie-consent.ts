@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
-// Çerez tercihi: tarayıcıda saklanır (zorunlu kayıt). Analiz / pazarlama betikleri eklendiğinde yalnız
-// hasConsent("all") doğruysa yüklenmeli. Cevapsız kalmak onay sayılmaz: tercih yazılmaz, betikler kapalı kalır.
+// Çerez tercihi: tarayıcıda saklanır (zorunlu kayıt). Analiz / pazarlama betikleri (lib/analytics.ts) yalnız
+// tercih "all" ise yüklenir. Cevapsız kalmak onay sayılmaz: tercih yazılmaz, betikler kapalı kalır.
 //
 // Soruyu sağ alttaki asistan sorar (cookie-ask.tsx). Ortak durum burada tutulur; asistan soru açıkken
 // kendini gizler, cevap verilmediyse köşesinde küçük bir kurabiye gösterir.
@@ -27,6 +27,16 @@ function set(patch: Partial<State>) {
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => listeners.delete(listener);
+}
+
+/** Ölçüm (lib/analytics.ts) için: tercih her değiştiğinde yeni değerle çağrılır. React dışından dinlemek için. */
+export function onConsentChange(listener: (consent: Consent | null) => void) {
+  let last = readConsent();
+  return subscribe(() => {
+    if (state.consent === last) return;
+    last = state.consent;
+    listener(last);
+  });
 }
 
 export function useConsentState() {

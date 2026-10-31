@@ -1,3 +1,4 @@
+import { track } from "./analytics";
 import { whatsappUrl } from "./links";
 
 /**
@@ -10,5 +11,6 @@ import { whatsappUrl } from "./links";
  * O zamana kadar ziyaretçi, sorusu hazır yazılmış bir WhatsApp mesajına yönlendirilir: hızlı soru için en doğal yol.
  */
 export function openAssistant(topic: string) {
+  track("asistan_ac", { konu: topic });
   window.open(whatsappUrl(`Merhaba, ${topic} hakkında bir sorum var.`), "_blank", "noopener,noreferrer");
 }

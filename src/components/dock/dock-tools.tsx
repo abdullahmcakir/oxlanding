@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PACKAGES } from "@/components/packages/packages-data";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
 import { WORKS } from "@/components/work/work-data";
+import { track } from "@/lib/analytics";
 import { openAssistant } from "@/lib/assistant";
 import { talepUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
@@ -212,6 +213,8 @@ function SpeedCheck({ onFace, onEngage }: ToolProps) {
       const score = Math.round((data?.lighthouseResult?.categories?.performance?.score ?? 0) * 100);
       const lcp: string | undefined = data?.lighthouseResult?.audits?.["largest-contentful-paint"]?.displayValue;
       setSpeed({ state: "done", url, score, lcp: lcp?.replace(/\s?s$/, " sn").replace(".", ",") });
+      // Ölçülen site sıcak bir ipucu: panelde kimin hangi siteyi test ettiği görünsün (yalnız onaylıda gider)
+      track("hiz_testi", { site: new URL(url).hostname, puan: score });
       // Yüz puan kadar dolar
       onFace({ fill: score / 100 });
     } catch (err) {

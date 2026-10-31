@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
+import { track } from "@/lib/analytics";
 import { openAssistant } from "@/lib/assistant";
 import { whatsappUrl } from "@/lib/links";
 
@@ -20,6 +21,8 @@ export function ContactComposer() {
     e.preventDefault();
     if (!ready) return;
     const text = `${name.trim() ? `Merhaba, ben ${name.trim()}. ` : "Merhaba, "}${message.trim()}`;
+    // Mesajın içeriği ölçüme gitmez, yalnız gönderildiği
+    track("mesaj_gonder", { yol: "iletisim_formu" });
     window.open(whatsappUrl(text), "_blank", "noopener,noreferrer");
   };
 
