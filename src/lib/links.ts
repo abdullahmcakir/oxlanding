@@ -1,13 +1,31 @@
+/** OX Panel'in adresi (env: NEXT_PUBLIC_PANEL_URL, ör. https://panel.ox-software.com) */
+export const PANEL_URL = process.env.NEXT_PUBLIC_PANEL_URL;
+
+/** Panelde talep hunisinin başladığı yol: /yeni-talep (hizmet seçimi) ve /yeni-talep/[hizmet] (form) */
+export const PANEL_TALEP_PATH = "/yeni-talep";
+
+// Sitedeki hizmet adresleri (/hizmetler/[slug]) → paneldeki form adresleri (/yeni-talep/[slug]).
+// Panelde lib/services.ts'teki slug'lar; biri değişirse burası da değişmeli.
+const PANEL_SERVICE: Record<string, string> = {
+  website: "tanitim-sitesi",
+  "e-ticaret": "e-ticaret-sitesi",
+  "sosyal-medya": "sosyal-medya-yonetimi",
+  seo: "seo-icerik",
+  branding: "branding",
+  otomasyon: "otomasyon",
+  mekanda: "mekanda",
+};
+
 /**
- * Müşteri panelindeki yeni talep sayfası. Adres env'den (NEXT_PUBLIC_PANEL_TALEP_URL).
- * `params` sorgu olarak eklenir (ör. { hizmet: "website" }); panel isterse formu ön-doldurabilir.
- * Env tanımlı değilse geçici olarak iletişim sayfasına gider (her sayfadan çalışır; eskiden ana sayfadaki
- * #iletisim bölümüne gidiyordu, o bölümün olmadığı sayfalarda buton boşa düşüyordu).
+ * Paneldeki ücretsiz görüşme / talep hunisi. `hizmet` verilirse doğrudan o hizmetin formu, yoksa hizmet seçimi açılır;
+ * diğer parametreler (paket, konu…) sorgu olarak geçer, panel formu ön-doldurmak için okuyabilir.
+ * Onaylı ziyaretçide oturum ve reklam kaynağı tıklama anında eklenir (lib/analytics.ts).
+ * Env tanımlı değilse geçici olarak iletişim sayfasına gider (her sayfadan çalışır).
  */
-export function talepUrl(params: Record<string, string> = {}) {
-  const base = process.env.NEXT_PUBLIC_PANEL_TALEP_URL;
-  if (!base) return "/iletisim";
-  const url = new URL(base);
+export function talepUrl({ hizmet, ...params }: Record<string, string> = {}) {
+  if (!PANEL_URL) return "/iletisim";
+  const service = hizmet ? PANEL_SERVICE[hizmet] : undefined;
+  const url = new URL(service ? `${PANEL_TALEP_PATH}/${service}` : PANEL_TALEP_PATH, PANEL_URL);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   return url.toString();
 }

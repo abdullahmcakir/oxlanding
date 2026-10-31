@@ -1,5 +1,6 @@
 import { onConsentChange, readConsent, type Consent } from "@/components/cookie/cookie-consent";
 import { ATTRIBUTION_KEYS, type EventName } from "./analytics-events";
+import { PANEL_TALEP_PATH, PANEL_URL } from "./links";
 
 // Ölçüm: her olay OX Panel'e gider (/api/olcum üzerinden), onay varsa Meta, GA4 ve Google Ads'e de.
 //
@@ -239,12 +240,8 @@ function applyConsent(consent: Consent | null, { initial = false } = {}) {
 
 // --- Görüşme bağlantısına kaynak ekleme ve tıklama yakalama ---
 
-const PANEL_URL = process.env.NEXT_PUBLIC_PANEL_TALEP_URL;
-
 function isPanelLink(url: URL) {
-  if (!PANEL_URL) return false;
-  const panel = new URL(PANEL_URL);
-  return url.origin === panel.origin && url.pathname.startsWith(panel.pathname);
+  return !!PANEL_URL && url.origin === new URL(PANEL_URL).origin && url.pathname.startsWith(PANEL_TALEP_PATH);
 }
 
 /** Onaylıysa panel bağlantısına oturum ve reklam kaynağını ekler; panel talebi ziyaretle eşleştirir */
@@ -268,10 +265,11 @@ function onClick(event: MouseEvent) {
   const from = { sayfa: location.pathname };
 
   if (isPanelLink(url)) {
-    // Butonun kendi parametreleri (ör. hizmet), kaynak eklenmeden önce
+    // Butonun kendi parametreleri (ör. paket), kaynak eklenmeden önce; hizmet adresin yolunda (/yeni-talep/[hizmet])
     const params = Object.fromEntries(url.searchParams);
+    const hizmet = url.pathname.slice(PANEL_TALEP_PATH.length + 1);
     decoratePanelLink(anchor, url);
-    track("gorusme_tikla", { ...from, ...params });
+    track("gorusme_tikla", { ...from, ...params, ...(hizmet && { hizmet }) });
   } else if (url.hostname === "wa.me") {
     track("whatsapp_tikla", from);
   } else if (url.protocol === "tel:") {
