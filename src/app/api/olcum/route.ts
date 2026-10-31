@@ -108,11 +108,11 @@ function toRybbit(event: OlcumEvent, host: string, visitor?: ReturnType<typeof v
     ...(event.e === "sayfa"
       ? { type: "pageview" }
       : { type: "custom_event", event_name: event.e, properties: JSON.stringify(event.onay ? (event.props ?? {}) : {}) }),
-    ...(visitor && {
-      ip_address: visitor.ip,
-      user_agent: visitor.ua,
-      language: visitor.language,
-    }),
+    // Onaysızda sabit yerel adres: IP verilmezse Rybbit konumu iletimin geçtiği sunucudan tahmin ediyor (Sofya, ABD…)
+    // ve ülke raporlarını bozuyordu. 127.0.0.1 hiçbir ülkeye çözülmez, onaysız ziyaretler "bilinmiyor"da toplanır.
+    ...(visitor
+      ? { ip_address: visitor.ip, user_agent: visitor.ua, language: visitor.language }
+      : { ip_address: "127.0.0.1" }),
   };
 }
 
