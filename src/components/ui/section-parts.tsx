@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 export function SplitHeading({ strong, soft }: { strong: string; soft: string }) {
   return (
     <div className="relative pl-5 md:pl-7">
-      <span className="absolute left-0 top-[0.2em] h-[1.1em] w-[3px] rounded-full bg-[#AFD41C] text-[clamp(32px,3.2vw,60px)]" />
+      <span className="absolute left-0 top-[0.2em] h-[1.1em] w-[3px] rounded-full bg-accent text-[clamp(32px,3.2vw,60px)]" />
       <h2 className="max-w-[17em] text-[clamp(32px,3.2vw,60px)] font-medium leading-[1.12] tracking-[-0.045em] text-[#111]">
         {strong} <span className="text-[#A3A3A3]">{soft}</span>
       </h2>
@@ -36,7 +36,7 @@ export function CarouselNav({
         className="group ml-2 hidden h-12 items-center gap-3 rounded-full bg-[#111] py-1.5 pl-5 pr-1.5 text-[14px] font-semibold tracking-[-0.02em] text-white sm:inline-flex"
       >
         {allLabel}
-        <span className="grid size-9 place-items-center rounded-full bg-accent text-black transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5">
+        <span className="grid size-9 place-items-center rounded-full bg-accent text-accent-ink transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5">
           <Chevron />
         </span>
       </Link>
@@ -63,7 +63,7 @@ function NavButton({
       onClick={onClick}
       className={cn(
         "grid size-12 place-items-center rounded-full transition-[opacity,transform] duration-300 enabled:hover:scale-105 disabled:opacity-30",
-        dir === 1 ? "bg-accent text-black" : "bg-[#111] text-white",
+        dir === 1 ? "bg-accent text-accent-ink" : "bg-[#111] text-white",
       )}
     >
       <Chevron className={cn(dir === -1 && "rotate-180")} />

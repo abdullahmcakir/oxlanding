@@ -10,7 +10,7 @@ type Caption = { strong: string; rest: string; strongFirst?: boolean };
 function Label({ glyph, children }: { glyph: Glyph; children: React.ReactNode }) {
   return (
     <p className="flex items-center gap-3 text-[15px] tracking-[-0.01em] text-[#111]">
-      <span className="grid size-9 place-items-center rounded-[11px] bg-accent text-[#111]">
+      <span className="grid size-9 place-items-center rounded-[11px] bg-accent text-accent-ink">
         <MiniGlyph glyph={glyph} cell={3} />
       </span>
       {children}
@@ -40,7 +40,7 @@ function Tile({ caption, children }: { caption: Caption; children: React.ReactNo
 function Check({ dark = false }: { dark?: boolean }) {
   return (
     <span
-      className={`grid size-5 shrink-0 place-items-center rounded-full ${dark ? "bg-[#111] text-accent" : "bg-accent text-[#111]"}`}
+      className={`grid size-5 shrink-0 place-items-center rounded-full ${dark ? "bg-[#111] text-accent" : "bg-accent text-accent-ink"}`}
     >
       <svg viewBox="0 0 12 12" className="size-2.5" fill="none" stroke="currentColor" strokeWidth={2} aria-hidden>
         <path d="m2.5 6.2 2.2 2.2 4.8-4.8" />
@@ -70,7 +70,7 @@ function Chip({
 }) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 ${removable ? "bg-accent/70 text-[#111]" : "bg-white text-[#111]"}`}
+      className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 ${removable ? "bg-accent text-accent-ink" : "bg-white text-[#111]"}`}
     >
       {children}
       {grip && <Grip />}
@@ -126,7 +126,7 @@ function ApprovalMock() {
         {["Masaüstü", "Mobil", "Metinler"].map((c) => (
           <span
             key={c}
-            className="inline-flex items-center gap-2 rounded-full bg-accent/70 py-1.5 pl-1.5 pr-3.5 text-[#111]"
+            className="inline-flex items-center gap-2 rounded-full bg-accent py-1.5 pl-1.5 pr-3.5 text-accent-ink"
           >
             <Check dark />
             {c}
@@ -169,7 +169,7 @@ function ReportMock() {
         <span className="text-[#111]">
           <Grip />
         </span>
-        <span className="grid size-7 place-items-center rounded-[8px] bg-accent text-[#111]">
+        <span className="grid size-7 place-items-center rounded-[8px] bg-accent text-accent-ink">
           <MiniGlyph glyph="trend" cell={2} />
         </span>
         <span className="min-w-0 truncate text-[#111]">
@@ -190,7 +190,7 @@ function ChatMock() {
         <span className="grid size-8 shrink-0 place-items-center rounded-full bg-[#111] font-mono text-[9px] font-bold text-accent">
           OX
         </span>
-        <p className="rounded-[18px] rounded-bl-[6px] bg-accent/70 px-4 py-2.5 text-[#111]">
+        <p className="rounded-[18px] rounded-bl-[6px] bg-accent px-4 py-2.5 text-accent-ink">
           Eklendi, yayında <span aria-hidden>✓</span>
         </p>
       </div>

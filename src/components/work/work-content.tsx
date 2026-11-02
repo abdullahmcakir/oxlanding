@@ -37,7 +37,7 @@ export function WorkContent({ work }: { work: Work }) {
               ))}
             </div>
           </Reveal>
-          <Reveal index={1} className="rounded-[16px] bg-accent p-4 text-black md:p-5">
+          <Reveal index={1} className="rounded-[16px] bg-accent p-4 text-accent-ink md:p-5">
             <p className="text-[14px] text-black/60">Hedefler</p>
             <ol className="mt-3 space-y-3">
               {work.goals.map((g, i) => (
@@ -127,7 +127,7 @@ export function WorkContent({ work }: { work: Work }) {
             index={i}
             className={cn(
               "flex min-h-[180px] flex-col justify-between gap-6 rounded-[16px] p-4 md:p-5",
-              i === 0 ? "bg-accent text-black" : "bg-[#171717] text-white",
+              i === 0 ? "bg-accent text-accent-ink" : "bg-[#171717] text-white",
             )}
           >
             <p className={cn("text-[14px]", i === 0 ? "text-black/60" : "text-white/50")}>Sonuç 0{i + 1}</p>

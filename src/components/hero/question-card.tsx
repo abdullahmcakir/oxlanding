@@ -30,7 +30,7 @@ export function QuestionCard({ className }: { className?: string }) {
         className="group flex h-14 items-center justify-between rounded-full bg-[#0E0D0A] py-2 pl-6 pr-2 text-[14px] font-semibold tracking-[-0.4px] text-white"
       >
         İletişime Geç
-        <span className="grid size-10 place-items-center overflow-hidden rounded-full bg-[#AFD41C] text-[#0E0D0A] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105">
+        <span className="grid size-10 place-items-center overflow-hidden rounded-full bg-accent text-accent-ink transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105">
           {/* Hover'da ok sağa çıkar, yenisi soldan gelir */}
           <span className="relative block size-4">
             {[0, 1].map((i) => (

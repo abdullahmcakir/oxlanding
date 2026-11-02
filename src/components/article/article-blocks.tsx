@@ -69,8 +69,8 @@ export function Block({ block }: { block: ArticleBlock }) {
         <Reveal>
           {/* Açık zemin: koyu bantla yan yana geldiğinde ritim bozulmasın */}
           <aside className="rounded-[28px] bg-white p-7 ring-1 ring-black/10 md:p-9">
-            <p className="flex w-fit items-center gap-2 rounded-full bg-accent py-1.5 pl-2.5 pr-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black">
-              <PixelIcon variant="plus" className="size-[9px]" cellClassName="fill-black" />
+            <p className="flex w-fit items-center gap-2 rounded-full bg-accent py-1.5 pl-2.5 pr-3 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-accent-ink">
+              <PixelIcon variant="plus" className="size-[9px]" cellClassName="fill-accent-ink" />
               İpucu
             </p>
             <p className="mt-4 text-[clamp(20px,1.6vw,24px)] font-medium leading-[1.2] tracking-[-0.025em] text-[#111]">

@@ -316,7 +316,7 @@ function Dock({ preset }: { preset: DockPresetValue | null }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 4, scale: 0.98 }}
                 transition={{ duration: 0.3, ease: EASE }}
-                className="pointer-events-none absolute bottom-full right-1 mb-2.5 block origin-bottom-right whitespace-nowrap rounded-[12px] bg-accent px-3 py-2 text-[13px] font-medium tracking-[-0.01em] text-black shadow-[0_10px_30px_-12px_rgb(0_0_0/0.5)]"
+                className="pointer-events-none absolute bottom-full right-1 mb-2.5 block origin-bottom-right whitespace-nowrap rounded-[12px] bg-accent px-3 py-2 text-[13px] font-medium tracking-[-0.01em] text-accent-ink shadow-[0_10px_30px_-12px_rgb(0_0_0/0.5)]"
               >
                 İstediğin zaman buradan küçültebilirsin.
                 {/* Küçült butonuna bakan kuyruk */}
@@ -630,7 +630,7 @@ function ListActions({
                 title={item.title}
                 className={cn(
                   "grid h-11 w-full place-items-center rounded-[14px] transition-colors",
-                  on ? "bg-accent text-black" : "bg-white/10 text-white/75 hover:bg-white/20 hover:text-white",
+                  on ? "bg-accent text-accent-ink" : "bg-white/10 text-white/75 hover:bg-white/20 hover:text-white",
                 )}
               >
                 {item.glyph ? (
@@ -689,13 +689,13 @@ function ReadingActions({ nextId }: { nextId?: string }) {
       <button
         type="button"
         onClick={go}
-        className="group flex h-11 flex-1 items-center justify-center gap-2 rounded-[16px] bg-accent px-4 text-[14px] font-semibold tracking-[-0.01em] text-black transition-[filter] hover:brightness-110"
+        className="group flex h-11 flex-1 items-center justify-center gap-2 rounded-[16px] bg-accent px-4 text-[14px] font-semibold tracking-[-0.01em] text-accent-ink transition-[filter] hover:brightness-110"
       >
         {nextId ? "Sonraki bölüm" : "Başa dön"}
         <PixelIcon
           variant={nextId ? "down" : "up"}
           className="size-[8px] transition-transform duration-300 group-hover:translate-y-0.5"
-          cellClassName="fill-black"
+          cellClassName="fill-accent-ink"
         />
       </button>
       <button
@@ -732,13 +732,13 @@ function Typed({ text }: { text: string }) {
 function Action({ action, primary = false }: { action: DockAction; primary?: boolean }) {
   const className = cn(
     "group flex h-11 items-center justify-center gap-2 rounded-[16px] px-4 text-[14px] tracking-[-0.01em] transition-[filter,background-color]",
-    primary ? "flex-1 bg-accent font-semibold text-black hover:brightness-110" : "bg-white/10 text-white hover:bg-white/15",
+    primary ? "flex-1 bg-accent font-semibold text-accent-ink hover:brightness-110" : "bg-white/10 text-white hover:bg-white/15",
   );
   const arrow = primary && (
     <PixelIcon
       variant="arrow"
       className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
-      cellClassName="fill-black"
+      cellClassName="fill-accent-ink"
     />
   );
 
@@ -789,7 +789,7 @@ function WorkNav({ preset }: { preset: Extract<DockPresetValue, { kind: "work" }
         <PixelIcon
           variant="arrow"
           className="size-[9px] transition-transform duration-300 group-hover:translate-x-0.5"
-          cellClassName="fill-black"
+          cellClassName="fill-accent-ink"
         />
       </Link>
     </>

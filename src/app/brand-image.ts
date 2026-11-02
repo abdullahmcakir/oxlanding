@@ -11,4 +11,4 @@ export async function logoSrc() {
 }
 
 export const BRAND_BG = "#070707";
-export const BRAND_ACCENT = "#c5f36a";
+export const BRAND_ACCENT = "#2f6bff";

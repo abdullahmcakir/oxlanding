@@ -26,7 +26,7 @@ export function AboutLetter() {
 
           <article className="relative rounded-[24px] bg-white p-7 shadow-[0_24px_60px_-36px_rgb(0_0_0/0.3)] md:p-9">
             {/* Referanstaki köşedeki portre; fotoğraf gelene kadar baş harfler */}
-            <span className="absolute -top-5 right-7 grid size-14 place-items-center rounded-[16px] bg-[#1F3A0B] text-[16px] font-medium text-accent shadow-lg ring-4 ring-white">
+            <span className="absolute -top-5 right-7 grid size-14 place-items-center rounded-[16px] bg-[#0B1A3F] text-[16px] font-medium text-accent shadow-lg ring-4 ring-white">
               {LETTER.initials}
             </span>
             <h3 className="text-[22px] font-medium tracking-[-0.03em] text-[#111]">{LETTER.title}</h3>

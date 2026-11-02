@@ -79,7 +79,7 @@ function Keyword({
       {/* Aktif hal: mavi + üstünden geçen ışıltı */}
       <span
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(90deg,#2F6BFF_0%,#2F6BFF_38%,#A9C6FF_50%,#2F6BFF_62%,#2F6BFF_100%)] bg-[length:200%_100%] bg-clip-text text-transparent transition-opacity duration-300"
+        className="absolute inset-0 bg-[linear-gradient(90deg,#2f6bff_0%,#2f6bff_38%,#A9C6FF_50%,#2f6bff_62%,#2f6bff_100%)] bg-[length:200%_100%] bg-clip-text text-transparent transition-opacity duration-300"
         style={{
           opacity: active ? 1 : 0,
           animation: active ? "shimmer 1.8s linear infinite" : "none",
@@ -329,7 +329,7 @@ const SETS: Item[][] = [
     { side: "left", x: 1.5, y: 1.0, rotate: 4, node: <BarCards a="#F9A8D4" b="#9333EA" /> },
     { side: "right", x: 1.05, y: -0.95, rotate: -9, node: <IconTile>{I.chart}</IconTile> },
     { side: "right", x: 2.35, y: -1.25, rotate: 9, node: <IconTile>{I.click}</IconTile> },
-    { side: "right", x: 1.5, y: 1.05, rotate: -3, node: <BarCards a="#C5F36A" b="#2F6BFF" /> },
+    { side: "right", x: 1.5, y: 1.05, rotate: -3, node: <BarCards a="#C5F36A" b="#2f6bff" /> },
   ],
   // Tasarım: renkli uygulama ikonları (referanstaki "plugins")
   [

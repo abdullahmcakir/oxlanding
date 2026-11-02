@@ -128,7 +128,7 @@ function PulseIcon({ open, className }: { open: boolean; className?: string }) {
   return (
     <span aria-hidden className={cn("grid size-[22px] place-items-center", className)}>
       {!open && <span className="absolute inset-0 animate-ping rounded-full bg-accent/70" />}
-      <span className="relative grid size-[22px] place-items-center rounded-full bg-accent text-black">
+      <span className="relative grid size-[22px] place-items-center rounded-full bg-accent text-accent-ink">
         <svg
           viewBox="0 0 18 18"
           fill="none"

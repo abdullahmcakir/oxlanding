@@ -48,12 +48,12 @@ function cells(pattern: Pattern): [number, number, number][] {
   return out;
 }
 
-// Şerit renkleri sırayla: limon, koyu, gri, koyu yeşil (piksel rengi zemine göre)
+// Şerit renkleri sırayla: mavi, koyu, gri, lacivert (piksel rengi zemine göre)
 const TONES = [
-  { bg: "bg-accent", px: "#111" },
-  { bg: "bg-[#111]", px: "#c5f36a" },
+  { bg: "bg-accent", px: "#fff" },
+  { bg: "bg-[#111]", px: "#2f6bff" },
   { bg: "bg-[#E4E4E4]", px: "#111" },
-  { bg: "bg-[#1F3A0B]", px: "#c5f36a" },
+  { bg: "bg-[#0B1A3F]", px: "#2f6bff" },
 ];
 
 function Band({ pattern, tone }: { pattern: Pattern; tone: (typeof TONES)[number] }) {

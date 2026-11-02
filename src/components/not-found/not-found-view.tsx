@@ -82,7 +82,7 @@ export function NotFoundView() {
                 <kbd
                   key={ch}
                   className={`grid size-9 place-items-center rounded-[9px] font-mono text-[14px] font-bold uppercase transition-colors duration-200 ${
-                    i < typed ? "bg-accent text-[#111]" : "bg-white/[0.06] text-white ring-1 ring-white/15"
+                    i < typed ? "bg-accent text-accent-ink" : "bg-white/[0.06] text-white ring-1 ring-white/15"
                   }`}
                 >
                   {ch}
@@ -101,7 +101,7 @@ export function NotFoundView() {
 
         {/* Dokunmatikte klavye yok: düz buton */}
         <div className="mt-8 [@media(pointer:fine)]:hidden">
-          <Link href="/" className="inline-block rounded-full bg-accent px-6 py-3 text-[15px] font-medium text-[#111]">
+          <Link href="/" className="inline-block rounded-full bg-accent px-6 py-3 text-[15px] font-medium text-accent-ink">
             Ana sayfaya dön
           </Link>
         </div>

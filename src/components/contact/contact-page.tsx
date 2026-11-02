@@ -66,7 +66,7 @@ export function ContactPage() {
               <span className="grid size-16 place-items-center rounded-[20px] bg-[#111]">
                 <PixelMatrix glyph="smile" />
               </span>
-              <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+              <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent-ink">
                 Önerilen
               </span>
             </div>

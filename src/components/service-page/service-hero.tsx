@@ -66,13 +66,13 @@ export function ServiceHero({ page }: { page: ServicePage }) {
           >
             <a
               href={talepUrl({ hizmet: service.slug })}
-              className="group inline-flex items-center gap-2.5 rounded-[14px] bg-accent py-3.5 pl-5 pr-4 text-[15px] font-semibold tracking-[-0.01em] text-black transition-[filter] hover:brightness-110"
+              className="group inline-flex items-center gap-2.5 rounded-[14px] bg-accent py-3.5 pl-5 pr-4 text-[15px] font-semibold tracking-[-0.01em] text-accent-ink transition-[filter] hover:brightness-110"
             >
               Projeni konuşalım
               <PixelIcon
                 variant="arrow"
                 className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
-                cellClassName="fill-black"
+                cellClassName="fill-accent-ink"
               />
             </a>
             <Link

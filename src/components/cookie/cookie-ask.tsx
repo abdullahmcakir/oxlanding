@@ -170,7 +170,7 @@ function AskPanel({ auto }: { auto: boolean }) {
                 onMouseLeave={() => setPreview(null)}
                 onFocus={() => setPreview("cookie")}
                 onBlur={() => setPreview(null)}
-                className="h-11 rounded-[16px] bg-accent px-3 font-semibold text-black transition-[filter] hover:brightness-110"
+                className="h-11 rounded-[16px] bg-accent px-3 font-semibold text-accent-ink transition-[filter] hover:brightness-110"
               >
                 Kabul et
               </button>
@@ -238,7 +238,7 @@ export function CookieBadge() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 4, scale: 0.98 }}
             transition={{ duration: 0.3, ease: EASE }}
-            className="pointer-events-none absolute bottom-full left-0 mb-2.5 block w-max origin-bottom-left whitespace-nowrap rounded-[12px] bg-accent px-3 py-2 text-[13px] font-medium leading-[1.3] tracking-[-0.01em] text-black shadow-[0_10px_30px_-12px_rgb(0_0_0/0.5)]"
+            className="pointer-events-none absolute bottom-full left-0 mb-2.5 block w-max origin-bottom-left whitespace-nowrap rounded-[12px] bg-accent px-3 py-2 text-[13px] font-medium leading-[1.3] tracking-[-0.01em] text-accent-ink shadow-[0_10px_30px_-12px_rgb(0_0_0/0.5)]"
           >
             Çerez tercihini buradan seçebilirsin.
             {/* Rozete bakan küçük kuyruk */}
@@ -254,7 +254,7 @@ export function CookieBadge() {
         onFocus={() => setHover(true)}
         onBlur={() => setHover(false)}
         aria-label="Çerez tercihini seç"
-        className="grid size-7 place-items-center rounded-full bg-accent text-black shadow-[0_6px_16px_-6px_rgb(0_0_0/0.6)] ring-[3px] ring-[#141414] transition-transform hover:scale-110"
+        className="grid size-7 place-items-center rounded-full bg-accent text-accent-ink shadow-[0_6px_16px_-6px_rgb(0_0_0/0.6)] ring-[3px] ring-[#141414] transition-transform hover:scale-110"
       >
         <MiniGlyph glyph="cookie" cell={2} />
       </button>

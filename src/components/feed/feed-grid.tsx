@@ -127,7 +127,7 @@ type Tone = "light" | "dark" | "accent";
 const TONE: Record<Tone, string> = {
   light: "bg-[#F5F5F5] text-[#111]",
   dark: "bg-[#111] text-white",
-  accent: "bg-accent text-black",
+  accent: "bg-accent text-accent-ink",
 };
 
 /** Ortak kart kabuğu: tam yükseklik, yuvarlak köşe, üstte rozet satırı. href varsa link olur. */

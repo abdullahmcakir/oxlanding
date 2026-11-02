@@ -91,7 +91,7 @@ export function Services() {
                 {s.title}
               </h3>
 
-              <span className="absolute bottom-5 left-5 grid size-[54px] place-items-center rounded-[16px] bg-[#AFD41C] text-[#0E0D0A] shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105">
+              <span className="absolute bottom-5 left-5 grid size-[54px] place-items-center rounded-[16px] bg-accent text-accent-ink shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

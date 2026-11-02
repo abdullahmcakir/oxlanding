@@ -44,7 +44,7 @@ export function ArticlePage({ article }: { article: Article }) {
 
       {/* Acelesi olan özü alır; olmayan neyle karşılaşacağını bilerek devam eder */}
       <div className="mx-auto mt-14 grid max-w-[960px] gap-3 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        <Reveal className="rounded-[28px] bg-accent p-7 text-black md:p-8">
+        <Reveal className="rounded-[28px] bg-accent p-7 text-accent-ink md:p-8">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-black/60">Kısaca</p>
           <ol className="mt-5 space-y-4">
             {article.takeaways.map((t, i) => (

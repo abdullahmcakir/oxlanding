@@ -171,7 +171,7 @@ function ArrowButton({ href, children }: { href: string; children: React.ReactNo
       className="group inline-flex h-14 shrink-0 items-center gap-4 self-start rounded-full bg-[#111] py-2 pl-6 pr-2 text-[15px] font-semibold tracking-[-0.02em] text-white md:self-auto"
     >
       {children}
-      <span className="grid size-10 place-items-center rounded-full bg-accent text-black transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5 group-hover:scale-105">
+      <span className="grid size-10 place-items-center rounded-full bg-accent text-accent-ink transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5 group-hover:scale-105">
         <Chevron />
       </span>
     </Link>

@@ -210,9 +210,9 @@ export function RatingCard({ className }: CardProps) {
 
 // Krestin'deki "Services" kutusundan uyarlama: dağınık, eğik etiketler.
 const SERVICE_PILLS = [
-  { label: "Reklam", className: "bottom-[78px] left-[18px] -rotate-[14deg] bg-accent text-black" },
+  { label: "Reklam", className: "bottom-[78px] left-[18px] -rotate-[14deg] bg-accent text-accent-ink" },
   { label: "Tasarım", className: "bottom-[96px] right-[16px] rotate-[12deg] bg-[#C9B8F2] text-black" },
-  { label: "Yazılım", className: "bottom-[34px] left-[74px] -rotate-[4deg] bg-[#2F6BFF] text-white" },
+  { label: "Yazılım", className: "bottom-[34px] left-[74px] -rotate-[4deg] bg-[#2f6bff] text-white" },
   { label: "SEO", className: "bottom-[44px] right-[30px] rotate-[8deg] bg-[#1A1A1A] text-white" },
   { label: "Sosyal Medya", className: "bottom-[-6px] left-[16px] rotate-[6deg] bg-white text-black" },
 ];

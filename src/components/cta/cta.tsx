@@ -107,7 +107,7 @@ export function Cta() {
             Projeni başlat
           </span>
           <span className="grid size-12 place-items-center rounded-[10px] bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
-            <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-black" />
+            <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-accent-ink" />
           </span>
         </a>
       </div>

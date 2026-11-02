@@ -63,7 +63,7 @@ export function Blog() {
           className="group inline-flex h-12 shrink-0 items-center gap-3 self-start rounded-full bg-[#111] py-1.5 pl-5 pr-1.5 text-[14px] font-semibold tracking-[-0.02em] text-white md:self-auto"
         >
           Tüm yazılar
-          <span className="grid size-9 place-items-center rounded-full bg-accent text-black transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5">
+          <span className="grid size-9 place-items-center rounded-full bg-accent text-accent-ink transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5">
             <Chevron />
           </span>
         </Link>
@@ -95,7 +95,7 @@ export function Blog() {
               <span className="mt-6 inline-flex items-center gap-2.5 text-[15px] font-semibold tracking-[-0.01em] text-[#111]">
                 Yazıyı oku
                 <span className="grid size-7 place-items-center rounded-[8px] bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
-                  <PixelIcon variant="arrow" className="size-[8px]" cellClassName="fill-black" />
+                  <PixelIcon variant="arrow" className="size-[8px]" cellClassName="fill-accent-ink" />
                 </span>
               </span>
             </div>

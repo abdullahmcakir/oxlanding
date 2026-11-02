@@ -36,7 +36,7 @@ export function ServicePackages({ page }: { page: ServicePage }) {
                   <span className="inline-flex flex-wrap items-center gap-x-3 gap-y-2">
                     <span>{pkg.title}.</span>
                     {pkg.featured && (
-                      <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+                      <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent-ink">
                         Popüler
                       </span>
                     )}
@@ -59,13 +59,13 @@ export function ServicePackages({ page }: { page: ServicePage }) {
                   <span
                     className={cn(
                       "flex h-12 items-center rounded-[10px] px-5 text-[15px] font-semibold tracking-[-0.02em]",
-                      pkg.featured ? "bg-accent text-black" : "bg-white text-[#111]",
+                      pkg.featured ? "bg-accent text-accent-ink" : "bg-white text-[#111]",
                     )}
                   >
                     Bu paketi seç
                   </span>
                   <span className="grid size-12 place-items-center rounded-[10px] bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
-                    <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-black" />
+                    <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-accent-ink" />
                   </span>
                 </span>
                 <span className="font-mono text-[10px] font-bold uppercase leading-[1.6] tracking-[0.12em] text-white/50">

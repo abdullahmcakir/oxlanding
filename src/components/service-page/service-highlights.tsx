@@ -60,7 +60,7 @@ function Band({
             </div>
             <p className="mt-0.5 text-[14px] leading-[1.35] tracking-[-0.01em] text-white/85">{note.text}</p>
             {note.badge && (
-              <span className="mt-2 inline-block rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-black">
+              <span className="mt-2 inline-block rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-accent-ink">
                 {note.badge}
               </span>
             )}

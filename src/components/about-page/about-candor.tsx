@@ -19,7 +19,7 @@ export function AboutCandor() {
               <li key={item} className="flex gap-4 border-t border-black/[0.07] py-4 first:border-0 first:pt-0">
                 <span
                   aria-hidden
-                  className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-accent text-[13px] font-bold text-black"
+                  className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-accent text-[13px] font-bold text-accent-ink"
                 >
                   ✓
                 </span>

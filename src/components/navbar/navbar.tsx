@@ -186,13 +186,13 @@ export function Navbar() {
                 {/* Ana hedef: OX Panel'de ücretsiz görüşme (panel adresi tanımlı değilse iletişim sayfası) */}
                 <a
                   href={talepUrl()}
-                  className="group hidden h-8 items-center gap-2 rounded-full bg-accent px-3.5 text-[14px] font-medium tracking-[-0.01em] text-black transition-[filter] hover:brightness-110 md:inline-flex"
+                  className="group hidden h-8 items-center gap-2 rounded-full bg-accent px-3.5 text-[14px] font-medium tracking-[-0.01em] text-accent-ink transition-[filter] hover:brightness-110 md:inline-flex"
                 >
                   Ücretsiz görüşme
                   <PixelIcon
                     variant="arrow"
                     className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
-                    cellClassName="fill-black"
+                    cellClassName="fill-accent-ink"
                   />
                 </a>
                 <button

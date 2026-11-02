@@ -44,7 +44,7 @@ export function Mission() {
             {/* Kurucu sözü: Krestin'deki iki satır + paragraf yerine. Kartlarla aynı yükseklikte; söz üstte, imza altta. */}
             <figure className="flex flex-col justify-between gap-10">
               <BlurIn>
-                <QuoteMark className="h-9 w-12 text-[#AFD41C]" />
+                <QuoteMark className="h-9 w-12 text-accent" />
                 <blockquote className="mt-7 max-w-[17em] text-[clamp(24px,1.9vw,34px)] leading-[1.22] tracking-[-0.035em] text-[#111]">
                   {QUOTE.text}
                 </blockquote>
@@ -120,7 +120,7 @@ function GreenSilk({ className }: { className?: string }) {
       className={cn("absolute inset-0 bg-[size:260%_260%]", className)}
       style={{
         backgroundImage:
-          "radial-gradient(ellipse 60% 40% at 30% 30%, rgb(197 243 106 / 0.55), transparent 70%), linear-gradient(115deg, #142806 0%, #3f6b0c 28%, #8fc21f 46%, #c5f36a 52%, #6a9e12 62%, #1d3507 100%)",
+          "radial-gradient(ellipse 60% 40% at 30% 30%, rgb(47 107 255 / 0.55), transparent 70%), linear-gradient(115deg, #06122e 0%, #123a9c 28%, #2459e0 46%, #6f9bff 52%, #1f4fd1 62%, #0a1d4d 100%)",
       }}
       animate={{ backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"] }}
       transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
@@ -130,7 +130,7 @@ function GreenSilk({ className }: { className?: string }) {
 
 function BrandTile({ className }: { className?: string }) {
   return (
-    <BlurIn className={cn("overflow-hidden rounded-[0.3em] bg-[#1d3507]", className)}>
+    <BlurIn className={cn("overflow-hidden rounded-[0.3em] bg-[#0a1d4d]", className)}>
       <GreenSilk />
       <Logo className="absolute left-1/2 top-1/2 size-[1.15em] -translate-x-1/2 -translate-y-1/2" />
     </BlurIn>
@@ -162,7 +162,7 @@ function BadgeCard() {
 
       <div aria-hidden className="absolute left-1/2 top-[16%] size-36 -translate-x-1/2">
         <div className="absolute inset-0 -translate-x-4 -rotate-6 rounded-[26px] bg-[#111] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-x-8 group-hover:-rotate-12" />
-        <div className="absolute inset-0 translate-x-5 translate-y-4 rotate-[14deg] rounded-[26px] border border-white/60 bg-gradient-to-br from-[#e2fba8] to-[#AFD41C] shadow-[0_20px_40px_-12px_rgb(95_143_10/0.45)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-7 group-hover:rotate-[6deg]">
+        <div className="absolute inset-0 translate-x-5 translate-y-4 rotate-[14deg] rounded-[26px] border border-white/60 bg-gradient-to-br from-[#c9d9ff] to-[#2f6bff] shadow-[0_20px_40px_-12px_rgb(31_79_209/0.45)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-7 group-hover:rotate-[6deg]">
           <BadgeIcon className="absolute left-1/2 top-1/2 size-14 -translate-x-1/2 -translate-y-1/2" />
         </div>
       </div>
@@ -226,7 +226,7 @@ function QuoteMark({ className }: IconProps) {
 
 type IconProps = { className?: string };
 
-const DUO = { fill: "rgb(197 243 106 / 0.45)", stroke: "#8DB51A" };
+const DUO = { fill: "rgb(47 107 255 / 0.45)", stroke: "#1f4fd1" };
 
 function CalendarIcon() {
   return (
@@ -257,7 +257,7 @@ function BadgeIcon({ className }: IconProps) {
         d="M24 3.5 29 8l6.6-.7 1.6 6.4 5.8 3.3-2.6 6.1 2.6 6.1-5.8 3.3-1.6 6.4L29 40l-5 4.5L19 40l-6.6.7-1.6-6.4L5 31l2.6-6.1L5 18.8l5.8-3.3 1.6-6.4L19 8z"
         fill="#5F8F0A"
       />
-      <path d="m16.5 24.5 5 5 10-10.5" fill="none" stroke="#e2fba8" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m16.5 24.5 5 5 10-10.5" fill="none" stroke="#c9d9ff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

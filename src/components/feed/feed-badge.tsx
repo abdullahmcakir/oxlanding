@@ -9,7 +9,7 @@ import { FILTER_ICON } from "./feed-data";
 export type BadgeKind = "calisma" | "blog" | "yorum" | "musteri" | "hizmet";
 
 const BADGES: Record<BadgeKind, { label: string; icon: PixelIconVariant; className: string; iconClass: string }> = {
-  calisma: { label: "Çalışma", icon: FILTER_ICON.calisma, className: "bg-accent text-black", iconClass: "fill-black" },
+  calisma: { label: "Çalışma", icon: FILTER_ICON.calisma, className: "bg-accent text-accent-ink", iconClass: "fill-accent-ink" },
   blog: { label: "Blog", icon: FILTER_ICON.blog, className: "bg-white text-[#111] ring-1 ring-black/10", iconClass: "fill-[#111]" },
   yorum: { label: "Yorumlar", icon: "quote", className: "bg-white/10 text-white", iconClass: "fill-accent" },
   musteri: { label: "Müşteriler", icon: "diamond", className: "bg-black text-white", iconClass: "fill-accent" },

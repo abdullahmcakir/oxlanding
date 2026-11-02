@@ -51,11 +51,11 @@ export function FeedFilters({
               <PixelIcon
                 variant={FILTER_ICON[f.key]}
                 className="relative size-[9px]"
-                cellClassName={active ? "fill-black" : "fill-white/60"}
+                cellClassName={active ? "fill-accent-ink" : "fill-white/60"}
               />
             )}
             <span className="relative">{f.label}</span>
-            <span className={cn("relative font-mono text-[10px]", active ? "text-black/60" : "text-white/40")}>
+            <span className={cn("relative font-mono text-[10px]", active ? "text-white/70" : "text-white/40")}>
               {String(counts[f.key]).padStart(2, "0")}
             </span>
           </Link>

@@ -157,7 +157,7 @@ function StageCard({ stage, onOpen }: { stage: Stage; onOpen: (el: HTMLElement) 
         <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5">
           <span className="font-mono text-[12px] font-bold text-white/80">{pad(stage.step)}</span>
           {pkg.featured && (
-            <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+            <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent-ink">
               Popüler
             </span>
           )}
@@ -243,13 +243,13 @@ function ServiceBlock({ service, onOpen }: { service: Service; onOpen: (item: Se
             <div className="mt-auto flex flex-col gap-2 pt-6">
               <a
                 href={talepUrl({ hizmet: service.slug })}
-                className="group flex h-12 items-center justify-center gap-2.5 rounded-full bg-accent text-[15px] font-semibold tracking-[-0.01em] text-black transition-[filter] hover:brightness-110"
+                className="group flex h-12 items-center justify-center gap-2.5 rounded-full bg-accent text-[15px] font-semibold tracking-[-0.01em] text-accent-ink transition-[filter] hover:brightness-110"
               >
                 Ücretsiz görüşme
                 <PixelIcon
                   variant="arrow"
                   className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
-                  cellClassName="fill-black"
+                  cellClassName="fill-accent-ink"
                 />
               </a>
               <button
@@ -284,7 +284,7 @@ function PlanCard({ plan, slug }: { plan: Plan; slug: string }) {
       <div className="flex items-start justify-between gap-3">
         <h5 className="text-[22px] font-medium tracking-[-0.03em] text-[#111]">{plan.title}</h5>
         {plan.featured && (
-          <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-black">
+          <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent-ink">
             Popüler
           </span>
         )}

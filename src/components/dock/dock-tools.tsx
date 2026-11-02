@@ -38,13 +38,13 @@ function Primary({ href, children }: { href: string; children: React.ReactNode }
   return (
     <a
       href={href}
-      className="group flex h-11 flex-1 items-center justify-center gap-2 rounded-[16px] bg-accent px-4 text-[14px] font-semibold tracking-[-0.01em] text-black transition-[filter] hover:brightness-110"
+      className="group flex h-11 flex-1 items-center justify-center gap-2 rounded-[16px] bg-accent px-4 text-[14px] font-semibold tracking-[-0.01em] text-accent-ink transition-[filter] hover:brightness-110"
     >
       {children}
       <PixelIcon
         variant="arrow"
         className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
-        cellClassName="fill-black"
+        cellClassName="fill-accent-ink"
       />
     </a>
   );
@@ -300,7 +300,7 @@ function SpeedCheck({ onFace, onEngage }: ToolProps) {
         />
         <button
           type="submit"
-          className="h-11 rounded-[16px] bg-accent px-4 text-[14px] font-semibold text-black transition-[filter] hover:brightness-110"
+          className="h-11 rounded-[16px] bg-accent px-4 text-[14px] font-semibold text-accent-ink transition-[filter] hover:brightness-110"
         >
           Ölç
         </button>

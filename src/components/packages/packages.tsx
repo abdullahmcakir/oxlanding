@@ -147,7 +147,7 @@ function PackageCard({
             Paketi incele
           </span>
           <span className="grid size-12 place-items-center rounded-[10px] bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
-            <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-black" />
+            <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-accent-ink" />
           </span>
         </span>
         <span className="font-mono text-[10px] font-bold uppercase leading-[1.6] tracking-[0.12em] text-white/50">
