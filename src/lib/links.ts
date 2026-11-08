@@ -17,12 +17,43 @@ const PANEL_SERVICE: Record<string, string> = {
 };
 
 /**
+ * Panel geçici olarak kapalıyken true: bütün "Ücretsiz görüşme" butonları panel yerine hazır mesajlı WhatsApp'a gider
+ * (mesajda butonun hizmet / paket / konu bilgisi yazar). Panel tekrar açılınca false yapılıp site yeniden derlenmeli.
+ */
+export const PANEL_PAUSED = true;
+
+// WhatsApp mesajında hizmetin okunur adı
+const SERVICE_NAME: Record<string, string> = {
+  website: "web sitesi",
+  "e-ticaret": "e-ticaret sitesi",
+  "sosyal-medya": "sosyal medya",
+  seo: "SEO",
+  branding: "marka kimliği",
+  otomasyon: "otomasyon",
+  mekanda: "Mekanda",
+};
+
+/** Panel kapalıyken görüşme butonunun WhatsApp mesajı: butonun bağlamı (hizmet, paket, site) mesaja eklenir */
+function talepMessage({ hizmet, paket, konu, site }: Record<string, string>) {
+  if (konu === "soru") return "Merhaba, bir sorum var.";
+  const details = [
+    hizmet && SERVICE_NAME[hizmet] && `Hizmet: ${SERVICE_NAME[hizmet]}`,
+    paket && `Paket: ${paket === "ozel" ? "özel" : paket}`,
+    site && `Site: ${site}`,
+    konu && konu !== "proje" && !site && `Konu: ${konu}`,
+  ].filter(Boolean);
+  const base = "Merhaba, ücretsiz ön görüşme ayarlamak istiyorum.";
+  return details.length ? `${base} ${details.join(" · ")}` : base;
+}
+
+/**
  * Paneldeki ücretsiz görüşme / talep hunisi. `hizmet` verilirse doğrudan o hizmetin formu, yoksa hizmet seçimi açılır;
  * diğer parametreler (paket, konu…) sorgu olarak geçer, panel formu ön-doldurmak için okuyabilir.
  * Onaylı ziyaretçide oturum ve reklam kaynağı tıklama anında eklenir (lib/analytics.ts).
  * Env tanımlı değilse geçici olarak iletişim sayfasına gider (her sayfadan çalışır).
  */
 export function talepUrl({ hizmet, ...params }: Record<string, string> = {}) {
+  if (PANEL_PAUSED) return whatsappUrl(talepMessage({ ...params, ...(hizmet && { hizmet }) }));
   if (!PANEL_URL) return "/iletisim";
   const service = hizmet ? PANEL_SERVICE[hizmet] : undefined;
   const url = new URL(service ? `${PANEL_TALEP_PATH}/${service}` : PANEL_TALEP_PATH, PANEL_URL);
