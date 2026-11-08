@@ -60,11 +60,13 @@ export const DOCK_MESSAGES = {
     primary: MEETING,
     tool: "sector",
   },
+  // Süre tahmin aracı ("timeline") gizli: içindeki süreler doğrulanmamış. Kodu dock-tools.tsx'te duruyor;
+  // gerçek süreler belli olunca `tool: "timeline"` geri eklenip cümle eski hâline ("Ne kadar sürer? İşini seç, söyleyeyim.") döner.
   surec: {
     glyph: "arrow",
-    line: "Ne kadar sürer? İşini seç, söyleyeyim.",
+    line: "Takvimi birlikte, kapsamına göre planlayalım.",
     primary: MEETING,
-    tool: "timeline",
+    secondary: WHATSAPP,
   },
   sss: {
     glyph: "question",

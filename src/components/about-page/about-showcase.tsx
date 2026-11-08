@@ -163,7 +163,7 @@ function ReportMock() {
           <span className="block text-[13px] text-neutral-500">Ekim raporu</span>
           <span className="block text-[#111]">Siteden gelen talep</span>
         </span>
-        <span className="ml-auto rounded-full border border-black/10 px-2.5 py-1 font-medium text-[#111]">+%38</span>
+        <span className="ml-auto rounded-full border border-black/10 px-2.5 py-1 font-medium text-[#111]">Artışta</span>
       </div>
       <div className="flex items-center gap-3 bg-[#F6F6F6] px-4 py-3.5">
         <span className="text-[#111]">

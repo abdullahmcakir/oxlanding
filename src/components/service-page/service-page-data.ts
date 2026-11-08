@@ -38,8 +38,8 @@ type Details = Pick<ServicePage, "facts" | "scope" | "deliverables" | "tools">;
 const DETAILS: Record<string, Details> = {
   website: {
     facts: [
-      { label: "Süre", value: "3–6 hafta" },
-      { label: "Revizyon", value: "2 tur tasarım" },
+      { label: "Süre", value: "Teslim süresi kapsamına göre değişir, teklifte netleşir" },
+      { label: "Revizyon", value: "Revizyon sayısı teklifte belirlenir" },
       { label: "Teslim", value: "Yönetim paneli + kaynak kod" },
       { label: "Destek", value: "3 ay teknik destek" },
     ],
@@ -64,7 +64,7 @@ const DETAILS: Record<string, Details> = {
   "sosyal-medya": {
     facts: [
       { label: "Çalışma", value: "Aylık, sürekli" },
-      { label: "Paylaşım", value: "Ayda 12–20 içerik" },
+      { label: "Paylaşım", value: "İçerik sayısı pakete göre belirlenir" },
       { label: "Onay", value: "Her içerik onayınla" },
       { label: "Rapor", value: "Aylık performans raporu" },
     ],
@@ -88,9 +88,9 @@ const DETAILS: Record<string, Details> = {
   },
   branding: {
     facts: [
-      { label: "Süre", value: "3–5 hafta" },
-      { label: "Konsept", value: "3 farklı logo yönü" },
-      { label: "Revizyon", value: "2 tur" },
+      { label: "Süre", value: "Teslim süresi kapsamına göre değişir, teklifte netleşir" },
+      { label: "Konsept", value: "Konsept sayısı teklifte belirlenir" },
+      { label: "Revizyon", value: "Revizyon sayısı teklifte belirlenir" },
       { label: "Teslim", value: "Tüm formatlarda dosyalar" },
     ],
     scope: [
@@ -138,7 +138,7 @@ const DETAILS: Record<string, Details> = {
   },
   "e-ticaret": {
     facts: [
-      { label: "Süre", value: "6–10 hafta" },
+      { label: "Süre", value: "Teslim süresi kapsamına göre değişir, teklifte netleşir" },
       { label: "Ödeme", value: "Sanal POS entegrasyonu" },
       { label: "Kargo", value: "Kargo firması bağlantısı" },
       { label: "Yönetim", value: "Ürün, stok, sipariş paneli" },
@@ -164,7 +164,7 @@ const DETAILS: Record<string, Details> = {
   seo: {
     facts: [
       { label: "Çalışma", value: "Aylık, en az 6 ay önerilir" },
-      { label: "İlk etki", value: "Genelde 2–3 ay içinde" },
+      { label: "İlk etki", value: "SEO uzun vadeli bir yatırımdır, sonuçlar aylar içinde görünür" },
       { label: "Başlangıç", value: "Ücretsiz teknik denetim" },
       { label: "Rapor", value: "Aylık sıralama raporu" },
     ],
@@ -277,7 +277,7 @@ function build(service: Service): Omit<ServicePage, "service"> {
         title: "Yayında, ölçümde",
         desc: "Yayına aldıktan sonra veriyi izliyor, test ediyor ve iyileştiriyoruz.",
         image: POOL[5],
-        note: { title: "OX Dijital", text: "Bu hafta ziyaretçi sayın %24 arttı.", badge: "Rapor" },
+        note: { title: "OX Dijital", text: "Bu haftanın raporu hazır.", badge: "Rapor" },
       },
       {
         title: "Her an ulaşılabilir",
@@ -308,7 +308,7 @@ function build(service: Service): Omit<ServicePage, "service"> {
       { quote: "Panel sayesinde neyin nerede olduğunu hep takip edebildik.", name: "Müşteri Adı", role: "Operasyon Sorumlusu, KOBİ" },
     ],
     faq: [
-      { q: `${name} projesi ne kadar sürer?`, a: "Kapsama göre değişir; çoğu projede ilk somut çıktıyı 2–4 hafta içinde paylaşıyoruz. Net takvim ilk görüşmeden sonra belli olur." },
+      { q: `${name} projesi ne kadar sürer?`, a: "Kapsama göre değişir. Net takvim ilk görüşmeden sonra, teklifle birlikte belli olur." },
       { q: "Fiyatlandırma nasıl yapılıyor?", a: "Sabit fiyat listemiz yok; ihtiyacına göre kapsamı birlikte belirleyip sana özel bir teklif hazırlıyoruz." },
       { q: "Süreç boyunca nasıl haberdar olacağım?", a: "Müşteri panelinden her adımı takip edebilir, onayları oradan verebilirsin. Ayrıca düzenli raporlarla ilerlemeyi paylaşıyoruz." },
       { q: "Proje bittikten sonra destek veriyor musunuz?", a: "Evet. İstersen aylık destekle birlikte büyümeye devam ediyoruz; istersen teslim edilen her şey belgelenmiş olarak sende kalıyor." },
