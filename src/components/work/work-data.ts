@@ -216,7 +216,7 @@ export const WORKS: Work[] = [
     color: "#14532D",
     year: "2025",
     duration: "9 hafta",
-    services: ["e-ticaret", "otomasyon", "seo"],
+    services: ["e-ticaret", "seo"],
     client: { location: "İstanbul", founded: "2021", size: "8 kişi", website: "ornek.com", logo: DEMO_LOGO },
     goals: [
       "Instagram siparişlerini mağazaya taşımak",

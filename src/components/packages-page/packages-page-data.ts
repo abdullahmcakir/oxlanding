@@ -10,7 +10,6 @@ export const SERVICE_GLYPHS: Record<string, Glyph> = {
   website: "browser",
   "sosyal-medya": "heart",
   branding: "star",
-  otomasyon: "gear",
   "e-ticaret": "bag",
   seo: "magnifier",
   mekanda: "pin",

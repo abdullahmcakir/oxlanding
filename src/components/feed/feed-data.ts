@@ -31,14 +31,14 @@ export const FILTERS = [
     label: "Çalışmalar",
     href: "/calismalar/projeler",
     title: "Çalışmalar",
-    description: "Website, branding, e-ticaret ve otomasyon projelerimizden seçkiler: problem, çözüm ve süreç.",
+    description: "Website, branding, e-ticaret ve SEO projelerimizden seçkiler: problem, çözüm ve süreç.",
   },
   {
     key: "blog",
     label: "Blog",
     href: "/blog",
     title: "Blog",
-    description: "Reklam, tasarım, SEO ve otomasyon üzerine uygulanabilir yazılar.",
+    description: "Reklam, tasarım, SEO ve web sitesi üzerine uygulanabilir yazılar.",
   },
 ] as const;
 

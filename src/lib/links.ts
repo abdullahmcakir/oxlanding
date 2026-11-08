@@ -12,7 +12,6 @@ const PANEL_SERVICE: Record<string, string> = {
   "sosyal-medya": "sosyal-medya-yonetimi",
   seo: "seo-icerik",
   branding: "branding",
-  otomasyon: "otomasyon",
   mekanda: "mekanda",
 };
 
@@ -29,7 +28,6 @@ const SERVICE_NAME: Record<string, string> = {
   "sosyal-medya": "sosyal medya",
   seo: "SEO",
   branding: "marka kimliği",
-  otomasyon: "otomasyon",
   mekanda: "Mekanda",
 };
 
