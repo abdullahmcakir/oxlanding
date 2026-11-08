@@ -40,6 +40,12 @@ export function whatsappUrl(text?: string) {
   return `https://wa.me/${number}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 }
 
+/** Sitede gösterilen iletişim adresi: iletişim sayfası, menü kartı ve kurum şeması. */
+export const CONTACT_EMAIL = "merhaba@oxdijital.com";
+
+/** KVKK aydınlatma metnindeki başvuru adresi. */
+export const KVKK_EMAIL = "kvkk@oxdijital.com";
+
 /** Sitenin yayındaki adresi: canonical, sitemap ve paylaşım görselleri bununla tam adrese çevrilir. */
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://oxdijital.com";
 

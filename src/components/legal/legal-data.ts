@@ -2,6 +2,8 @@
 // TASLAK: yapı 6698 sayılı KVKK ve Aydınlatma Yükümlülüğü Tebliği'ne göre kuruldu; yayından önce bir avukatın
 // gözden geçirmesi gerekir. Şirket bilgileri about-data.ts COMPANY'den gelir (YER TUTUCU).
 
+import { KVKK_EMAIL } from "@/lib/links";
+
 export type LegalSection = { heading: string; paragraphs?: string[]; list?: string[] };
 
 export type LegalDoc = {
@@ -13,8 +15,6 @@ export type LegalDoc = {
   intro: string;
   sections: LegalSection[];
 };
-
-export const CONTACT_EMAIL = "kvkk@oxdijital.com";
 
 export const KVKK: LegalDoc = {
   href: "/kvkk",
@@ -91,7 +91,7 @@ export const KVKK: LegalDoc = {
     {
       heading: "Başvuru",
       paragraphs: [
-        `Taleplerinizi ${CONTACT_EMAIL} adresine ya da aşağıdaki posta adresine yazılı olarak iletebilirsiniz. Başvurunuz en geç 30 gün içinde ücretsiz olarak sonuçlandırılır.`,
+        `Taleplerinizi ${KVKK_EMAIL} adresine ya da aşağıdaki posta adresine yazılı olarak iletebilirsiniz. Başvurunuz en geç 30 gün içinde ücretsiz olarak sonuçlandırılır.`,
       ],
     },
   ],

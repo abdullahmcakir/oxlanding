@@ -2,7 +2,7 @@ import { Kalam } from "next/font/google";
 import { Reveal } from "@/components/about/about-cards";
 import { MiniGlyph, PixelMatrix } from "@/components/dock/pixel-matrix";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
-import { SOCIALS, talepUrl } from "@/lib/links";
+import { CONTACT_EMAIL, SOCIALS, talepUrl } from "@/lib/links";
 import { ContactComposer } from "./contact-composer";
 import { GiantPixels } from "./giant-pixels";
 
@@ -15,7 +15,7 @@ import { GiantPixels } from "./giant-pixels";
 // Telefon ve adres YER TUTUCU.
 
 const CONTACT = {
-  email: "merhaba@oxdijital.com",
+  email: CONTACT_EMAIL,
   phone: "+90 (500) 000 00 00",
   phoneHref: "tel:+905000000000",
   address: "Örnek Mah. Örnek Cad. No: 1, İstanbul",

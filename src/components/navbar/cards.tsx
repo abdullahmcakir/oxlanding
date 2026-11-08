@@ -1,4 +1,4 @@
-import { SOCIALS as SOCIAL_LINKS, talepUrl } from "@/lib/links";
+import { CONTACT_EMAIL, SOCIALS as SOCIAL_LINKS, talepUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { PixelIcon } from "./pixel-icon";
 import { BehanceIcon, InstagramIcon, LinkedinIcon } from "./social-icons";
@@ -47,10 +47,10 @@ export function ContactCard({ className }: { className?: string }) {
         +90 (500) 000 00 00
       </a>
       <a
-        href="mailto:merhaba@oxdijital.com"
+        href={`mailto:${CONTACT_EMAIL}`}
         className="mt-1.5 block text-[20px] tracking-[-0.02em] text-white"
       >
-        merhaba@oxdijital.com
+        {CONTACT_EMAIL}
       </a>
       <ul className="mt-6 flex gap-4">
         {SOCIALS.map(({ label, href, icon: Icon }) => (

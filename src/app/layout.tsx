@@ -3,7 +3,7 @@ import { Inter, Space_Mono } from "next/font/google";
 import { CookieAsk } from "@/components/cookie/cookie-ask";
 import { DockProvider } from "@/components/dock/dock";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
-import { SITE_URL, SOCIALS } from "@/lib/links";
+import { CONTACT_EMAIL, SITE_URL, SOCIALS } from "@/lib/links";
 import "./globals.css";
 
 // opsz ekseni: büyük puntolarda tarayıcı otomatik olarak "Inter Display" kesimine geçer.
@@ -45,7 +45,7 @@ const ORGANIZATION = {
   name: "OX Dijital",
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo.png`,
-  email: "merhaba@oxdijital.com",
+  email: CONTACT_EMAIL,
   sameAs: SOCIALS.map((s) => s.href),
 };
 
