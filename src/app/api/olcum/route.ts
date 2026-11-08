@@ -4,18 +4,17 @@ import { ATTRIBUTION_KEYS, EVENTS, type EventName } from "@/lib/analytics-events
 
 // Tarayıcıdaki ölçüm (lib/analytics.ts) olayları buraya yollar, burası doğrulayıp OX Panel'e ve Rybbit'e iletir.
 // Neden aradan geçiyor: anahtarlar tarayıcıya inmez, reklam engelleyiciler kendi alan adımızı engellemez,
-// ziyaretçinin IP'si ve tarayıcı bilgisi panele hiç gitmez; Rybbit'e yalnız onaylı ziyaretçide gider.
+// ziyaretçinin IP'si ve tarayıcı bilgisi panele hiç gitmez.
+//
+// Yalnız çerez onayı vermiş ziyaretçinin olayları kabul edilir (oturum kimliği = onay). Onaysız olay reddedilir:
+// site sahibinin kararı (8 Kasım 2026), onay vermeyen ziyaretçi hiç sayılmaz.
 //
 // Panel sözleşmesi: POST OX_PANEL_OLCUM_URL, "Authorization: Bearer OX_PANEL_OLCUM_KEY", gövde:
-//   { site: "oxdijital.com", at: ISO zaman, e: olay, path, onay: boolean,
-//     ref?, utm_source?, utm_medium?, utm_campaign?,          ← onaysızda yalnız bunlar
-//     sid?, cihaz?, kaynak?: { utm_*, gclid, fbclid, giris, ref }, props? }  ← onaylıda ek olarak
+//   { site: "oxdijital.com", at: ISO zaman, e: olay, path, onay: true,
+//     sid, cihaz?, kaynak?: { utm_*, gclid, fbclid, giris, ref }, props? }
 //
-// Rybbit (kendi sunucumuzda, RYBBIT_URL): POST /api/track, site anahtarıyla.
-// - Onaysız: yalnız sayfa görüntüleme; IP ve tarayıcı bilgisi gönderilmez. Rybbit isteği bizim sunucumuzdan görür,
-//   bu yüzden onaysız ziyaretler orada tek bir "ziyaretçi" gibi durur: toplam sayfa görüntüleme doğru, ziyaretçi
-//   ve oturum sayıları anlamsız (bilerek: onaysız ziyaretçiyi ayırt etmiyoruz).
-// - Onaylı: IP, tarayıcı ve dil iletilir; Rybbit konum, cihaz ve oturumları kendisi çıkarır. Tıklamalar özel olay.
+// Rybbit (kendi sunucumuzda, RYBBIT_URL): POST /api/track, site anahtarıyla. IP, tarayıcı ve dil iletilir;
+// Rybbit konum, cihaz ve oturumları kendisi çıkarır. Tıklamalar özel olay.
 //
 // Hiçbir hedef tanımlı değilse (geliştirme) olay konsola yazılır.
 
@@ -61,11 +60,8 @@ function normalize(raw: Record<string, unknown>) {
   const base = { site: SITE, at: new Date().toISOString(), e, path };
   const sid = str(raw.sid, 64);
 
-  // Oturum kimliği yoksa onaysız olaydır: yalnız sayfa görüntüleme ve kaynak bilgisi geçer
-  if (!sid) {
-    if (e !== "sayfa") return null;
-    return { ...base, onay: false as const, ref: str(raw.ref), ...pick(raw, ["utm_source", "utm_medium", "utm_campaign"]) };
-  }
+  // Oturum kimliği yalnız onaylı ziyaretçide var: yoksa olay hiçbir yere iletilmez
+  if (!sid) return null;
 
   return {
     ...base,
@@ -79,7 +75,7 @@ function normalize(raw: Record<string, unknown>) {
 
 type OlcumEvent = NonNullable<ReturnType<typeof normalize>>;
 
-/** Onaylı ziyaretçinin Rybbit'e iletilecek bilgileri; onaysızda hiç okunmaz */
+/** Ziyaretçinin Rybbit'e iletilecek bilgileri (yalnız onaylı olaylar buraya gelir) */
 function visitorOf(request: Request) {
   const headers = request.headers;
   // Cloudflare arkasında gerçek IP cf-connecting-ip'te; yoksa vekilin eklediği ilk adres
@@ -91,13 +87,13 @@ function visitorOf(request: Request) {
   };
 }
 
-function toRybbit(event: OlcumEvent, host: string, visitor?: ReturnType<typeof visitorOf>) {
+function toRybbit(event: OlcumEvent, host: string, visitor: ReturnType<typeof visitorOf>) {
   // UTM ve reklam kimlikleri sorgu olarak: Rybbit kaynak raporlarını bunlardan çıkarır
-  const attribution = event.onay ? event.kaynak : pick(event, ["utm_source", "utm_medium", "utm_campaign"]);
+  const attribution = event.kaynak;
   const query = new URLSearchParams(
     Object.entries(attribution ?? {}).filter(([key, value]) => value && (ATTRIBUTION_KEYS as readonly string[]).includes(key)),
   ).toString();
-  const ref = event.onay ? event.kaynak?.ref : event.ref;
+  const ref = event.kaynak?.ref;
 
   return {
     site_id: RYBBIT_SITE_ID,
@@ -107,12 +103,10 @@ function toRybbit(event: OlcumEvent, host: string, visitor?: ReturnType<typeof v
     ...(ref && { referrer: `https://${ref}/` }),
     ...(event.e === "sayfa"
       ? { type: "pageview" }
-      : { type: "custom_event", event_name: event.e, properties: JSON.stringify(event.onay ? (event.props ?? {}) : {}) }),
-    // Onaysızda sabit yerel adres: IP verilmezse Rybbit konumu iletimin geçtiği sunucudan tahmin ediyor (Sofya, ABD…)
-    // ve ülke raporlarını bozuyordu. 127.0.0.1 hiçbir ülkeye çözülmez, onaysız ziyaretler "bilinmiyor"da toplanır.
-    ...(visitor
-      ? { ip_address: visitor.ip, user_agent: visitor.ua, language: visitor.language }
-      : { ip_address: "127.0.0.1" }),
+      : { type: "custom_event", event_name: event.e, properties: JSON.stringify(event.props ?? {}) }),
+    ip_address: visitor.ip,
+    user_agent: visitor.ua,
+    language: visitor.language,
   };
 }
 
@@ -146,7 +140,7 @@ export async function POST(request: Request) {
 
   // Hangi kopyadan geldiği (test adresi / asıl site) Rybbit'te ayrılabilsin
   const host = (request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? SITE).split(":")[0];
-  const visitor = event.onay ? visitorOf(request) : undefined;
+  const visitor = visitorOf(request);
 
   // Ziyaretçi hedeflerin cevabını beklemesin
   after(async () => {

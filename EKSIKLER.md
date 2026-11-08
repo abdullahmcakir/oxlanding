@@ -14,17 +14,12 @@ Son güncelleme: 8 Kasım 2026. Dal: `demo/blue-accent` (push edilmedi, yayında
 - Dokploy'a `NEXT_PUBLIC_WHATSAPP_NUMBER` girilmeli (ör. `905XXXXXXXXX`), sonra **yeniden derleme** (değer derlemede koda yazılıyor).
 - Girilmezse bütün WhatsApp butonları sahte numaraya (`905000000000`) gider. Panel kapalıyken bütün "Ücretsiz görüşme" butonları da WhatsApp'a gittiği için bu en kritik ayar.
 
-### 3. Çerez kararı (onay vermeyen ziyaretçiyi anonim sayma)
-- Karar bekleniyor: **A)** onaysız ziyaretçinin sayfa görüntülemesini anonim saymaya devam et, ya da **B)** onay olmadan hiçbir şey gönderme.
-- A seçilirse: çerez politikasında "analiz yalnız onayla çalışır" yazıyor; onaysız anonim sayımın da metne eklenmesi gerekir.
-- B seçilirse: `src/lib/analytics.ts` içindeki `track()` onaysızken hiç göndermeyecek şekilde değişir.
-
-### 4. Mobil kontrol
+### 3. Mobil kontrol
 - Tarayıcı penceresi küçültülemediği için hiçbir sayfa telefon genişliğinde (320–430 px) gözle kontrol edilmedi.
 - Öncelikli: ana sayfa (hero metni, "Referanslar" boş durum kutusu), `/calismalar` (boş durum + ızgara), hizmet sayfalarındaki "Bir bakışta" kutuları, footer'daki Balıkesir linki, menü, Balıkesir sayfası, 404 ve hata sayfası.
 - Mekanda sayfasındaki QR kod telefonla okutulup test edilmeli.
 
-### 5. Yayın günü adımları
+### 4. Yayın günü adımları
 1. `src/lib/launch.ts` → `LAUNCH_DATE` = yayın günü (ör. `"2026-11-20"`). Meta reklam ve küçük işletme SEO yazılarının yayın tarihi olur.
 2. OX Panel açıldıysa `src/lib/links.ts` → `PANEL_PAUSED = false` (butonlar tekrar panele gider). Açılmadıysa olduğu gibi kalsın.
 3. Dalı ana dala almak ve push etmek; Dokploy'un hangi daldan derlediğini kontrol etmek.

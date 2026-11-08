@@ -22,7 +22,7 @@ export const KVKK: LegalDoc = {
   label: "KVKK",
   title: "KVKK aydınlatma metni",
   description: "OX Dijital'in kişisel verileri nasıl işlediğine dair 6698 sayılı KVKK kapsamındaki aydınlatma metni.",
-  updated: "2 Kasım 2026",
+  updated: "8 Kasım 2026",
   intro:
     "Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (\"KVKK\") uyarınca, web sitemizi ziyaret eden, OX Panel üzerinden görüşme talebi oluşturan, bizimle iletişime geçen ve hizmet alan kişilerin kişisel verilerinin hangi amaçla ve nasıl işlendiğini açıklamak için hazırlandı.",
   sections: [
@@ -70,9 +70,9 @@ export const KVKK: LegalDoc = {
       ],
     },
     {
-      heading: "Onay vermeden önce ne ölçüyoruz",
+      heading: "Onay vermezseniz",
       paragraphs: [
-        "Çerezlere onay vermeseniz de sitenin kaç kez görüntülendiğini sayarız. Bu sayım için tarayıcınıza çerez ya da başka bir kayıt yazılmaz, size bir kimlik verilmez ve sizi bir sonraki ziyaretinizde tanımayız. Kaydedilen yalnızca açılan sayfanın adresi, siteye hangi siteden geldiğiniz (yalnız alan adı) ve adreste varsa kampanya etiketleridir. IP adresiniz ve tarayıcı bilginiz bu sayım için kaydedilmez ve kimseye iletilmez.",
+        "Çerezlere onay vermezseniz ziyaretinizle ilgili hiçbir ölçüm yapmayız: sayfa görüntülemeleri dahil hiçbir bilgi bize, OX Panel'e ya da ölçüm araçlarına gönderilmez ve tarayıcınıza yalnızca çerez tercihinizi hatırlayan zorunlu kayıtlar yazılır.",
       ],
     },
     {
@@ -128,7 +128,7 @@ export const COOKIES: LegalDoc = {
   label: "Çerez politikası",
   title: "Çerez politikası",
   description: "OX Dijital web sitesinde hangi çerezlerin, hangi amaçla ve ne kadar süreyle kullanıldığı ve tercihlerinizi nasıl yönetebileceğiniz.",
-  updated: "2 Kasım 2026",
+  updated: "8 Kasım 2026",
   intro:
     "Çerezler, bir web sitesini ziyaret ettiğinizde tarayıcınıza kaydedilen küçük metin dosyalarıdır. Bu sayfada \"çerez\" derken tarayıcı depolaması gibi benzer teknolojileri de kastediyoruz. Aşağıda sitemizde neyi, neden ve ne kadar süreyle kullandığımızı anlatıyoruz.",
   sections: [
@@ -136,7 +136,7 @@ export const COOKIES: LegalDoc = {
       heading: "Onay vermezseniz",
       paragraphs: [
         "Siteye ilk girdiğinizde sağ alttaki asistan çerez tercihinizi sorar. Cevap vermemek onay sayılmaz. Onay vermediğiniz sürece yalnızca aşağıdaki zorunlu kayıtlar kullanılır; analiz ve pazarlama araçları hiç yüklenmez.",
-        "Bu durumda da sayfaların kaç kez görüntülendiğini sayarız; ancak bunun için tarayıcınıza hiçbir şey yazılmaz ve sizi tanıyacak bir bilgi tutulmaz. Ayrıntısı KVKK aydınlatma metnimizde yer alır.",
+        "Bu durumda ziyaretinizle ilgili hiçbir ölçüm yapılmaz; sayfa görüntülemeleri de sayılmaz.",
       ],
     },
     {

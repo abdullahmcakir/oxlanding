@@ -2,12 +2,11 @@ import { onConsentChange, readConsent, type Consent } from "@/components/cookie/
 import { ATTRIBUTION_KEYS, type EventName } from "./analytics-events";
 import { PANEL_TALEP_PATH, PANEL_URL } from "./links";
 
-// Ölçüm: her olay OX Panel'e gider (/api/olcum üzerinden), onay varsa Meta, GA4 ve Google Ads'e de.
+// Ölçüm: yalnız çerez onayı ("all") verilmişse çalışır. Olaylar OX Panel ve Rybbit'e (/api/olcum üzerinden),
+// Meta, GA4 ve Google Ads'e gider.
 //
-// İki mod, çerez tercihine göre:
-// - Onaysız (cevapsız ya da "yalnız zorunlu"): yalnız sayfa görüntüleme sayılır. Çerez, depolama, oturum kimliği,
-//   cihaz bilgisi yok; sunucu IP'yi panele iletmez. Gönderilen: sayfa yolu, gelinen sitenin alan adı, adresteki UTM.
-//   GEÇİCİ KARAR: yayından önce site sahibinden bir kez daha onay alınacak.
+// - Onaysız (cevapsız ya da "yalnız zorunlu"): HİÇBİR ŞEY gönderilmez, sayfa görüntüleme de sayılmaz.
+//   Site sahibinin kararı (8 Kasım 2026, KVKK açısından en güvenli seçenek). /api/olcum de onaysız olayı reddeder.
 // - Onaylı ("all"): oturum kimliği (sekme kapanınca silinir), ilk geliş kaynağı (UTM, gclid, fbclid), tıklamalar,
 //   cihaz türü; reklam etiketleri yüklenir. Görüşme butonuna basınca bu bilgiler panel adresine eklenir,
 //   böylece panel talebi hangi ziyaret ve reklamın getirdiğini bilir.
@@ -93,23 +92,13 @@ function send(payload: object) {
   fetch("/api/olcum", { method: "POST", body, keepalive: true }).catch(() => {});
 }
 
-// Gelinen site yalnız ziyaretin ilk sayfasında anlamlı; site içi gezinmede document.referrer değişmez
-let landed = false;
-
 /**
- * Bir olayı kaydeder. Onaysızken sayfa görüntüleme dışındaki her şey yok sayılır.
+ * Bir olayı kaydeder. Onay yoksa hiçbir şey gönderilmez.
  * `at`: olayın sayfası. Gezinmede adres çubuğu geç güncellendiği için sayfa görüntülemede hedef adres verilir.
  */
 export function track(name: EventName, props: Props = {}, at = new URL(location.href)) {
   if (typeof window === "undefined" || navigator.webdriver) return;
-  const ref = name === "sayfa" && !landed ? referrerHost() : "";
-  if (name === "sayfa") landed = true;
-
-  if (!full()) {
-    if (name !== "sayfa") return;
-    send({ e: name, path: at.pathname, ref, ...urlAttribution(["utm_source", "utm_medium", "utm_campaign"], at) });
-    return;
-  }
+  if (!full()) return;
 
   send({
     e: name,
@@ -231,8 +220,8 @@ function applyConsent(consent: Consent | null, { initial = false } = {}) {
     loadTags();
     window.gtag?.("consent", "update", { ad_storage: "granted", ad_user_data: "granted", ad_personalization: "granted", analytics_storage: "granted" });
     window.fbq?.("consent", "grant");
-    // Onay sayfa ortasında verildiyse açık sayfa etiketlere bildirilsin (panel onu zaten anonim saydı)
-    if (!initial && firstLoad) sendToTags("sayfa", {});
+    // Onay sayfa ortasında verildiyse açık sayfa da sayılsın (onaysızken hiçbir yere gönderilmemişti)
+    if (!initial && firstLoad) track("sayfa");
   } else if (!initial) {
     revokeTags();
   }
