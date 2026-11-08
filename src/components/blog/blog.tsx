@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/about/about-cards";
-import { LIVE_ARTICLES, type Article } from "@/components/article/article-data";
+import { articleDate, LIVE_ARTICLES, type Article } from "@/components/article/article-data";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
 import { Chevron, SplitHeading } from "@/components/ui/section-parts";
 import { cn } from "@/lib/utils";
@@ -15,9 +15,11 @@ const UNDERLINE =
   "bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat transition-[background-size] duration-500 group-hover:bg-[length:100%_1px]";
 
 function Meta({ article }: { article: Article }) {
+  const date = articleDate(article);
   return (
     <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">
-      <span className="text-[#111]">{article.category}</span> · {article.date} · {article.minutes} dk
+      <span className="text-[#111]">{article.category}</span>
+      {date && ` · ${date}`} · {article.minutes} dk
     </p>
   );
 }

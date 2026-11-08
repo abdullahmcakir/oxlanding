@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SplitHeading } from "@/components/ui/section-parts";
 import type { Crumb } from "@/lib/seo";
 import { Block } from "./article-blocks";
-import { relatedArticles, type Article } from "./article-data";
+import { articleDate, relatedArticles, type Article } from "./article-data";
 import { ArticleShare } from "./article-share";
 
 // Referans: clean-tuna-722417.framer.app/blogayrı. Akış:
@@ -27,6 +27,7 @@ export function articleCrumbs(article: Article): Crumb[] {
 
 export function ArticlePage({ article }: { article: Article }) {
   const related = relatedArticles(article.slug);
+  const date = articleDate(article);
 
   return (
     <div className="bg-background px-4 pb-28 pt-[132px] md:px-[4.5vw] md:pb-36 md:pt-[150px]">
@@ -36,7 +37,11 @@ export function ArticlePage({ article }: { article: Article }) {
           <Badge kind="blog" />
           <p className={META}>
             {article.category} ·{" "}
-            {article.published ? <time dateTime={article.published}>{article.date}</time> : article.date} ·{" "}
+            {date && (
+              <>
+                <time dateTime={article.published}>{date}</time> ·{" "}
+              </>
+            )}
             {article.minutes} dk okuma
           </p>
         </div>

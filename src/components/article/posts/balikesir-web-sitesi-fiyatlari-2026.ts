@@ -24,7 +24,6 @@ export const BALIKESIR_PRICES: Omit<Article, "minutes"> = {
       "Balıkesir web sitesi fiyatları 2026 yılında neye göre değişiyor? Kurumsal site, e-ticaret, hosting, SEO ve bakım maliyetlerini öğrenin.",
   },
   category: "Web Tasarım",
-  date: "3 Kasım 2026",
   published: "2026-11-03",
   modified: "2026-11-03",
   image: `/images/blog/${SLUG}.webp`,

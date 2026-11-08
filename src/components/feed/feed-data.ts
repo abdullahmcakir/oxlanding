@@ -4,7 +4,7 @@
 // Kart ancak bağlandığı çalışma / yazı yayındaysa (live) görünür: içerik orada açılınca kart da kendiliğinden gelir.
 // Müşteri yorumu ve müşteri listesi kartları kaldırıldı (gerçek yorum yok); gerçekleri gelince yeniden eklenebilir.
 
-import { LIVE_ARTICLES } from "@/components/article/article-data";
+import { ARTICLES, articleDate, LIVE_ARTICLES } from "@/components/article/article-data";
 import { LIVE_WORKS } from "@/components/work/work-data";
 
 export type FeedCard =
@@ -71,14 +71,21 @@ export function isLiveCard(card: FeedCard) {
 
 export const HAS_LIVE_WORKS = LIVE_WORKS.length > 0;
 
+/** Blog kartının alt satırı yazının kendisinden: okuma süresi ve (varsa) yayın tarihi */
+function postMeta(slug: string) {
+  const article = ARTICLES.find((a) => a.slug === slug);
+  if (!article) return "";
+  const date = articleDate(article);
+  return date ? `${article.minutes} dk okuma · ${date}` : `${article.minutes} dk okuma`;
+}
+
 // Sütunlar elle dengelenir (masonry): her sütunun kart yükseklikleri toplamı eşit olmalı.
 // Yükseklikler: image 620 · post / kısa image 370 · services 230
 // "Tümü" bu düzeni yalnız içindeki bütün kartlar yayındayken kullanır (BENTO_READY); bir kart bile gizliyse
 // denge bozulacağı için eşit yükseklikli düz ızgaraya geçer. Gerçek içerik gelince sütunları yeniden dengele.
 export const FEED_COLUMNS: FeedCard[][] = [
   [
-    // Okuma süresi yazının kelime sayısından hesaplanır (article-data.ts readingMinutes); yazı değişirse burayı da güncelle
-    { type: "post", tag: "Web Tasarım", title: "Balıkesir web sitesi fiyatları 2026: web sitesi yaptırma rehberi", meta: "10 dk okuma · 3 Kasım 2026", href: "/blog/balikesir-web-sitesi-fiyatlari-2026" },
+    { type: "post", tag: "Web Tasarım", title: "Balıkesir web sitesi fiyatları 2026: web sitesi yaptırma rehberi", meta: postMeta("balikesir-web-sitesi-fiyatlari-2026"), href: "/blog/balikesir-web-sitesi-fiyatlari-2026" },
     { type: "image", label: "Çalışma", tag: "E-ticaret", title: "Moda Markası", image: "/images/services/e-ticaret.png", href: "/calismalar/moda-markasi" },
     { type: "image", label: "Blog", tag: "Sosyal medya", title: "Reels mi carousel mı?", image: "/images/services/sosyal-medya.png", short: true, href: "/blog/reels-mi-carousel-mi" },
   ],
@@ -90,7 +97,7 @@ export const FEED_COLUMNS: FeedCard[][] = [
   ],
   [
     { type: "image", label: "Çalışma", tag: "Branding", title: "Kafe Zinciri", image: "/images/services/branding.png", href: "/calismalar/kafe-zinciri" },
-    { type: "post", tag: "SEO", title: "Küçük işletmeler için SEO: ilk 90 günde ne yapmalı?", meta: "6 dk okuma · 29 Eylül 2026", href: "/blog/kucuk-isletmeler-icin-seo" },
+    { type: "post", tag: "SEO", title: "Küçük işletmeler için SEO: ilk 90 günde ne yapmalı?", meta: postMeta("kucuk-isletmeler-icin-seo"), href: "/blog/kucuk-isletmeler-icin-seo" },
     { type: "image", label: "Çalışma", tag: "Mekanda", title: "Butik Otel", image: "/images/services/mekanda.png", href: "/calismalar/butik-otel" },
   ],
 ];
@@ -98,7 +105,7 @@ export const FEED_COLUMNS: FeedCard[][] = [
 // Dengeli bento'ya sığmayan kartlar: "Tümü"de görünmez ama filtreli listelerde (ör. /blog) ve sayaçlarda yer alır.
 // Yeni bir yazı bento'da bir kartın yerini aldığında yerinden çıkan kart buraya taşınır.
 const OVERFLOW: FeedCard[] = [
-  { type: "post", tag: "Reklam", title: "2026'da Meta reklamlarında işe yarayan 5 strateji", meta: "9 dk okuma · 14 Ekim 2026", href: "/blog/meta-reklam-stratejileri" },
+  { type: "post", tag: "Reklam", title: "2026'da Meta reklamlarında işe yarayan 5 strateji", meta: postMeta("meta-reklam-stratejileri"), href: "/blog/meta-reklam-stratejileri" },
 ];
 
 // Satır sırası (soldan sağa, yukarıdan aşağı): filtreli ızgara bu sırayla dizilir; ilk kartlar "en yeni" sayılır.

@@ -5,6 +5,7 @@
 // Aşağıdaki diğer yazılar YER TUTUCU (demo): yazılar, rakamlar, yazar bilgileri ve görseller gerçek içerikle değiştirilecek.
 // /calismalar akışındaki blog kartları buraya `href` ile bağlanır (feed-data.ts).
 
+import { LAUNCH_DATE } from "@/lib/launch";
 import { BALIKESIR_PRICES } from "./posts/balikesir-web-sitesi-fiyatlari-2026";
 
 // Metin alanlarında iç bağlantı: [bağlantı metni](/adres) yazımı bağlantıya çevrilir (article-blocks.tsx RichText).
@@ -36,7 +37,6 @@ export type Article = {
   live: boolean;
   title: string;
   category: string;
-  date: string;
   /** Okuma süresi (dakika) */
   minutes: number;
   image: string;
@@ -50,7 +50,7 @@ export type Article = {
   sections: { id: string; title: string; blocks: ArticleBlock[] }[];
   /** Arama sonucu başlığı / açıklaması; yoksa "{başlık} · OX Dijital" ve ilk giriş paragrafı */
   seo?: { title: string; description: string };
-  /** Yayın ve güncelleme tarihi (ISO, ör. 2026-11-03). Varsa BlogPosting şeması üretilir */
+  /** Yayın ve güncelleme tarihi (ISO, ör. 2026-11-03). Görünen tarih bundan üretilir (articleDate); varsa BlogPosting şeması da */
   published?: string;
   modified?: string;
   /** Paylaşım görseli (1200×630); yoksa sitenin varsayılanı */
@@ -90,6 +90,13 @@ function blockText(b: ArticleBlock): string[] {
 }
 
 /** Gerçek kelime sayısından okuma süresi: dakikada ~200 kelime, en az 1 dk */
+const DATE_FORMAT = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+
+/** Görünen yayın tarihi ("3 Kasım 2026"), published alanından; yayın tarihi yoksa null */
+export function articleDate(article: Pick<Article, "published">) {
+  return article.published ? DATE_FORMAT.format(new Date(`${article.published}T00:00:00Z`)) : null;
+}
+
 export function readingMinutes(article: Omit<Article, "minutes">) {
   const texts = [
     article.title,
@@ -120,7 +127,8 @@ export const ARTICLES: Article[] = [
     live: true,
     title: "2026'da Meta reklamlarında işe yarayan 5 strateji",
     category: "Reklam",
-    date: "14 Ekim 2026",
+    // Yayın tarihi sitenin canlıya alındığı gün (lib/launch.ts)
+    ...(LAUNCH_DATE && { published: LAUNCH_DATE }),
     minutes: 9,
     image: "/images/services/sosyal-medya.png",
     lede: [
@@ -251,7 +259,8 @@ export const ARTICLES: Article[] = [
     live: true,
     title: "Küçük işletmeler için SEO: ilk 90 günde ne yapmalı?",
     category: "SEO",
-    date: "29 Eylül 2026",
+    // Yayın tarihi sitenin canlıya alındığı gün (lib/launch.ts)
+    ...(LAUNCH_DATE && { published: LAUNCH_DATE }),
     minutes: 6,
     image: "/images/services/seo.jpg",
     lede: [
@@ -296,7 +305,6 @@ export const ARTICLES: Article[] = [
     live: false, // demo içerik
     title: "Reels mi carousel mı? Hangi format ne zaman işe yarar",
     category: "Sosyal medya",
-    date: "22 Eylül 2026",
     minutes: 4,
     image: "/images/services/sosyal-medya.png",
     lede: ["İkisi de işe yarıyor, ama aynı işe değil. Reels yeni insanlara ulaştırır, carousel ise var olan takipçiyi derinleştirir."],
@@ -326,7 +334,6 @@ export const ARTICLES: Article[] = [
     live: false, // demo içerik
     title: "Landing page dönüşümünü artırmanın 7 yolu",
     category: "Tasarım",
-    date: "7 Ekim 2026",
     minutes: 5,
     image: "/images/solutions/kobi.webp",
     lede: ["Reklama tıklayan herkes bir fırsat. Landing page ise o fırsatı ya satışa ya da geri tuşuna çeviriyor."],
@@ -356,7 +363,6 @@ export const ARTICLES: Article[] = [
     live: false, // demo içerik
     title: "Tekrar eden işleri otomatiğe almak",
     category: "Otomasyon",
-    date: "15 Eylül 2026",
     minutes: 5,
     image: "/images/services/otomasyon.png",
     lede: ["Ekibin her gün aynı işi elle yapıyorsa, o iş muhtemelen otomatiğe alınabilir. Asıl soru nereden başlanacağı."],
