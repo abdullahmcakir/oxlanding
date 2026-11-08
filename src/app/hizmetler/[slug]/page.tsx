@@ -14,6 +14,7 @@ import { ServiceScope } from "@/components/service-page/service-scope";
 import { ServiceStatement } from "@/components/service-page/service-statement";
 import { ServiceSteps } from "@/components/service-page/service-steps";
 import { ServiceTestimonials } from "@/components/service-page/service-testimonials";
+import { breadcrumbJsonLd, jsonLdHtml, serviceJsonLd } from "@/lib/seo";
 
 // Her hizmet için ayrı sayfa: /hizmetler/website, /hizmetler/seo …
 // Sıralama referanstaki gibi; araya "Bir bakışta" ve "Neler dahil?" bilgi bölümleri eklendi.
@@ -46,8 +47,18 @@ export default async function ServicePageRoute({ params }: PageProps<"/hizmetler
   const page = getServicePage(slug);
   if (!page) notFound();
 
+  const path = `/hizmetler/${slug}`;
+  // Şemada yalnız sayfada görünen bilgiler: hizmetin adı ve hero'daki açıklaması; SSS ise <Faq schema> ile
+  const serviceLd = serviceJsonLd({ name: page.service.title, description: page.hero.description, path });
+  const crumbsLd = breadcrumbJsonLd([
+    { label: "Ana sayfa", href: "/" },
+    { label: page.service.title, href: path },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(serviceLd)} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(crumbsLd)} />
       <Navbar />
       <main>
         <ServiceHero page={page} />
@@ -59,7 +70,7 @@ export default async function ServicePageRoute({ params }: PageProps<"/hizmetler
         <ServiceScope page={page} />
         <ServiceAudiences items={page.audiences} />
         <ServiceTestimonials items={page.testimonials} />
-        <Faq items={page.faq} />
+        <Faq items={page.faq} schema />
         <ServicePackages page={page} />
       </main>
       <Footer />

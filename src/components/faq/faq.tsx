@@ -4,6 +4,7 @@ import { useId, useState } from "react";
 import { Reveal } from "@/components/about/about-cards";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
 import { talepUrl } from "@/lib/links";
+import { faqJsonLd, jsonLdHtml } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 // Düzen referansı: tbdstudio.framer.ai "Pre-call FAQ".
@@ -39,12 +40,20 @@ const FAQ = [
 export type FaqItem = { q: string; a: string };
 
 /** `items` verilmezse ana sayfanın genel soruları gösterilir (hizmet sayfaları kendi sorularını verir). */
-export function Faq({ items = FAQ }: { items?: FaqItem[] }) {
+export function Faq({
+  items = FAQ,
+  schema = false,
+}: {
+  items?: FaqItem[];
+  /** true: görünen soru-cevaplarla birebir aynı FAQPage yapısal verisini de basar (sayfada tek SSS olmalı) */
+  schema?: boolean;
+}) {
   const [open, setOpen] = useState<number | null>(0);
   const baseId = useId();
 
   return (
     <section id="sss" data-dock="sss" className="bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
+      {schema && <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdHtml(faqJsonLd(items))} />}
       <h2 className="text-center text-[clamp(40px,4.6vw,88px)] font-medium leading-[1.05] tracking-[-0.045em] text-[#111]">
         Sık sorulanlar.
       </h2>

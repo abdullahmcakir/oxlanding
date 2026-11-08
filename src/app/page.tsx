@@ -24,7 +24,7 @@ export default function Home() {
         <Difference />
         <Packages />
         <Blog />
-        <Faq />
+        <Faq schema />
         <Cta />
       </main>
       <Footer />

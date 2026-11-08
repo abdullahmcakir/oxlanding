@@ -41,7 +41,7 @@ export default function PackagesPage() {
           </header>
           <PackagesExplorer />
         </div>
-        <Faq items={PLAN_FAQ} />
+        <Faq items={PLAN_FAQ} schema />
       </main>
       <Footer />
     </>
