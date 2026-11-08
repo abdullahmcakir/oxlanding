@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { About } from "@/components/about/about";
 import { Blog } from "@/components/blog/blog";
 import { Cta } from "@/components/cta/cta";
@@ -10,6 +11,15 @@ import { Packages } from "@/components/packages/packages";
 import { References } from "@/components/references/references";
 import { Services } from "@/components/services/services";
 import { Solutions } from "@/components/solutions/solutions";
+import { pageOpenGraph } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: "OX Dijital | Web Sitesi, Sosyal Medya, SEO ve Marka Kimliği",
+  description:
+    "Web sitesi, e-ticaret, sosyal medya, SEO, marka kimliği ve dijital reklam işlerini tek ekiple planlıyoruz. Ücretsiz ön görüşmeyle başla.",
+  alternates: { canonical: "/" },
+  openGraph: pageOpenGraph("/"),
+};
 
 export default function Home() {
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageOpenGraph } from "@/lib/seo";
 import { Faq } from "@/components/faq/faq";
 import { Footer } from "@/components/footer/footer";
 import { Navbar } from "@/components/navbar/navbar";
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
   title: "Paketler · OX Dijital",
   description: "Her hizmetin paketlerini tek sayfada gör: kapsam, süre ve içerik. Kesin teklif ücretsiz görüşmede.",
   alternates: { canonical: "/paketler" },
+  openGraph: pageOpenGraph("/paketler"),
 };
 
 // Referanstaki kareli kâğıt zemin: başlık ve hizmet yığınlarının arkasında, aşağı doğru kaybolur

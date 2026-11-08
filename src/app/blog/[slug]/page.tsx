@@ -5,6 +5,7 @@ import { ArticlePage } from "@/components/article/article-page";
 import { DockPreset } from "@/components/dock/dock";
 import { Footer } from "@/components/footer/footer";
 import { Navbar } from "@/components/navbar/navbar";
+import { pageOpenGraph } from "@/lib/seo";
 
 // Her blog yazısı için ayrı sayfa: /blog/meta-reklam-stratejileri …
 // Sağ alttaki asistan bu sayfada okuma arkadaşı olur: ilerleme, kalan süre, o an okunan bölüm (DockPreset).
@@ -21,6 +22,7 @@ export async function generateMetadata({ params }: PageProps<"/blog/[slug]">): P
     title: `${article.title} · OX Dijital`,
     description: article.lede[0],
     alternates: { canonical: `/blog/${slug}` },
+    openGraph: pageOpenGraph(`/blog/${slug}`),
   };
 }
 

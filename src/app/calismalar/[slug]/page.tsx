@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageOpenGraph } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/footer/footer";
 import { Navbar } from "@/components/navbar/navbar";
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: PageProps<"/calismalar/[slug]
     title: `${work.title} · OX Dijital`,
     description: `${work.summary}. ${work.challenge}`,
     alternates: { canonical: `/calismalar/${slug}` },
+    openGraph: pageOpenGraph(`/calismalar/${slug}`),
   };
 }
 

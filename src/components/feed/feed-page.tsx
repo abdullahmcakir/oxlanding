@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageOpenGraph } from "@/lib/seo";
 import { Footer } from "@/components/footer/footer";
 import { Navbar } from "@/components/navbar/navbar";
 import { filterOf, type FeedFilter } from "./feed-data";
@@ -14,6 +15,7 @@ export function feedMetadata(key: FeedFilter): Metadata {
     title: `${f.title} · OX Dijital`,
     description: f.description,
     alternates: { canonical: f.href },
+    openGraph: pageOpenGraph(f.href),
   };
 }
 

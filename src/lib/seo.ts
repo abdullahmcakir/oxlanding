@@ -9,6 +9,22 @@ export function absoluteUrl(path: string) {
   return new URL(path, SITE_URL).toString();
 }
 
+/**
+ * Sayfaya özel Open Graph: og:url canonical ile aynı olur.
+ * Metadata sığ birleşir: sayfa openGraph verince kökteki openGraph (ve app/opengraph-image görseli) tamamen ezilir.
+ * Bu yüzden ortak alanlar ve varsayılan paylaşım görseli burada tekrar verilir. og:title / og:description
+ * verilmez: Next bunları sayfanın kendi title / description'ından türetir.
+ */
+export function pageOpenGraph(path: string) {
+  return {
+    type: "website" as const,
+    siteName: "OX Dijital",
+    locale: "tr_TR",
+    url: path,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "OX Dijital", type: "image/png" }],
+  };
+}
+
 /** layout.tsx'teki Organization ile aynı varlığa bağlanmak için (@id) */
 export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 

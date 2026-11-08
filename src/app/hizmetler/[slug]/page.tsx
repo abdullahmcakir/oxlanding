@@ -14,7 +14,8 @@ import { ServiceScope } from "@/components/service-page/service-scope";
 import { ServiceStatement } from "@/components/service-page/service-statement";
 import { ServiceSteps } from "@/components/service-page/service-steps";
 import { ServiceTestimonials } from "@/components/service-page/service-testimonials";
-import { breadcrumbJsonLd, jsonLdHtml, serviceJsonLd } from "@/lib/seo";
+import { SERVICE_META } from "@/components/service-page/service-meta";
+import { breadcrumbJsonLd, jsonLdHtml, pageOpenGraph, serviceJsonLd } from "@/lib/seo";
 
 // Her hizmet için ayrı sayfa: /hizmetler/website, /hizmetler/seo …
 // Sıralama referanstaki gibi; araya "Bir bakışta" ve "Neler dahil?" bilgi bölümleri eklendi.
@@ -28,10 +29,14 @@ export async function generateMetadata({ params }: PageProps<"/hizmetler/[slug]"
   const { slug } = await params;
   const page = getServicePage(slug);
   if (!page) return {};
+  const canonical = `/hizmetler/${slug}`;
+  const meta = SERVICE_META[slug];
   return {
-    title: `${page.service.title} · OX Dijital`,
-    description: page.service.description,
-    alternates: { canonical: `/hizmetler/${slug}` },
+    title: meta?.title ?? `${page.service.title} · OX Dijital`,
+    description: meta?.description ?? page.service.description,
+    alternates: { canonical },
+    // og:title / og:description title ve description'dan türer; ortak alanlar ve paylaşım görseli pageOpenGraph'ta
+    openGraph: pageOpenGraph(canonical),
   };
 }
 

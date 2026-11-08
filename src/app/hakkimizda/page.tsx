@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageOpenGraph } from "@/lib/seo";
 import { AboutBeliefs } from "@/components/about-page/about-beliefs";
 import { AboutCandor } from "@/components/about-page/about-candor";
 import { AboutDisciplines } from "@/components/about-page/about-disciplines";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
   title: "Hakkımızda · OX Dijital",
   description: "İstanbul merkezli dijital ajans. Reklam, tasarım ve yazılım tek çatı altında.",
   alternates: { canonical: "/hakkimizda" },
+  openGraph: pageOpenGraph("/hakkimizda"),
 };
 
 // Yaklaşım: yeni kurulmuş bir marka kendini (rakam, kadro, tarihçe) değil, duruşunu anlatır.
