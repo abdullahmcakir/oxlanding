@@ -83,6 +83,10 @@ export function Footer() {
             {/* Yıl, tarayıcıda çalışan saatten alınır (render'da new Date() önbellekli prerender'da donar) */}
             OX Dijital © {time ? time.slice(-4) : "    "}
             <span className="mt-1 flex flex-wrap justify-end gap-x-3 text-[13px] text-white/50">
+              {/* Yerel açılış sayfası: arama motorları ve ziyaretçi için her sayfadan bir iç bağlantı */}
+              <Link href="/balikesir-web-sitesi" className="transition-colors hover:text-white">
+                Balıkesir web sitesi
+              </Link>
               {LEGAL_DOCS.map((d) => (
                 <Link key={d.href} href={d.href} className="transition-colors hover:text-white">
                   {d.label}
