@@ -26,8 +26,9 @@ export async function generateMetadata({ params }: PageProps<"/calismalar/[slug]
   };
 }
 
-// Hizmet sayfalarındaki gibi: bilinmeyen adres gerçek 404 dönsün diye parametre en üstte okunuyor.
+// Bilinmeyen adres gerçek 404 dönsün (ayrıntı: app/hizmetler/[slug]/page.tsx).
 export const instant = false;
+export const ensureStatic = "navigation";
 
 export default async function WorkPage({ params }: PageProps<"/calismalar/[slug]">) {
   const { slug } = await params;

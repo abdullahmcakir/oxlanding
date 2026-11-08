@@ -34,9 +34,12 @@ export async function generateMetadata({ params }: PageProps<"/hizmetler/[slug]"
   };
 }
 
-// Parametre en üstte okunuyor ki bilinmeyen adres gerçek 404 dönsün (Suspense içinde okununca 200 dönüyordu).
-// İçerik sabit ve tüm hizmetler önceden üretildiği için "anlık gezinme" denetiminden çıkarmanın maliyeti yok.
+// Bilinmeyen adres gerçek 404 dönsün: Partial Prefetching açıkken listede olmayan slug'a önce hazır kabuk gidiyor ve
+// yanıt 200 ile başlıyordu. ensureStatic = "navigation" ilk isteğin tam statik sonucu beklemesini sağlar; böylece
+// notFound() akış başlamadan çalışır. İçerik sabit ve tüm hizmetler önceden üretildiği için anlık gezinme
+// denetiminden (instant) çıkarmanın da maliyeti yok.
 export const instant = false;
+export const ensureStatic = "navigation";
 
 export default async function ServicePageRoute({ params }: PageProps<"/hizmetler/[slug]">) {
   const { slug } = await params;
