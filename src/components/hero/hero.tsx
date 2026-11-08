@@ -72,8 +72,8 @@ export function Hero() {
         className="absolute bottom-18 left-6 hidden max-w-[360px] md:block"
       >
         <p className="text-[15px] leading-[1.45] tracking-[-0.01em] text-neutral-300">
-          İstanbul merkezli dijital ajans. Reklam, tasarım ve yazılım tek çatı
-          altında.
+          İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Reklam, tasarım ve yazılım
+          tek çatı altında.
         </p>
         <div className="mt-4 border-t border-white/10 pt-4 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">
           Showreel 2026 · İstanbul, TR

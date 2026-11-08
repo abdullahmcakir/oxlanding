@@ -22,7 +22,7 @@ const spaceMono = Space_Mono({
 
 // Sayfalar kendi başlık, açıklama ve canonical'ını verir; burası ana sayfanın ve ortak alanların varsayılanı.
 // Açıklama şimdilik hakkımızda sayfasından; ana sayfa metinleri yazılınca güncellenecek.
-const DESCRIPTION = "İstanbul merkezli dijital ajans. Reklam, tasarım ve yazılım tek çatı altında.";
+const DESCRIPTION = "İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Reklam, tasarım ve yazılım tek çatı altında.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

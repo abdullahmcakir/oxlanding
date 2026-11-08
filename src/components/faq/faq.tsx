@@ -32,8 +32,8 @@ const FAQ = [
     a: "Evet. Google Ads ve Meta üzerinden reklam kampanyalarının planlanması, kurulumu, takibi ve optimizasyonu konusunda hizmet veriyoruz. Hedef kitleni ve bütçeni birlikte belirleyerek kampanyaları işletmenin hedeflerine göre yönetiyoruz. Reklam harcamaları hizmet bedelinden ayrıdır.",
   },
   {
-    q: "Balıkesir dışındaki işletmelerle çalışıyor musunuz?",
-    a: "Evet. Balıkesir ve çevresindeki işletmelerin yanı sıra Türkiye'nin farklı şehirlerindeki markalarla da uzaktan çalışabiliyoruz. Görüşmeleri ve proje takibini online olarak yürütebiliyoruz. Fiziksel çekim gerektiren işlerde konum ve organizasyon detaylarını ayrıca değerlendiriyoruz.",
+    q: "Hangi şehirlerdeki işletmelerle çalışıyorsunuz?",
+    a: "Türkiye'nin her yerindeki işletmelerle çalışıyoruz. Resmî ofisimiz İstanbul'da; görüşmeleri ve proje takibini online yürütüyoruz. Balıkesir ve çevresindeysen yüz yüze de görüşebiliriz. Fiziksel çekim gerektiren işlerde konum ve organizasyon detaylarını ayrıca değerlendiriyoruz.",
   },
   {
     q: "Web sitem tamamlandıktan sonra güncelleme ve destek alabilir miyim?",

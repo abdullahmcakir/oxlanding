@@ -15,7 +15,7 @@ import { Statement } from "@/components/statement/statement";
 
 export const metadata: Metadata = {
   title: "Hakkımızda · OX Dijital",
-  description: "İstanbul merkezli dijital ajans. Reklam, tasarım ve yazılım tek çatı altında.",
+  description: "İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Reklam, tasarım ve yazılım tek çatı altında.",
   alternates: { canonical: "/hakkimizda" },
   openGraph: pageOpenGraph("/hakkimizda"),
 };

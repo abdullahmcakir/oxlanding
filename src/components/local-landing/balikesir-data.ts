@@ -4,6 +4,7 @@ import { SERVICES } from "@/components/services/services-data";
 // /balikesir-web-sitesi: Balıkesir'den gelen "web sitesi / web tasarım" aramaları için hizmet açılış sayfası.
 // Ticari niyet: hizmetler, süreç, fiyatı etkileyenler ve görüşme. Fiyat araştırmasının ayrıntısı blog rehberinde
 // (/blog/balikesir-web-sitesi-fiyatlari-2026); iki sayfa birbirini tekrar etmez, birbirine bağlanır.
+// Konum: resmî ofis İstanbul’da; Balıkesir’den hizmet veriliyor ve yüz yüze görüşülebiliyor (ofis iddiası yok).
 // Kurallar: fiziksel ofis, müşteri sayısı, başarı oranı, sıralama garantisi yok. Fiyat yalnız sitedeki gerçek
 // başlangıç fiyatı (services-data.ts'teki website flyout'u); orası değişince burası da kendiliğinden değişir.
 
@@ -205,8 +206,8 @@ export const FAQ: FaqItem[] = [
     a: "Evet. Projenin yapısına göre düzenlenebilir alanları size açıyoruz; metin ve görsel gibi içerikleri kendiniz güncelleyebilirsiniz. Yeni sayfa, özellik veya bakım ihtiyaçlarını da ayrıca planlayabiliyoruz; varsa devam eden ücretleri proje başlamadan netleştiriyoruz.",
   },
   {
-    q: "Balıkesir dışında olsanız da hizmet verebilir misiniz?",
-    a: "Evet. Balıkesir ve çevresindeki işletmelerin yanı sıra Türkiye’nin farklı şehirlerindeki markalarla da çalışıyoruz. Görüşmeleri ve proje takibini online yürütüyoruz; süreci müşteri panelinden izleyebiliyorsunuz.",
+    q: "Balıkesir’de yüz yüze görüşebilir miyiz?",
+    a: "Evet. Balıkesir’den hizmet veriyoruz; dilerseniz projenizi yüz yüze konuşabiliriz. Resmî ofisimiz İstanbul’da; Türkiye’nin farklı şehirlerindeki işletmelerle görüşmeleri ve proje takibini online yürütüyoruz.",
   },
   {
     q: "Web sitesi için SEO çalışması gerekli mi?",
@@ -216,7 +217,7 @@ export const FAQ: FaqItem[] = [
 
 export const FINAL_CTA = {
   title: "Balıkesir’deki işletmeniz için yeni bir web sitesi planlayalım.",
-  text: "Yeni bir web sitesi kurmak veya mevcut sitenizi yenilemek istiyorsanız projenizin ihtiyaçlarını birlikte değerlendirelim.",
+  text: "Yeni bir web sitesi kurmak veya mevcut sitenizi yenilemek istiyorsanız projenizin ihtiyaçlarını birlikte değerlendirelim. Balıkesir’den hizmet veriyoruz; dilerseniz yüz yüze görüşebiliriz.",
   label: "Ücretsiz ön görüşme talep edin",
   note: "Ücretsiz ön görüşme · Bağlayıcı değil",
 };

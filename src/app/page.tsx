@@ -16,7 +16,7 @@ import { pageOpenGraph } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "OX Dijital | Web Sitesi, Sosyal Medya, SEO ve Marka Kimliği",
   description:
-    "Web sitesi, e-ticaret, sosyal medya, SEO, marka kimliği ve dijital reklam işlerini tek ekiple planlıyoruz. Ücretsiz ön görüşmeyle başla.",
+    "İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Web sitesi, e-ticaret, sosyal medya, SEO ve marka kimliği tek ekipte.",
   alternates: { canonical: "/" },
   openGraph: pageOpenGraph("/"),
 };
