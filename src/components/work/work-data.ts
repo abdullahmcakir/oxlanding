@@ -1,7 +1,7 @@
 // Çalışma detay sayfaları (/calismalar/[slug]).
 // Düzen referansı: portorocha.com proje sayfaları (solda sabit kenar çubuğu, sağda koyu paneller).
 // TÜMÜ YER TUTUCU: müşteri bilgileri, metinler, ekip ve görseller gerçek projelerle değiştirilecek.
-// `results` içindeki rakamlar ÖRNEKTİR: gerçek ölçümlerle değiştirilmeden yayına çıkmamalı.
+// `results`: yalnız gerçek ölçümler yazılır; boşsa "Sonuçlar" bölümü ve içindekiler satırı görünmez.
 // /calismalar akışındaki çalışma kartları buraya `href` ile bağlanır (feed-data.ts).
 
 export type WorkBlock =
@@ -104,12 +104,7 @@ export const WORKS: Work[] = [
     ],
     deliverables: ["8 sayfalık web sitesi", "Yönetim paneli", "Mobil uyumlu arayüz", "SEO altyapısı", "Analitik kurulumu"],
     tools: ["Figma", "Next.js", "Tailwind CSS", "Vercel", "GA4"],
-    results: [
-      { value: "%42", label: "Daha fazla demo talebi" },
-      { value: "1.2 sn", label: "Ortalama açılış süresi" },
-      { value: "2.4x", label: "Sayfada kalma süresi" },
-      { value: "6 hf", label: "Fikirden yayına" },
-    ],
+    results: [],
     palette: [
       { hex: "#1E3A8A", name: "Gece mavisi" },
       { hex: "#C5F36A", name: "Sinyal yeşili" },
@@ -173,12 +168,7 @@ export const WORKS: Work[] = [
     ],
     deliverables: ["Logo ve varyasyonları", "Bardak ve ambalaj seti", "Menü ve tabela tasarımı", "Marka kılavuzu", "Sosyal medya şablonları"],
     tools: ["Figma", "Illustrator", "Photoshop", "After Effects"],
-    results: [
-      { value: "5/5", label: "Şubede aynı kimlik" },
-      { value: "3x", label: "Ambalaj paylaşımı" },
-      { value: "%27", label: "Sosyal medya etkileşimi" },
-      { value: "1 gün", label: "Yeni şube kurulumu" },
-    ],
+    results: [],
     palette: [
       { hex: "#C44120", name: "Kavrulmuş turuncu" },
       { hex: "#F3E9DC", name: "Süt köpüğü" },
@@ -242,12 +232,7 @@ export const WORKS: Work[] = [
     ],
     deliverables: ["E-ticaret mağazası", "Ürün, stok ve sipariş paneli", "Ödeme ve kargo entegrasyonu", "WhatsApp bildirim botu", "Dönüşüm takibi"],
     tools: ["Shopify", "iyzico", "WhatsApp Business API", "n8n", "GA4"],
-    results: [
-      { value: "3.2x", label: "Online satış" },
-      { value: "%31", label: "Daha az sepet terki" },
-      { value: "4 sa", label: "Günlük kazanılan zaman" },
-      { value: "%0", label: "Elle sipariş takibi" },
-    ],
+    results: [],
     palette: [
       { hex: "#14532D", name: "Orman" },
       { hex: "#EDE6DA", name: "Keten" },
@@ -311,12 +296,7 @@ export const WORKS: Work[] = [
     ],
     deliverables: ["Mekanda otel sayfası", "Oda ve masa QR kodları", "Etkinlik bildirimleri", "Yönetim paneli", "Ekip eğitimi"],
     tools: ["Mekanda", "QR kod", "Google Haritalar"],
-    results: [
-      { value: "%60", label: "Daha az tekrar eden soru" },
-      { value: "2x", label: "Etkinlik katılımı" },
-      { value: "0", label: "Basılı broşür" },
-      { value: "2 hf", label: "Kurulum süresi" },
-    ],
+    results: [],
     palette: [
       { hex: "#3F2A1E", name: "Ceviz" },
       { hex: "#E8DCC8", name: "Kum" },

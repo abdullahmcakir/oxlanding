@@ -12,7 +12,7 @@ import { useIstanbulTime } from "@/hooks/use-istanbul-time";
 import { SOCIALS, whatsappUrl } from "@/lib/links";
 
 // Framer sitesindeki footer (clean-tuna-722417.framer.app) — katman yapısı, ölçüler ve animasyonlar
-// canlı siteden ölçülerek birebir kuruldu. Alıntı Framer'daki yer tutucu.
+// canlı siteden ölçülerek birebir kuruldu. Framer'daki alıntı ve canlı saat kaldırıldı.
 const LINKS = [...SOCIALS, { label: "WhatsApp", href: whatsappUrl() }];
 
 // Toz dokusu 660×371; 495px genişlikte döşenir → bir döşeme yüksekliği:
@@ -33,11 +33,11 @@ export function Footer() {
         className="relative h-[clamp(440px,30.6vw,580px)] overflow-hidden rounded-[24px] bg-[#171717] text-white"
       >
         {/* Katman kutusu (Framer "AnimOne", 520px): footer'dan 13px yukarı, 40px aşağı taşar.
-            Zemindeki degrade yalnızca sağ/sol 1px kenarda görünür; turuncu kısmı ve ışımanın
+            Zemindeki degrade yalnızca sağ/sol 1px kenarda görünür; mavi kısmı ve ışımanın
             parlak çekirdeği footer'ın altında kalıp kırpılır. */}
         <div
           className="absolute inset-x-0 -bottom-[40px] -top-[13px] overflow-hidden rounded-[16px]"
-          style={{ background: "linear-gradient(rgb(23,23,23) 65%, rgb(206,48,0) 100%)" }}
+          style={{ background: "linear-gradient(rgb(23,23,23) 65%, rgb(16,52,170) 100%)" }}
         >
           <div className="absolute inset-x-px bottom-px top-px">
             {/* Grenli koyu zemin */}
@@ -57,7 +57,7 @@ export function Footer() {
               transition={inView ? { duration: 6.3, repeat: Infinity, ease: "easeInOut" } : { duration: 0 }}
             >
               {/* unoptimized: dönüştürülünce saydam ışımanın tonları değişiyor */}
-              <Image src="/images/footer/glow.png" alt="" fill unoptimized className="object-cover object-bottom" />
+              <Image src="/images/footer/glow-blue.png" alt="" fill unoptimized className="object-cover object-bottom" />
             </motion.div>
 
             {/* Toz: döşenmiş parçacıklar sürekli yükselir, ışımanın üstünde color-dodge ile parlar */}
@@ -72,38 +72,33 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Üst satır: alıntı + saat / telif */}
+        {/* Üst satır: solda telif, sağda yasal bağlantılar */}
         <div className="absolute inset-x-5 top-5 flex items-start justify-between gap-6 text-[16px] leading-6 md:inset-x-[21px] md:top-[21px]">
-          <p>
-            Buraya çok havalı bir cümle yazalım.
-            <br />– OX Dijital
-          </p>
-          <p className="text-right tabular-nums">
-            <span className="block">{time ?? " "}</span>
-            {/* Yıl, tarayıcıda çalışan saatten alınır (render'da new Date() önbellekli prerender'da donar) */}
-            OX Dijital © {time ? time.slice(-4) : "    "}
-            <span className="mt-1 flex flex-wrap justify-end gap-x-3 text-[13px] text-white/50">
-              {/* Yerel açılış sayfası: arama motorları ve ziyaretçi için her sayfadan bir iç bağlantı */}
-              <Link href="/balikesir-web-sitesi" className="transition-colors hover:text-white">
-                Balıkesir web sitesi
+          {/* Yıl, tarayıcıda çalışan saatten alınır (render'da new Date() önbellekli prerender'da donar) */}
+          <div>
+            <p className="tabular-nums">OX Dijital © {time ? time.slice(-4) : "    "}</p>
+            {/* Yerel açılış sayfası: arama motorları ve ziyaretçi için her sayfadan bir iç bağlantı */}
+            <Link href="/balikesir-web-sitesi" className="text-[13px] text-white/50 transition-colors hover:text-white">
+              Balıkesir web sitesi
+            </Link>
+          </div>
+          <p className="flex flex-wrap justify-end gap-x-3 text-[13px] text-white/50">
+            {LEGAL_DOCS.map((d) => (
+              <Link key={d.href} href={d.href} className="transition-colors hover:text-white">
+                {d.label}
               </Link>
-              {LEGAL_DOCS.map((d) => (
-                <Link key={d.href} href={d.href} className="transition-colors hover:text-white">
-                  {d.label}
-                </Link>
-              ))}
-              <CookieSettingsButton className="transition-colors hover:text-white">Çerez tercihleri</CookieSettingsButton>
-            </span>
+            ))}
+            <CookieSettingsButton className="transition-colors hover:text-white">Çerez tercihleri</CookieSettingsButton>
           </p>
         </div>
 
         {/* Orta: logo kutusu (Framer "Large Highlight" katmanları) */}
         <div className="absolute left-1/2 top-1/2 size-[152px] -translate-x-1/2 -translate-y-1/2 rounded-[16px] bg-[linear-gradient(rgb(38,38,38)_0%,rgb(15,15,15)_100%)]">
-          {/* Alt kenarda turuncu kenar ışığı */}
-          <div className="absolute inset-0 rounded-[16px] bg-[radial-gradient(41%_40%_at_50%_100%,rgb(255,98,7)_6.3%,rgba(255,98,7,0)_100%)]" />
-          {/* 1px içeride yüzey + hafif turuncu yansıma */}
+          {/* Alt kenarda mavi kenar ışığı */}
+          <div className="absolute inset-0 rounded-[16px] bg-[radial-gradient(41%_40%_at_50%_100%,rgb(47,107,255)_6.3%,rgba(47,107,255,0)_100%)]" />
+          {/* 1px içeride yüzey + hafif mavi yansıma */}
           <div className="absolute inset-px rounded-[15px] bg-[#171717]" />
-          <div className="absolute inset-px rounded-[15px] bg-[radial-gradient(100%_100%_at_50%_100%,rgb(255,98,7)_0%,rgba(255,98,8,0)_100%)] opacity-15" />
+          <div className="absolute inset-px rounded-[15px] bg-[radial-gradient(100%_100%_at_50%_100%,rgb(47,107,255)_0%,rgba(47,107,255,0)_100%)] opacity-15" />
           <Logo className="absolute left-1/2 top-1/2 size-[100px] -translate-x-1/2 -translate-y-1/2" />
         </div>
 

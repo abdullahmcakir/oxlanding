@@ -29,6 +29,7 @@ const STEP_ICONS: PixelIconVariant[] = ["quote", "plus", "arrow"];
 const pad = (n: number) => String(n).padStart(2, "0");
 const blockId = (slug: string) => `paket-${slug}`;
 const ALL_SERVICES = SERVICES;
+const extras = allExtras();
 
 export function PackagesExplorer() {
   const [selected, setSelected] = useState<Service | null>(null);
@@ -82,15 +83,17 @@ export function PackagesExplorer() {
           ))}
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-[13px] text-neutral-500">Paketlere eklenebilen modül ve uygulamalar:</span>
-          {allExtras().map((e) => (
-            <span key={e.label} className="rounded-full bg-[#F1F1F1] px-3 py-1.5 text-[13px] text-[#333]">
-              {e.label}
-              <span className="ml-1.5 text-[11px] text-neutral-400">{e.kind}</span>
-            </span>
-          ))}
-        </div>
+        {extras.length > 0 && (
+          <div className="mt-5 flex flex-wrap items-center gap-1.5">
+            <span className="mr-1 text-[13px] text-neutral-500">Paketlere eklenebilen modül ve uygulamalar:</span>
+            {extras.map((e) => (
+              <span key={e.label} className="rounded-full bg-[#F1F1F1] px-3 py-1.5 text-[13px] text-[#333]">
+                {e.label}
+                <span className="ml-1.5 text-[11px] text-neutral-400">{e.kind}</span>
+              </span>
+            ))}
+          </div>
+        )}
 
         <Reveal className="mt-14">
           <div className="flex flex-col gap-6 rounded-[28px] bg-[#111] p-7 text-white md:p-9 lg:flex-row lg:items-center lg:justify-between">
@@ -187,9 +190,11 @@ function StageCard({ stage, onOpen }: { stage: Stage; onOpen: (el: HTMLElement) 
             Paketi incele
             <span className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">↗</span>
           </span>
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400">
-            Süre: <span className="text-[#111]">{pkg.duration}</span>
-          </span>
+          {pkg.duration && (
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-400">
+              Süre: <span className="text-[#111]">{pkg.duration}</span>
+            </span>
+          )}
         </div>
       </div>
     </button>

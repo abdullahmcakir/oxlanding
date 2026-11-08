@@ -120,26 +120,29 @@ export function WorkContent({ work }: { work: Work }) {
         </div>
       </section>
 
-      <section id="sonuclar" className="grid scroll-mt-[92px] grid-cols-2 gap-2 lg:grid-cols-4">
-        {work.results.map((r, i) => (
-          <Reveal
-            key={r.label}
-            index={i}
-            className={cn(
-              "flex min-h-[180px] flex-col justify-between gap-6 rounded-[16px] p-4 md:p-5",
-              i === 0 ? "bg-accent text-accent-ink" : "bg-[#171717] text-white",
-            )}
-          >
-            <p className={cn("text-[14px]", i === 0 ? "text-black/60" : "text-white/50")}>Sonuç 0{i + 1}</p>
-            <div>
-              <p className="text-[clamp(40px,4vw,64px)] font-medium leading-none tracking-[-0.05em]">{r.value}</p>
-              <p className={cn("mt-2 text-[14px] leading-[1.3]", i === 0 ? "text-black/70" : "text-white/60")}>
-                {r.label}
-              </p>
-            </div>
-          </Reveal>
-        ))}
-      </section>
+      {/* Yalnız gerçek ölçüm varsa görünür */}
+      {work.results.length > 0 && (
+        <section id="sonuclar" className="grid scroll-mt-[92px] grid-cols-2 gap-2 lg:grid-cols-4">
+          {work.results.map((r, i) => (
+            <Reveal
+              key={r.label}
+              index={i}
+              className={cn(
+                "flex min-h-[180px] flex-col justify-between gap-6 rounded-[16px] p-4 md:p-5",
+                i === 0 ? "bg-accent text-accent-ink" : "bg-[#171717] text-white",
+              )}
+            >
+              <p className={cn("text-[14px]", i === 0 ? "text-black/60" : "text-white/50")}>Sonuç 0{i + 1}</p>
+              <div>
+                <p className="text-[clamp(40px,4vw,64px)] font-medium leading-none tracking-[-0.05em]">{r.value}</p>
+                <p className={cn("mt-2 text-[14px] leading-[1.3]", i === 0 ? "text-black/70" : "text-white/60")}>
+                  {r.label}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </section>
+      )}
 
       <section id="tasarim" className={SECTION}>
         <div className="grid gap-2 md:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">

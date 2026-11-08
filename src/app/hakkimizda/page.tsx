@@ -34,8 +34,8 @@ export default function AboutPage() {
       <Navbar />
       <main>
         <PageHero
-          title={["Dijitalde büyümenin", "yeni standardı"]}
-          description="Strateji, yaratıcılık ve teknolojiyi bir araya getirerek markaların dijitalde daha görünür ve daha etkili olmasını sağlıyoruz."
+          title={["İşini büyütmek isteyenlerin", "dijital ekibiyiz."]}
+          description="OX Dijital olarak tasarım, yazılım ve dijital pazarlama alanlarında çalışıyoruz. İşletmelerin ihtiyaçlarını anlayıp doğru çözümleri birlikte geliştirmeye odaklanıyoruz."
           image="/images/page-hero/hakkimizda.jpg"
           cutout="/images/page-hero/hakkimizda-cutout.png"
           aspect={4 / 3}
@@ -43,7 +43,7 @@ export default function AboutPage() {
           // ve ucu başlığın ilk satırının üst yarısına biner.
           anchor={0.65}
           titleAnchor={0.69}
-          meta="Hakkımızda · İstanbul, TR"
+          meta="Hakkımızda · OX Dijital"
           scrollTarget="#misyon"
         />
         <Mission />

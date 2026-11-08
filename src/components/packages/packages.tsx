@@ -99,9 +99,11 @@ function PackageCard({
               ))}
             </span>
           </div>
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">
-            Süre: <span className="text-white">{pkg.duration}</span>
-          </span>
+          {pkg.duration && (
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">
+              Süre: <span className="text-white">{pkg.duration}</span>
+            </span>
+          )}
         </div>
 
         <h3 className="mt-[clamp(48px,6vw,96px)] text-[clamp(28px,2.3vw,40px)] leading-[1.15] tracking-[-0.03em]">
@@ -151,8 +153,6 @@ function PackageCard({
           </span>
         </span>
         <span className="font-mono text-[10px] font-bold uppercase leading-[1.6] tracking-[0.12em] text-white/50">
-          {pkg.items.length} kalem
-          <br />
           Kapsama göre teklif
         </span>
       </div>

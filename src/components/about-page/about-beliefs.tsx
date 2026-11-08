@@ -25,7 +25,7 @@ export function AboutBeliefs() {
               {BELIEFS.length} basit ilke.
             </h2>
             <p className="mt-5 max-w-[30ch] text-[clamp(16px,1.15vw,19px)] leading-[1.45] text-white/50">
-              Her projede, her müşteriyle aynı sözleri tutarız.
+              Nasıl çalıştığımızı belirleyen beş temel prensibimiz var.
             </p>
 
             {/* Öne çıkan ilkenin piksel şekli */}

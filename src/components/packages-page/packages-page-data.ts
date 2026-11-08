@@ -38,7 +38,7 @@ export type Stage = {
 const MEMBERS: Record<string, string[]> = {
   "sifirdan-basla": ["website", "branding", "sosyal-medya", "seo"],
   "satisa-gec": ["e-ticaret", "mekanda"],
-  olcekle: ["otomasyon"],
+  olcekle: [],
 };
 
 /** Hizmetin yer aldığı paket(ler): tekli listede "… paketinde de var" notu için. */

@@ -5,19 +5,35 @@ import type { ServicePage } from "./service-page-data";
 // Referans: solda yapışkan başlık ("3 adımda başla"), sağda numaralı dikey zaman çizgisi ve büyük kartlar.
 // Kartlardaki uygulama ekranları yerine görsel alanı (görseller sonra konacak).
 
-export function ServiceSteps({ steps, image }: { steps: ServicePage["steps"]; image: string }) {
+export function ServiceSteps({
+  steps,
+  image,
+  intro,
+}: {
+  steps: ServicePage["steps"];
+  image: string;
+  intro?: ServicePage["stepsIntro"];
+}) {
   return (
     <section data-dock="surec" className="relative z-10 -mt-12 rounded-t-[48px] bg-background px-4 py-24 md:px-[4.5vw] md:py-32">
       <div className="grid gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.6fr)] lg:gap-20">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <h2 className="text-[clamp(32px,3.2vw,60px)] font-medium leading-[1.08] tracking-[-0.045em] text-[#111]">
-            {steps.length} adımda
-            <br />
-            başlıyoruz.
+          <h2 className="max-w-[11em] text-[clamp(32px,3.2vw,60px)] font-medium leading-[1.08] tracking-[-0.045em] text-[#111]">
+            {intro ? (
+              intro.title
+            ) : (
+              <>
+                {steps.length} adımda
+                <br />
+                başlıyoruz.
+              </>
+            )}
           </h2>
-          <p className="mt-4 text-[clamp(15px,1.05vw,18px)] tracking-[-0.01em] text-neutral-500">
-            İlk görüşmeden yayına kadar her şey belli.
-          </p>
+          {(intro ? intro.desc : "İlk görüşmeden yayına kadar her şey belli.") && (
+            <p className="mt-4 text-[clamp(15px,1.05vw,18px)] tracking-[-0.01em] text-neutral-500">
+              {intro ? intro.desc : "İlk görüşmeden yayına kadar her şey belli."}
+            </p>
+          )}
         </div>
 
         <ol>

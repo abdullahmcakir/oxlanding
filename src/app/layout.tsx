@@ -4,6 +4,7 @@ import { CookieAsk } from "@/components/cookie/cookie-ask";
 import { DockProvider } from "@/components/dock/dock";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { CONTACT_EMAIL, SITE_URL, SOCIALS } from "@/lib/links";
+import { ORGANIZATION_ID } from "@/lib/seo";
 import "./globals.css";
 
 // opsz ekseni: büyük puntolarda tarayıcı otomatik olarak "Inter Display" kesimine geçer.
@@ -42,6 +43,8 @@ export const metadata: Metadata = {
 const ORGANIZATION = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  // Sayfa şemaları (Service, BlogPosting) kurumu bu kimlikle anar (lib/seo.ts ORGANIZATION_ID)
+  "@id": ORGANIZATION_ID,
   name: "OX Dijital",
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo.png`,

@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import type { ReactNode } from "react";
 import { Reveal } from "@/components/about/about-cards";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
 import { cn } from "@/lib/utils";
@@ -9,12 +11,74 @@ import type { ArticleBlock } from "./article-data";
 
 export const PROSE = "text-[18px] leading-[1.65] tracking-[-0.005em] text-[#333]";
 
+const LINK = "font-medium text-[#111] underline decoration-accent decoration-2 underline-offset-[3px] transition-colors hover:text-accent";
+
+/** Metindeki [bağlantı metni](/adres) yazımını bağlantıya çevirir; site içi adresler Link ile (ön yükleme) */
+export function RichText({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (!m) return part;
+        const [, label, href] = m;
+        return href.startsWith("/") ? (
+          <Link key={i} href={href} className={LINK}>
+            {label}
+          </Link>
+        ) : (
+          <a key={i} href={href} className={LINK}>
+            {label}
+          </a>
+        );
+      })}
+    </>
+  );
+}
+
+/** Site içi adres Link, panel gibi dış adres düz <a> */
+function SmartLink({ href, className, children }: { href: string; className?: string; children: ReactNode }) {
+  return href.startsWith("/") ? (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  ) : (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  );
+}
+
 export function Block({ block }: { block: ArticleBlock }) {
   switch (block.type) {
     case "p":
-      return <p className={PROSE}>{block.text}</p>;
+      return (
+        <p className={PROSE}>
+          <RichText text={block.text} />
+        </p>
+      );
+
+    case "h3":
+      return (
+        <h3 className="pt-4 text-[clamp(21px,1.6vw,25px)] font-medium leading-[1.2] tracking-[-0.03em] text-[#111]">
+          {block.text}
+        </h3>
+      );
 
     case "list":
+      if (block.check) {
+        // Kontrol listesi: maddeler ayrı satırlar, solda boş onay kutusu (okur kendi işaretler)
+        return (
+          <ul className="divide-y divide-black/[0.06] rounded-[24px] bg-[#F1F1F1] px-6 py-2 md:px-8">
+            {block.items.map((item) => (
+              <li key={item} className="flex items-start gap-4 py-4 text-[17px] leading-[1.45] tracking-[-0.01em] text-[#111]">
+                <span aria-hidden className="mt-[3px] size-[18px] shrink-0 rounded-[5px] border-2 border-[#111]/25 bg-white" />
+                <RichText text={item} />
+              </li>
+            ))}
+          </ul>
+        );
+      }
       return (
         <ol className={cn(PROSE, "space-y-3")}>
           {block.items.map((item, i) => (
@@ -25,10 +89,92 @@ export function Block({ block }: { block: ArticleBlock }) {
                 // Piksel madde işareti: sitenin piksel dili
                 <span aria-hidden className="mt-[11px] size-[7px] shrink-0 bg-[#111]" />
               )}
-              <span>{item}</span>
+              <span>
+                <RichText text={item} />
+              </span>
             </li>
           ))}
         </ol>
+      );
+
+    case "table":
+      return (
+        // Dar ekranda tablo kendi içinde yatay kayar; sayfa taşmaz
+        <div className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
+          <table className="w-full min-w-[520px] border-separate border-spacing-0 overflow-hidden rounded-[20px] text-left text-[15px] leading-[1.45] ring-1 ring-black/10">
+            <caption className="caption-bottom pt-3 text-left text-[13px] text-neutral-500">{block.caption}</caption>
+            <thead className="bg-[#111] text-white">
+              <tr>
+                {block.head.map((h) => (
+                  <th key={h} scope="col" className="px-5 py-3.5 font-mono text-[11px] font-bold uppercase tracking-[0.1em]">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.rows.map((row) => (
+                <tr key={row[0]} className="even:bg-[#F7F7F7]">
+                  {row.map((cell, j) =>
+                    j === 0 ? (
+                      <th key={j} scope="row" className="border-t border-black/[0.06] px-5 py-3.5 font-medium text-[#111]">
+                        {cell}
+                      </th>
+                    ) : (
+                      <td key={j} className="border-t border-black/[0.06] px-5 py-3.5 text-[#333]">
+                        <RichText text={cell} />
+                      </td>
+                    ),
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+
+    case "faq":
+      // Açık liste: tüm cevaplar görünür (şemadaki metinle birebir aynı), akordeon yok
+      return (
+        <div className="divide-y divide-black/[0.08] border-y border-black/[0.08]">
+          {block.items.map((item) => (
+            <div key={item.q} className="py-6">
+              <h3 className="text-[clamp(19px,1.4vw,22px)] font-medium leading-[1.25] tracking-[-0.025em] text-[#111]">{item.q}</h3>
+              <p className="mt-2.5 text-[16px] leading-[1.6] text-[#333]">
+                <RichText text={item.a} />
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+
+    case "cta":
+      return (
+        <Reveal>
+          <aside className="rounded-[28px] bg-[#111] p-7 text-white md:p-9">
+            <p className="text-[clamp(22px,1.8vw,28px)] font-medium leading-[1.15] tracking-[-0.03em]">{block.title}</p>
+            <p className="mt-3 max-w-[46ch] text-[16px] leading-[1.55] text-white/65">{block.text}</p>
+            <div className="mt-7 flex flex-wrap gap-2.5">
+              {block.actions.map((a, i) => (
+                <SmartLink
+                  key={a.href}
+                  href={a.href}
+                  className={cn(
+                    "group inline-flex items-center gap-2.5 rounded-[12px] px-4 py-3 text-[15px] font-semibold tracking-[-0.01em] transition-[filter,background-color]",
+                    i === 0 ? "bg-accent text-accent-ink hover:brightness-110" : "bg-white/10 text-white hover:bg-white/20",
+                  )}
+                >
+                  {a.label}
+                  <PixelIcon
+                    variant="arrow"
+                    className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
+                    cellClassName={i === 0 ? "fill-accent-ink" : "fill-white"}
+                  />
+                </SmartLink>
+              ))}
+            </div>
+          </aside>
+        </Reveal>
       );
 
     case "quote":
@@ -76,7 +222,9 @@ export function Block({ block }: { block: ArticleBlock }) {
             <p className="mt-4 text-[clamp(20px,1.6vw,24px)] font-medium leading-[1.2] tracking-[-0.025em] text-[#111]">
               {block.title}
             </p>
-            <p className="mt-3 text-[16px] leading-[1.55] text-[#333]">{block.text}</p>
+            <p className="mt-3 text-[16px] leading-[1.55] text-[#333]">
+              <RichText text={block.text} />
+            </p>
           </aside>
         </Reveal>
       );

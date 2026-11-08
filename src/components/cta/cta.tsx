@@ -94,17 +94,18 @@ export function Cta() {
           Birlikte çalışalım
         </p>
         <h2 className="relative mt-6 text-[clamp(36px,3.6vw,64px)] font-medium leading-[1.08] tracking-[-0.045em]">
-          <span className="text-[#A3A3A3]">Fikrin hazırsa,</span>
+          <span className="text-[#A3A3A3]">Aklında bir şey varsa,</span>
           <br />
-          gerisini birlikte kuralım.
+          konuşarak başlayalım.
         </h2>
         <p className="relative mt-6 max-w-[520px] text-[clamp(15px,1.05vw,18px)] leading-[1.6] text-neutral-500">
-          Markanın hangi aşamada olduğunu anlat; sana uygun yol haritasını birlikte çıkaralım.
+          Yeni bir işe başlıyor ya da mevcut işini büyütmek istiyor olabilirsin. Ne yapmak istediğini anlat, birlikte en
+          doğru yolu bulalım.
         </p>
 
         <a href={talepUrl({ konu: "proje" })} className="group relative mt-10 flex items-center gap-1.5">
           <span className="flex h-12 items-center rounded-[10px] bg-[#111] px-5 text-[15px] font-semibold tracking-[-0.02em] text-white">
-            Projeni başlat
+            Ücretsiz görüşme
           </span>
           <span className="grid size-12 place-items-center rounded-[10px] bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
             <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-accent-ink" />

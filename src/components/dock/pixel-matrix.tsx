@@ -32,6 +32,10 @@ export const GLYPHS = {
   check: [9, 13, 15, 17, 21],
   bubble: [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 21],
   trend: [2, 3, 4, 8, 9, 12, 14, 16, 20],
+  // Mekanda özellikleri
+  wifi: [1, 2, 3, 5, 9, 11, 12, 13, 22],
+  clock: [1, 2, 3, 5, 7, 9, 10, 12, 13, 14, 15, 19, 21, 22, 23],
+  music: [2, 3, 4, 7, 9, 12, 15, 16, 17, 20, 21],
   // Çerez sorusu: yuvarlak kurabiye (sönük pikseller çikolata parçası) ve yenme adımları
   cookie: [1, 2, 3, 5, 6, 8, 9, 10, 11, 12, 14, 15, 17, 18, 19, 21, 22, 23],
   cookieBite: [1, 2, 5, 6, 8, 10, 11, 12, 15, 17, 18, 19, 21, 22, 23],

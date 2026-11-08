@@ -41,7 +41,8 @@ const JUMP_KEY = "ox-feed-jump";
 const heightOf = (card: FeedCard) => (card.type === "image" && card.short ? HEIGHT.post : HEIGHT[card.type]);
 
 const COUNTS: Record<FeedFilter, number> = {
-  tumu: READING_ORDER.filter((c) => categoryOf(c)).length,
+  // "Tümü" sekmesi bento'yu gösterir: sayaç da yalnız bento'daki kartları sayar
+  tumu: FEED_COLUMNS.flat().filter((c) => categoryOf(c)).length,
   calisma: READING_ORDER.filter((c) => categoryOf(c) === "calisma").length,
   blog: READING_ORDER.filter((c) => categoryOf(c) === "blog").length,
 };

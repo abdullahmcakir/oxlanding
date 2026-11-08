@@ -8,21 +8,23 @@
 // olduğunu hissettirir.
 export const STORY = {
   lead: "Ekranda güzel görünen değil, arkada da çalışan işler yapıyoruz.",
-  // İki tonlu paragraf: ilk cümle koyu, devamı soluk
-  strong: "OX Dijital'i kurmadan önce ajans tarafında da marka tarafında da çalıştık.",
-  soft: "Gördüğümüz hep aynıydı: güzel bir site teslim ediliyor, ama kimse onun ne kadar müşteri getirdiğini ölçmüyor. Biz tasarımı, yazılımı ve reklamı tek masada toplayıp her işi sonucuyla birlikte teslim etmek için yola çıktık.",
+  // İki tonlu paragraf: ilk iki cümle koyu, devamı soluk
+  strong: "Bir web sitesi güzel görünebilir, bir reklam dikkat çekebilir. Ama bunların işletmeye ne kazandırdığı da önemli.",
+  soft: "OX Dijital'de tasarım, yazılım ve pazarlamayı bu yüzden birlikte düşünüyoruz. Yapılan işin yalnızca teslim edildiği gün değil, sonrasında da işe yaramasını önemsiyoruz.",
 };
 
-export const LETTER = {
-  title: "OX Dijital'in yaklaşımı",
+// İmza `name` varsa görünür; köşedeki portre rozeti ayrıca `initials` ister.
+export const LETTER: { title: string; paragraphs: string[]; name?: string; role: string; initials?: string } = {
+  title: "Neden OX Dijital?",
+  // Kurucunun ağzından kısa manifesto (birinci tekil şahıs)
   paragraphs: [
-    "\"Siteyi teslim edip geçelim\" anlayışını baştan reddediyoruz. Bizim için iş, markanın ekranda nasıl göründüğü kadar arka planda nasıl çalıştığı ve nasıl büyüdüğüdür.",
-    "Tasarımı, yazılımı ve reklamı aynı masada yürütüyoruz. Çünkü güzel bir tasarım, doğru kurulmuş bir altyapı ve ölçülebilir bir reklam olmadan uzun vadede değer üretmiyor.",
-    "Her projede kimin neyi, ne zaman yapacağını baştan açıkça konuşuyoruz. Süreci OX Panel'den adım adım takip ediyorsun; sürpriz yaşamıyorsun.",
+    "Bir işletmenin dijitalde iyi görünmesi gerektiğine inanıyorum. Ama sadece iyi görünmesi yetmez. Yapılan işin bir karşılığı olmalı.",
+    "Bir web sitesi gerçekten işe yaramalı. Reklama ayrılan bütçenin nereye gittiği bilinmeli. Tasarım yalnızca güzel olduğu için değil, doğru olduğu için tercih edilmeli.",
+    "OX Dijital'de kurmaya çalıştığım çalışma anlayışı bu. Müşterinin ne satın aldığını bildiği, yapılan işi takip edebildiği ve karşısında gerçekten muhatap bulabildiği bir ekip.",
+    "Her şeyi bildiğimizi veya her sorunu çözebileceğimizi iddia etmiyorum. Ama üstlendiğimiz işi sahiplenmek, açık konuşmak ve daha iyisini yapmak için uğraşmak konusunda ciddiyiz.",
   ],
-  name: "Ad Soyad",
+  name: "Abdullah Çakır",
   role: "Kurucu · OX Dijital",
-  initials: "AS",
 };
 
 // "Neye inanıyoruz": müşteriye dönük ilkeler; her biri bir söz gibi okunmalı.
@@ -30,25 +32,28 @@ export const LETTER = {
 export const BELIEFS = [
   { title: "İyi iş ölçülür.", text: "Güzel görünmek başlangıç. Her işi, getirdiği sonuçla değerlendiririz.", glyph: "bars" },
   { title: "Sürpriz yok.", text: "Kapsam, takvim ve maliyet baştan nettir; her adım onayından geçer.", glyph: "check" },
-  { title: "Tek masa, tek sorumluluk.", text: "Tasarım, yazılım ve reklam aynı masada. Topu kimse kimseye atmaz.", glyph: "plus" },
+  { title: "Sorumluluk bizde.", text: "İşin hangi aşamada olduğunu bilirsin. Bir sorun çıktığında kiminle görüşeceğini de.", glyph: "plus" },
   { title: "Önce dinleriz.", text: "Ne istediğini anlamadan ne yapacağımıza karar vermeyiz.", glyph: "bubble" },
   { title: "Bitince bitmez.", text: "Yayına aldığımız her şeyi izler, iyileştirmeye devam ederiz.", glyph: "trend" },
 ] as const;
 
 // "Net olalım": yaptıklarımız ve bilerek yapmadıklarımız. Sektörde güvensizlik abartılı vaatlerden doğar;
 // neyi yapmadığını açıkça söyleyen bir ajansa daha kolay inanılır. Yapmayız listesi gerçek bir taahhüt olmalı.
+// Aynı sıradaki maddeler karşılıklıdır: masaüstünde aynı satırda, mobilde art arda gösterilir (sayılar eşit kalmalı).
 export const CANDOR = {
   do: [
-    "Her işi ölçülebilir bir hedefle başlatırız.",
-    "Kapsamı, takvimi ve maliyeti işe başlamadan yazılı netleştiririz.",
-    "Her adımı onayına sunar, süreci OX Panel'den görünür tutarız.",
-    "Teslim ettiğimiz dosyalar, hesaplar ve kodlar tamamen senindir.",
+    "Beğenmediğin tasarımı neden beğenmediğini konuşur, birlikte düzeltiriz.",
+    "Küçük bir değişiklik için de ulaşabileceğin bir muhatabın olur.",
+    "Yapamayacağımız bir iş varsa en baştan söyleriz.",
+    "İhtiyacına uygun çözümü öneririz; bazen daha basiti yeterlidir.",
+    "Sadece istediğin işi yapmakla kalmaz, o işten daha fazla verim alman için neler yapabileceğimizi de konuşuruz.",
   ],
   dont: [
-    "Garantili \"Google'da 1. sıra\" vaat etmeyiz.",
-    "Seni uzun ve çıkışı zor sözleşmelere kilitlemeyiz.",
-    "Hazır şablonu özel tasarım diye satmayız.",
-    "Ölçemediğimiz bir başarıyı rapora yazmayız.",
+    "\"Biz tasarımcıyız, doğrusu bu\" diyerek istemediğin bir işi sana kabul ettirmeyiz.",
+    "İki satır yazı değişecek diye seni günlerce peşimizden koşturmayız.",
+    "Sırf müşteriyi kaçırmamak için her işe \"hallederiz\" demeyiz.",
+    "İki sayfalık bir iş için sana gereksiz yere koca bir sistem satmayız.",
+    "\"İstediğin işi yaptık, gerisi sana kalmış.\" deyip işin içinden çıkmayız.",
   ],
 };
 
@@ -78,17 +83,17 @@ export const DISCIPLINES = [
   },
   {
     title: "Yazılım",
-    text: "Hızlı açılan, kolay yönetilen, büyüdükçe yük olmayan siteler ve paneller kurarız.",
+    text: "İşletmenin ihtiyaçlarına göre yazılımlar geliştirir, mevcut sistemleri birbirine bağlar ve iş süreçlerini kolaylaştırırız. Teknolojiyi işine uydururuz, işini teknolojiye değil.",
     pattern: "checker",
   },
   {
     title: "Reklam",
-    text: "Bütçeyi en çok dönüş getiren kanala yönlendirir, her kampanyayı rakamlarla izleriz.",
+    text: "Hedef kitleni ve bütçeni dikkate alarak kampanyalarını planlar, sonuçlarını takip eder ve gerektiğinde düzenlemeler yaparız.",
     pattern: "bars",
   },
   {
     title: "İçerik ve sosyal medya",
-    text: "Takipçiyi müşteriye çeviren içerikleri planlar, üretir ve düzenli yayında tutarız.",
+    text: "Markanın diline uygun içerikler planlar ve üretiriz. Sosyal medya hesaplarının düzenli ve tutarlı bir şekilde yönetilmesini sağlarız.",
     pattern: "diag",
   },
 ] as const;

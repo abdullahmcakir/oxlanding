@@ -32,7 +32,7 @@ export function ServiceHero({ page }: { page: ServicePage }) {
 
         <div className="relative px-4 md:px-[4.5vw]">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">
-            Hizmetler · {service.title}
+            {hero.eyebrow ?? `Hizmetler · ${service.title}`}
           </p>
           <h1 className="mt-5 max-w-[12em] text-[clamp(40px,5.2vw,100px)] font-medium leading-[1.04] tracking-[-0.045em] text-white">
             {hero.title.map((line, i) => (
@@ -45,6 +45,8 @@ export function ServiceHero({ page }: { page: ServicePage }) {
                 >
                   {line}
                 </motion.span>
+                {/* Satırlar blok span: boşluk olmadan metin "ileişletmenizi" diye bitişik okunuyordu (H1, arama motoru) */}
+                {i < hero.title.length - 1 && " "}
               </span>
             ))}
           </h1>
@@ -68,7 +70,7 @@ export function ServiceHero({ page }: { page: ServicePage }) {
               href={talepUrl({ hizmet: service.slug })}
               className="group inline-flex items-center gap-2.5 rounded-[14px] bg-accent py-3.5 pl-5 pr-4 text-[15px] font-semibold tracking-[-0.01em] text-accent-ink transition-[filter] hover:brightness-110"
             >
-              Projeni konuşalım
+              {hero.primaryLabel ?? "Projeni konuşalım"}
               <PixelIcon
                 variant="arrow"
                 className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
@@ -76,10 +78,10 @@ export function ServiceHero({ page }: { page: ServicePage }) {
               />
             </a>
             <Link
-              href="#paketler"
+              href={hero.secondary?.href ?? "#paketler"}
               className="inline-flex items-center rounded-[14px] border border-white/20 bg-white/10 px-5 py-3.5 text-[15px] font-semibold tracking-[-0.01em] text-white backdrop-blur-md transition-colors hover:bg-white/20"
             >
-              Paketleri gör
+              {hero.secondary?.label ?? "Paketleri gör"}
             </Link>
           </motion.div>
         </div>

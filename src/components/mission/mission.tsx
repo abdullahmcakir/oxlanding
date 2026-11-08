@@ -7,18 +7,15 @@ import { cn } from "@/lib/utils";
 
 // Düzen referansı: krestin.webflow.io ana sayfası, "As a leading marketing agency…" bölümü.
 // Başlığın başındaki kutu Krestin'de video + logo; şimdilik hareketli yeşil degrade, video gelince değişecek.
-// Kartlardaki bilgiler ana sayfadaki rakam kutularıyla (120+, %98, 15+…) çakışmasın diye farklı seçildi.
-// TÜMÜ YER TUTUCU: metinler, kuruluş yılı ve disiplinler gerçek içerikle değiştirilecek.
+// Bilerek kuruluş yılı, rakam ya da istatistik yok.
 
 const HEADING =
-  "Dijital ajans olarak strateji, yaratıcılık ve veriyi aynı masada buluşturuyor; markaların bugünün hızlı pazarında öne çıkmasını sağlıyoruz.";
+  "OX Dijital'de reklam, tasarım ve yazılımı birbirinden ayrı işler olarak görmüyoruz. İşletmeni tanıyor, neye ihtiyacın olduğunu birlikte belirliyor ve bütün süreci tek ekip olarak yürütüyoruz.";
 
-// YER TUTUCU: gerçek söz, isim, unvan ve portre gelecek.
-const QUOTE = {
-  text: "Her markanın dijitalde hak ettiği yeri bulması için çalışıyoruz. Bizim için iyi iş, ölçülebilen iştir.",
-  name: "Ad Soyad",
+// Kurucunun adı tanımlanana kadar imzada yalnız unvan görünür (portre ve isim gizli). Portre gelince next/image.
+const QUOTE: { text: string; role: string; name?: string; initials?: string } = {
+  text: "Bir web sitesi, güzel bir logo veya reklam kampanyası tek başına yeterli olmayabilir. Biz işin bütününe bakıyor, gerçekten ihtiyacın olan şeylere odaklanıyoruz.",
   role: "Kurucu · OX Dijital",
-  initials: "AS",
 };
 
 const EASE_OUT = [0.22, 1, 0.36, 1] as const;
@@ -51,16 +48,22 @@ export function Mission() {
               </BlurIn>
               <BlurIn index={1}>
                 <figcaption className="flex items-center gap-4 border-t border-black/[0.08] pt-6">
-                  {/* Yer tutucu portre: fotoğraf gelince next/image ile değişecek */}
-                  <span
-                    aria-hidden
-                    className="grid size-14 shrink-0 place-items-center rounded-full bg-[#111] text-[15px] font-medium tracking-[-0.02em] text-white"
-                  >
-                    {QUOTE.initials}
-                  </span>
+                  {QUOTE.name && (
+                    <span
+                      aria-hidden
+                      className="grid size-14 shrink-0 place-items-center rounded-full bg-[#111] text-[15px] font-medium tracking-[-0.02em] text-white"
+                    >
+                      {QUOTE.initials}
+                    </span>
+                  )}
                   <span>
-                    <span className="block text-[17px] tracking-[-0.015em] text-[#111]">{QUOTE.name}</span>
-                    <span className="mt-1 block font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">
+                    {QUOTE.name && <span className="block text-[17px] tracking-[-0.015em] text-[#111]">{QUOTE.name}</span>}
+                    <span
+                      className={cn(
+                        "block font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500",
+                        QUOTE.name && "mt-1",
+                      )}
+                    >
                       {QUOTE.role}
                     </span>
                   </span>
@@ -70,11 +73,11 @@ export function Mission() {
 
             <div className="grid gap-2 sm:grid-cols-2">
               <BlurIn className="flex flex-col gap-2">
-                <CardHeader icon={<CalendarIcon />}>2018&apos;den beri</CardHeader>
+                <CardHeader icon={<CalendarIcon />}>Tasarım, yazılım ve pazarlama</CardHeader>
                 <BadgeCard />
               </BlurIn>
               <BlurIn index={1} className="flex flex-col gap-2">
-                <CardHeader icon={<TeamIcon />}>5 disiplin, tek ekip</CardHeader>
+                <CardHeader icon={<TeamIcon />}>Tek ekip, tek muhatap</CardHeader>
                 <DisciplinesCard />
               </BlurIn>
             </div>
@@ -168,7 +171,8 @@ function BadgeCard() {
       </div>
 
       <p className="relative max-w-[34ch] text-[16px] leading-[1.4] tracking-[-0.01em] text-[#111]">
-        Kurulduğumuz günden bu yana farklı ölçeklerden markalarla ölçülebilir işler üretiyoruz.
+        Her işletmenin ihtiyacı farklı. Bu yüzden hazır bir çözümü herkese uygulamak yerine, yapılacak işi işletmenin
+        hedeflerine göre planlıyoruz.
       </p>
     </div>
   );
@@ -208,7 +212,8 @@ function DisciplinesCard() {
       </ul>
 
       <p className="relative mx-auto max-w-[34ch] text-[16px] leading-[1.4] tracking-[-0.01em] text-white">
-        Reklam, tasarım, yazılım, içerik ve SEO aynı masada: tek muhatap, tek plan.
+        Web sitesi, reklam, tasarım ve SEO çalışmalarını birbirinden koparmadan, aynı planın parçaları olarak ele
+        alıyoruz.
       </p>
     </div>
   );

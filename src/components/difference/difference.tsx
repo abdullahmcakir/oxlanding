@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
-import { animate, motion, useInView, useMotionValue, useTransform } from "motion/react";
+import { useRef } from "react";
+import { motion, useInView } from "motion/react";
 import { Reveal } from "@/components/about/about-cards";
 import { Logo } from "@/components/navbar/logo";
 import { SplitHeading } from "@/components/ui/section-parts";
@@ -10,9 +10,9 @@ import { cn } from "@/lib/utils";
 
 // Düzen referansı: tbd® şablonu "case study" bento'su.
 // Görsel dil: navbar menü paneli (#171717 çerçeve, #070707 kartlar, mono etiketler, yeşil çubuklar).
-// Metinler, rakam ve yorum YER TUTUCU.
+// Bilerek rakam, müşteri yorumu ya da doğrulanmamış başarı iddiası yok.
 
-const TAGS = ["Reklam", "Tasarım", "Yazılım", "SEO", "Otomasyon"];
+const TAGS = ["Reklam", "Tasarım", "Yazılım", "SEO"];
 
 // Barkod çizgi genişlikleri (px)
 const BARCODE = [2, 1, 3, 1, 1, 2, 4, 1, 2, 1, 3, 2, 1, 1, 3, 1, 2, 4, 1, 1, 2, 3, 1, 2, 1, 1, 3];
@@ -26,7 +26,7 @@ export function Difference() {
     <section id="farkimiz" className="bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
       <SplitHeading
         strong="Farkımız."
-        soft="Diğer dijital ajanslardan ayrıldığımız yer burası."
+        soft="Birden fazla ekiple uğraşmadan, bütün dijital işlerini tek yerden yönet."
       />
 
       {/* Bento: navbar menü paneliyle aynı çerçeve/kart dili */}
@@ -34,9 +34,9 @@ export function Difference() {
         <div className="grid gap-1.5 rounded-[32px] bg-[#171717] p-1.5 lg:h-[clamp(640px,52vw,880px)] lg:grid-cols-4 lg:grid-rows-2">
           <VisualCard />
           <ProblemCard />
-          <ImpactCard />
+          <ControlCard />
           <OneRoofCard />
-          <ReviewCard />
+          <ContactCard />
         </div>
       </Reveal>
     </section>
@@ -50,6 +50,16 @@ function Card({ className, children }: { className?: string; children: React.Rea
     <div className={cn("relative flex flex-col overflow-hidden rounded-[26px] bg-[#070707] p-7 text-white md:p-8", className)}>
       {children}
     </div>
+  );
+}
+
+/** Kartın alt kısmı: beyaz ana cümle + küçük açıklama */
+function Statement({ title, text }: { title: string; text: string }) {
+  return (
+    <>
+      <p className="text-[clamp(18px,1.35vw,24px)] leading-[1.3] tracking-[-0.02em] text-white">{title}</p>
+      <p className="mt-3 max-w-[300px] text-[13px] leading-[1.45] text-white/60">{text}</p>
+    </>
   );
 }
 
@@ -109,50 +119,39 @@ function ProblemCard() {
     <Card className="min-h-[340px] justify-between">
       <Tag>Sorun</Tag>
       <p className="text-[clamp(18px,1.35vw,24px)] leading-[1.3] tracking-[-0.02em] text-white/45">
-        <span className="text-white">Ajanslar parça parça çalışır.</span> Reklamı biri, siteyi
-        biri, tasarımı bir başkası yapar; sonuçtan kimse sorumlu olmaz.
+        <span className="text-white">Bir iş için üç farklı kişiyle görüşmek zorunda değilsin.</span> Web siten ayrı,
+        reklamların ayrı, tasarım işlerin ayrı yerde olunca hepsini takip etmek de sana kalıyor.
       </p>
     </Card>
   );
 }
 
-function ImpactCard() {
+function ControlCard() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const value = useMotionValue(0);
-  const text = useTransform(value, (v) => `${v.toFixed(1)}x`);
-
-  // Ekrana girince sıfırdan sayarak yükselir
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(value, 3.2, { duration: 1.8, ease: [0.22, 1, 0.36, 1] });
-    return () => controls.stop();
-  }, [inView, value]);
 
   return (
     <Card className="min-h-[340px] justify-between">
-      <Tag>Etki</Tag>
+      <Tag>Kontrol</Tag>
       <div ref={ref}>
-        <div className="flex items-center gap-5">
-          {/* Yeşil çubuklar sırayla dolar (menüdeki müsaitlik kartının dili) */}
-          <div className="flex h-[clamp(48px,4.2vw,72px)] gap-[5px]" aria-hidden>
-            {Array.from({ length: 8 }, (_, i) => (
-              <motion.span
-                key={i}
-                className={cn("w-[3px] origin-bottom rounded-full", i < 6 ? "bg-accent" : "bg-white/15")}
-                initial={{ scaleY: 0 }}
-                animate={inView ? { scaleY: 1 } : undefined}
-                transition={{ duration: 0.5, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-              />
-            ))}
-          </div>
-          <motion.p className="text-[clamp(52px,4.6vw,84px)] leading-none tracking-[-0.04em] tabular-nums">
-            {text}
-          </motion.p>
+        {/* Yeşil çubuklar sırayla dolar (menüdeki müsaitlik kartının dili) */}
+        <div className="flex h-[clamp(40px,3.4vw,56px)] gap-[5px]" aria-hidden>
+          {Array.from({ length: 8 }, (_, i) => (
+            <motion.span
+              key={i}
+              className={cn("w-[3px] origin-bottom rounded-full", i < 6 ? "bg-accent" : "bg-white/15")}
+              initial={{ scaleY: 0 }}
+              animate={inView ? { scaleY: 1 } : undefined}
+              transition={{ duration: 0.5, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+            />
+          ))}
         </div>
-        <p className="mt-4 max-w-[240px] text-[13px] leading-[1.45] text-white/60">
-          Tek ekip, tek hedef: müşterilerimizde ortalama dönüşüm artışı.
-        </p>
+        <div className="mt-6">
+          <Statement
+            title="Her şey gözünün önünde."
+            text="Projelerinin durumunu, taleplerini ve devam eden işleri tek panelden takip et."
+          />
+        </div>
       </div>
     </Card>
   );
@@ -163,9 +162,10 @@ function OneRoofCard() {
     <Card className="min-h-[340px] justify-between">
       <Tag>Tek çatı altında</Tag>
       <div>
-        <p className="max-w-[300px] text-[13px] leading-[1.45] text-white/60">
-          Reklam, tasarım ve yazılım aynı masada. Yeni bir ekip ya da yeni bir araç öğrenmenize gerek yok.
-        </p>
+        <Statement
+          title="Reklam, tasarım ve yazılım aynı ekipte."
+          text="İşlerin birbirinden kopmadan ilerlesin. Farklı hizmetler için sürekli yeni bir ekip aramak zorunda kalma."
+        />
         <ul className="mt-5 flex flex-wrap gap-2">
           {TAGS.map((t) => (
             <li
@@ -181,39 +181,15 @@ function OneRoofCard() {
   );
 }
 
-function ReviewCard() {
+function ContactCard() {
   return (
     <Card className="min-h-[340px] justify-between bg-[#0e0e0e]">
-      <div className="flex items-center justify-between font-mono text-[10px] font-bold uppercase tracking-[0.12em]">
-        <span className="flex items-center gap-2 text-white">
-          <span className="flex gap-0.5 text-white" aria-label="5 üzerinden 5 yıldız">
-            {Array.from({ length: 5 }, (_, i) => (
-              <svg key={i} viewBox="0 0 24 24" className="size-3" fill="currentColor" aria-hidden>
-                <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" />
-              </svg>
-            ))}
-          </span>
-          5.0/5
-        </span>
-        <span className="text-white/45">Doğrulanmış yorum</span>
-      </div>
-
+      <Tag>İletişim</Tag>
       <div>
-        <p className="text-[clamp(18px,1.35vw,24px)] leading-[1.3] tracking-[-0.02em] text-white/45">
-          <span className="text-white">&ldquo;Üç ayrı ajansla uğraşmayı bıraktık,</span> her şey tek
-          ekipte ve sonuçlar ilk aydan görünür oldu.&rdquo;
-        </p>
-        <div className="mt-6 flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-full bg-gradient-to-br from-[#C9B8F2] to-[#7D64C8] text-[12px] font-semibold">
-            AY
-          </span>
-          <div>
-            <p className="text-[14px] font-medium leading-tight">Ad Soyad</p>
-            <p className="mt-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/45">
-              Pazarlama müdürü
-            </p>
-          </div>
-        </div>
+        <Statement
+          title="Bir şey sormak için toplantı beklemene gerek yok."
+          text="Talebini panelden ilet, ne aşamada olduğunu takip et. Aynı konuyu tekrar tekrar anlatmak zorunda kalma."
+        />
       </div>
     </Card>
   );

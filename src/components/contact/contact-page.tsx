@@ -1,6 +1,6 @@
 import { Kalam } from "next/font/google";
 import { Reveal } from "@/components/about/about-cards";
-import { MiniGlyph, PixelMatrix } from "@/components/dock/pixel-matrix";
+import { PixelMatrix } from "@/components/dock/pixel-matrix";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
 import { CONTACT_EMAIL, SOCIALS, talepUrl } from "@/lib/links";
 import { ContactComposer } from "./contact-composer";
@@ -11,16 +11,11 @@ import { GiantPixels } from "./giant-pixels";
 // hızlı soru (WhatsApp'a hazır mesaj) · ücretsiz görüşme (ana hedef, ortada ve açık renk) · iletişim bilgileri.
 // Referanstaki renkli gradient yerine sitenin piksel dili: bütün zemini kaplayan büyük kare ızgara,
 // rastgele kareleri yanıp sönerek canlı durur (GiantPixels).
-// Harita gömülmez (sayfa açılır açılmaz Google'a veri gitmesin, çerez onayı gerekmesin): piksel harita + bağlantı.
-// Telefon ve adres YER TUTUCU.
+// Yalnız doğrulanmış bilgiler gösterilir: telefon, çalışma saatleri ve ofis adresi tanımlanınca CONTACT'a eklenir
+// (yer tutucu numara / adres bilerek yok). Harita bu yüzden şimdilik yok.
 
 const CONTACT = {
   email: CONTACT_EMAIL,
-  phone: "+90 (500) 000 00 00",
-  phoneHref: "tel:+905000000000",
-  address: "Örnek Mah. Örnek Cad. No: 1, İstanbul",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Istanbul",
-  hours: "Hafta içi 09:00–18:00",
   socials: SOCIALS,
 };
 
@@ -49,17 +44,8 @@ export function ContactPage() {
       </header>
 
       <div className="mx-auto mt-12 grid max-w-[1200px] gap-3 md:mt-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)_minmax(0,0.95fr)]">
-        <Reveal className="h-full">
-          <div className="flex h-full flex-col rounded-[28px] bg-[#111] p-6 ring-1 ring-white/[0.08] md:p-7">
-            <p className={`${LABEL} text-white/50`}>Hızlı soru</p>
-            <p className="mb-6 mt-2 text-[20px] font-medium leading-[1.2] tracking-[-0.025em] text-white">
-              Aklındakini yaz, hemen dönelim.
-            </p>
-            <ContactComposer />
-          </div>
-        </Reveal>
-
-        <Reveal index={1} className="h-full">
+        {/* Ana aksiyon: HTML'de ilk (mobilde ve klavyede ilk sırada), masaüstünde ortada */}
+        <Reveal index={1} className="h-full lg:order-2">
           <div className="flex h-full flex-col rounded-[28px] bg-[#F7F7F7] p-6 md:p-7">
             <div className="flex items-start justify-between">
               {/* Referanstaki kişi fotoğrafı yerine OX Piksel el sallar */}
@@ -67,20 +53,21 @@ export function ContactPage() {
                 <PixelMatrix glyph="smile" />
               </span>
               <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-accent-ink">
-                Önerilen
+                Ücretsiz ön görüşme
               </span>
             </div>
-            <p className="mt-7 text-[clamp(20px,1.6vw,24px)] leading-[1.25] tracking-[-0.025em] text-[#111]">
-              <span className="font-medium">Konuşarak mı ilerleyelim?</span>{" "}
-              <span className="text-neutral-500">
-                Ücretsiz online görüşmede projeni dinleyelim, yol haritanı birlikte çizelim.
-              </span>
+            <h2 className="mt-7 text-[clamp(22px,1.8vw,28px)] font-medium leading-[1.15] tracking-[-0.03em] text-[#111]">
+              Önce bir tanışalım.
+            </h2>
+            <p className="mt-2 text-[15px] leading-[1.5] tracking-[-0.01em] text-neutral-500">
+              İşini, aklındaki projeyi veya çözmek istediğin sorunu konuşalım. Neye ihtiyacın olduğunu birlikte değerlendirir, nasıl
+              ilerleyebileceğimizi netleştiririz.
             </p>
             <span className="mt-4 w-fit rounded-full bg-white px-3 py-1.5 text-[13px] text-neutral-600 ring-1 ring-black/[0.06]">
-              yaklaşık 30 dakika · bağlayıcı değil
+              Yaklaşık 30 dakika · Ücretsiz
             </span>
             <ul className="mt-6 space-y-2.5 text-[14px] text-[#333]">
-              {["OX Panel'den sana uyan saati seç", "İhtiyacını ve hedefini konuşalım", "Görüşme sonunda net bir plan al"].map(
+              {["Sana uygun bir görüşme saati seç.", "Projeni ve beklentilerini konuşalım.", "Sonraki adımları birlikte netleştirelim."].map(
                 (t) => (
                   <li key={t} className="flex items-center gap-2.5">
                     <span aria-hidden className="size-[6px] bg-[#111]" />
@@ -92,9 +79,9 @@ export function ContactPage() {
             <div className="mt-auto pt-8">
               <a
                 href={talepUrl()}
-                className="group flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#111] text-[15px] font-semibold tracking-[-0.01em] text-white transition-colors hover:bg-black"
+                className="group flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#111] text-[15px] font-semibold tracking-[-0.01em] text-white outline-none transition-colors hover:bg-black focus-visible:ring-4 focus-visible:ring-accent/50"
               >
-                Ücretsiz görüşme ayarla
+                Ücretsiz görüşme planla
                 <PixelIcon
                   variant="arrow"
                   className="size-[8px] transition-transform duration-300 group-hover:translate-x-0.5"
@@ -104,66 +91,44 @@ export function ContactPage() {
           </div>
         </Reveal>
 
-        <Reveal index={2} className="h-full">
+        <Reveal className="h-full lg:order-1">
+          <div className="flex h-full flex-col rounded-[28px] bg-[#111] p-6 ring-1 ring-white/[0.08] md:p-7">
+            <p className={`${LABEL} text-white/50`}>Hızlı soru</p>
+            <h2 className="mt-2 text-[20px] font-medium leading-[1.2] tracking-[-0.025em] text-white">Bir şey mi soracaktın?</h2>
+            <p className="mb-6 mt-2 text-[14px] leading-[1.5] text-white/55">
+              Projenle ilgili bir detay olabilir, yalnızca fiyat öğrenmek istiyor olabilirsin. Aklındakini yaz, WhatsApp üzerinden
+              konuşalım.
+            </p>
+            <ContactComposer />
+          </div>
+        </Reveal>
+
+        <Reveal index={2} className="h-full lg:order-3">
           {/* Düz zemin: cam (backdrop-blur) arkadaki yanan kareleri bulanık yuvarlak lekeye çeviriyordu */}
           <div className="flex h-full flex-col rounded-[28px] bg-[#161616] p-6 text-white ring-1 ring-white/10 md:p-7">
             <p className={`${LABEL} text-white/50`}>İletişim bilgileri</p>
-            <dl className="mt-5 space-y-4 text-[15px] tracking-[-0.01em]">
-              <div>
-                <dt className="text-[13px] text-white/50">E-posta</dt>
-                <dd>
-                  <a href={`mailto:${CONTACT.email}`} className="underline-offset-4 hover:underline">
-                    {CONTACT.email}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[13px] text-white/50">Telefon</dt>
-                <dd>
-                  <a href={CONTACT.phoneHref} className="tabular-nums underline-offset-4 hover:underline">
-                    {CONTACT.phone}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[13px] text-white/50">Çalışma saatleri</dt>
-                <dd>{CONTACT.hours}</dd>
-              </div>
+            <dl className="mt-5 text-[15px] tracking-[-0.01em]">
+              <dt className="text-[13px] text-white/50">E-posta</dt>
+              <dd className="mt-1">
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                  className="rounded-sm text-[clamp(17px,1.3vw,20px)] underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-accent/60"
+                >
+                  {CONTACT.email}
+                </a>
+              </dd>
             </dl>
 
-            {/* Piksel harita: gömülü harita yerine; tıklayınca Google Haritalar'da açılır */}
-            <a
-              href={CONTACT.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group mt-6 block overflow-hidden rounded-[20px] ring-1 ring-white/10"
-            >
-              <span
-                className="relative grid h-[120px] place-items-center bg-[#0d0d0d]"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(circle, rgb(255 255 255 / 0.12) 1px, transparent 1.2px)",
-                  backgroundSize: "12px 12px",
-                }}
-              >
-                <span className="transition-transform duration-500 group-hover:-translate-y-1">
-                  <MiniGlyph glyph="pin" cell={7} className="text-accent" />
-                </span>
-              </span>
-              <span className="flex items-center justify-between gap-3 bg-white/[0.04] px-4 py-3 text-[13px]">
-                <span className="text-white/80">{CONTACT.address}</span>
-                <span className="shrink-0 text-white/50 transition-colors group-hover:text-white">Haritada aç ↗</span>
-              </span>
-            </a>
-
-            <ul className="mt-auto flex flex-wrap gap-1.5 pt-6">
+            {/* Kartlar eşit boyda: sosyal medya kartın dibinde, e-postayla arası boş kalır */}
+            <p className="mt-8 text-[13px] text-white/50 lg:mt-auto">Sosyal medya</p>
+            <ul className="mt-2 flex flex-wrap gap-1.5">
               {CONTACT.socials.map((s) => (
                 <li key={s.label}>
                   <a
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block rounded-full bg-white/10 px-3.5 py-2 text-[13px] text-white/80 transition-colors hover:bg-white/15 hover:text-white"
+                    className="block rounded-full bg-white/10 px-3.5 py-2 text-[13px] text-white/80 outline-none transition-colors hover:bg-white/15 hover:text-white focus-visible:ring-2 focus-visible:ring-accent/60"
                   >
                     {s.label}
                   </a>

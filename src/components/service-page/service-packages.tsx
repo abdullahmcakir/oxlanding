@@ -11,11 +11,38 @@ import type { ServicePage } from "./service-page-data";
 // Altındaki şerit, kaldırılan CTA'nın #iletisim adresini devralır: sitedeki "Toplantı Ayarla" butonları buraya iner.
 
 export function ServicePackages({ page }: { page: ServicePage }) {
-  const { packages, service } = page;
+  const { packages, packagesIntro, service } = page;
 
   return (
     <section id="paketler" data-dock="paketler" className="scroll-mt-28 bg-background px-4 pb-28 md:px-[4.5vw] md:pb-36">
-      <SplitHeading strong="Paketler." soft={`${service.title} için ihtiyacına uygun planı seç.`} />
+      <SplitHeading strong="Paketler." soft={packagesIntro?.soft ?? `${service.title} için ihtiyacına uygun planı seç.`} />
+      {packagesIntro?.desc && (
+        <p className="mt-6 max-w-[40em] pl-5 text-[clamp(15px,1.05vw,18px)] leading-[1.5] tracking-[-0.01em] text-neutral-500 md:pl-7">
+          {packagesIntro.desc}
+        </p>
+      )}
+      {/* Başlangıç fiyatı: flyout'taki fiyat alanıyla aynı dil (büyük tutar + bitişik ek), yanında notlar */}
+      {packagesIntro?.price && (
+        <div className="mt-8 flex flex-col gap-5 rounded-[28px] bg-[#F1F1F1] p-6 md:flex-row md:items-end md:justify-between md:p-8">
+          <div>
+            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">
+              {packagesIntro.price.label}
+            </p>
+            <p className="mt-3 leading-none text-[#111]">
+              <span className="text-[clamp(36px,3vw,52px)] font-medium tracking-[-0.04em]">{packagesIntro.price.amount}</span>
+              <span className="whitespace-pre text-[16px] text-neutral-500">{packagesIntro.price.suffix}</span>
+            </p>
+          </div>
+          <ul className="space-y-1.5 text-[14px] leading-[1.45] text-neutral-600 md:max-w-[46ch]">
+            {packagesIntro.price.notes.map((n) => (
+              <li key={n} className="flex gap-2">
+                <span aria-hidden className="mt-[0.55em] size-1 shrink-0 rounded-full bg-accent" />
+                {n}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-14 grid gap-4 lg:grid-cols-3">
         {packages.map((pkg, i) => (
@@ -27,9 +54,11 @@ export function ServicePackages({ page }: { page: ServicePage }) {
               <div className="flex flex-1 flex-col rounded-[26px] bg-[#070707] p-7 md:p-9">
                 <div className="flex items-start justify-between gap-4">
                   <span className="text-[clamp(32px,2.4vw,40px)] leading-none tracking-[-0.03em]">0{i + 1}</span>
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">
-                    Süre: <span className="text-white">{pkg.duration}</span>
-                  </span>
+                  {pkg.duration && (
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/50">
+                      Süre: <span className="text-white">{pkg.duration}</span>
+                    </span>
+                  )}
                 </div>
 
                 <h3 className="mt-[clamp(40px,5vw,80px)] text-[clamp(28px,2.3vw,40px)] leading-[1.15] tracking-[-0.03em]">
@@ -44,7 +73,12 @@ export function ServicePackages({ page }: { page: ServicePage }) {
                   <span className="block text-white/45">{pkg.tagline}.</span>
                 </h3>
 
-                <ul className="mt-auto space-y-3 pt-10">
+                {packagesIntro?.itemsLabel && (
+                  <p className="mt-auto pt-10 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-white/40">
+                    {packagesIntro.itemsLabel}
+                  </p>
+                )}
+                <ul className={cn("space-y-3", packagesIntro?.itemsLabel ? "pt-4" : "mt-auto pt-10")}>
                   {pkg.items.map((item) => (
                     <li key={item} className="flex items-start gap-3 text-[15px] tracking-[-0.01em] text-white/75">
                       <CheckIcon />
@@ -62,15 +96,13 @@ export function ServicePackages({ page }: { page: ServicePage }) {
                       pkg.featured ? "bg-accent text-accent-ink" : "bg-white text-[#111]",
                     )}
                   >
-                    Bu paketi seç
+                    {packagesIntro?.cta ?? "Bu paketi seç"}
                   </span>
                   <span className="grid size-12 place-items-center rounded-[10px] bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1">
                     <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-accent-ink" />
                   </span>
                 </span>
                 <span className="font-mono text-[10px] font-bold uppercase leading-[1.6] tracking-[0.12em] text-white/50">
-                  {pkg.items.length} kalem
-                  <br />
                   Kapsama göre teklif
                 </span>
               </div>
@@ -78,6 +110,10 @@ export function ServicePackages({ page }: { page: ServicePage }) {
           </Reveal>
         ))}
       </div>
+
+      {packagesIntro?.note && (
+        <p className="mt-5 max-w-[60ch] text-[15px] leading-[1.5] tracking-[-0.01em] text-neutral-500">{packagesIntro.note}</p>
+      )}
 
       <Reveal>
         <div

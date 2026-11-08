@@ -8,45 +8,34 @@ import { useSnapCarousel } from "@/hooks/use-snap-carousel";
 import { cn } from "@/lib/utils";
 
 // Kart düzeni referansı: mintlify.com "Powering businesses of all sizes" müşteri hikayeleri.
-// TÜMÜ YER TUTUCU: marka adları, başlıklar, rakamlar ve görseller gerçek referanslarla değiştirilecek.
+// Marka adları ve görseller YER TUTUCU: gerçek referanslarla değiştirilecek.
+// Bilerek rakam yok: artış, süre ya da performans iddiası yazılmaz.
 const REFERENCES = [
   {
     brand: "Kafe Zinciri",
-    headline: "için dijital menü ve sosyal medyayla erişimi 3 ayda ikiye katladık.",
-    stats: [
-      { value: "2x", label: "Sosyal medya erişimi" },
-      { value: "%40", label: "Daha fazla rezervasyon" },
-    ],
+    headline: "için dijital menü ve sosyal medya çalışmalarını tek planda yürüttük.",
+    href: "/calismalar/kafe-zinciri",
     color: "#C44120",
     image: "/images/services/mekanda.png",
   },
   {
     brand: "Moda Markası",
     headline: "için satışa odaklı e-ticaret altyapısını sıfırdan kurduk.",
-    stats: [
-      { value: "3.2x", label: "Online satış artışı" },
-      { value: "%28", label: "Daha düşük reklam maliyeti" },
-    ],
+    href: "/calismalar/moda-markasi",
     color: "#1E3A8A",
     image: "/images/services/e-ticaret.png",
   },
   {
     brand: "Teknoloji Girişimi",
-    headline: "için lansmana hazır web sitesi ve marka kimliğini 6 haftada teslim ettik.",
-    stats: [
-      { value: "6 hf", label: "Fikirden yayına" },
-      { value: "12k", label: "İlk ay ziyaretçi" },
-    ],
+    headline: "için lansmana hazır web sitesi ve marka kimliği tasarladık.",
+    href: "/calismalar/teknoloji-girisimi",
     color: "#14532D",
     image: "/images/services/website.webp",
   },
   {
     brand: "Restoran Grubu",
     headline: "için akılda kalan bir marka kimliği ve ambalaj sistemi tasarladık.",
-    stats: [
-      { value: "8", label: "Şubede yeni kimlik" },
-      { value: "%35", label: "Marka bilinirliği artışı" },
-    ],
+    href: "/calismalar",
     color: "#4C1D95",
     image: "/images/services/branding.png",
   },
@@ -73,9 +62,9 @@ export function References() {
       <div className="flex flex-col gap-8 px-4 md:flex-row md:items-end md:justify-between md:px-[4.5vw]">
         <SplitHeading
           strong="Referanslar."
-          soft="Farklı ölçeklerden markalarla, ölçülebilir sonuçlar ürettik."
+          soft="Birlikte çalıştığımız markalar ve ortaya çıkan işler."
         />
-        <CarouselNav edges={edges} onScroll={scroll} allHref="#calismalar" allLabel="Tüm çalışmalar" />
+        <CarouselNav edges={edges} onScroll={scroll} allHref="/calismalar" allLabel="Tüm çalışmalar" />
       </div>
 
       <div ref={trackRef} className={TRACK_CLASS}>
@@ -87,7 +76,7 @@ export function References() {
             className={cn("shrink-0", i === REFERENCES.length - 1 ? "snap-end" : "snap-start")}
           >
             <Link
-              href="#calismalar"
+              href={ref.href}
               data-card
               style={{ width: cardW, ["--card-h" as string]: `${cardH}px` }}
               className="group grid overflow-hidden rounded-[28px] text-white outline-none focus-visible:ring-4 focus-visible:ring-accent/60 md:h-[var(--card-h)] md:grid-cols-[51fr_49fr]"
@@ -112,17 +101,9 @@ export function References() {
                 </div>
 
                 <div className="relative">
-                  <div className="grid grid-cols-2 gap-6">
-                    {ref.stats.map((s) => (
-                      <div key={s.label}>
-                        <p className="text-[clamp(36px,3vw,48px)] leading-none tracking-[-0.02em]">{s.value}</p>
-                        <p className="mt-2 text-[15px] leading-[1.4] text-white/85">{s.label}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <span className="mt-8 inline-flex h-12 items-center gap-3 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-semibold tracking-[-0.02em] text-[#111]">
+                  <span className="inline-flex h-12 items-center gap-3 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-semibold tracking-[-0.02em] text-[#111]">
                     Hikayeyi oku
-                    <span className="grid size-9 place-items-center rounded-full bg-accent transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5">
+                    <span className="grid size-9 place-items-center rounded-full bg-accent text-accent-ink transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0.5">
                       <Chevron />
                     </span>
                   </span>

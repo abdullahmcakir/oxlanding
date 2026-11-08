@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/about/about-cards";
 import { Badge } from "@/components/feed/feed-badge";
+import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SplitHeading } from "@/components/ui/section-parts";
+import type { Crumb } from "@/lib/seo";
 import { Block } from "./article-blocks";
 import { relatedArticles, type Article } from "./article-data";
 import { ArticleShare } from "./article-share";
@@ -14,23 +16,35 @@ import { ArticleShare } from "./article-share";
 
 const META = "font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500";
 
+/** Sayfa yolu: görünür breadcrumb ve BreadcrumbList şeması aynı listeyi kullanır */
+export function articleCrumbs(article: Article): Crumb[] {
+  return [
+    { label: "Ana sayfa", href: "/" },
+    { label: "Blog", href: "/blog" },
+    { label: article.title, href: `/blog/${article.slug}` },
+  ];
+}
+
 export function ArticlePage({ article }: { article: Article }) {
   const related = relatedArticles(article.slug);
 
   return (
     <div className="bg-background px-4 pb-28 pt-[132px] md:px-[4.5vw] md:pb-36 md:pt-[150px]">
       <header className="mx-auto max-w-[1120px]">
+        <Breadcrumbs items={articleCrumbs(article)} className="mb-6" />
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Badge kind="blog" />
           <p className={META}>
-            {article.category} · {article.date} · {article.minutes} dk okuma
+            {article.category} ·{" "}
+            {article.published ? <time dateTime={article.published}>{article.date}</time> : article.date} ·{" "}
+            {article.minutes} dk okuma
           </p>
         </div>
         <h1 className="mt-6 max-w-[15em] text-[clamp(40px,4.6vw,72px)] font-medium leading-[1.04] tracking-[-0.045em] text-[#111]">
           {article.title}
         </h1>
         <Reveal className="relative mt-12 aspect-[16/9] overflow-hidden rounded-[28px] bg-[#F1F1F1] md:aspect-[16/7]">
-          <Image src={article.image} alt="" fill preload sizes="(min-width: 1200px) 1120px, 100vw" className="object-cover" />
+          <Image src={article.image} alt={article.imageAlt ?? ""} fill preload sizes="(min-width: 1200px) 1120px, 100vw" className="object-cover" />
         </Reveal>
       </header>
 
@@ -120,33 +134,35 @@ export function ArticlePage({ article }: { article: Article }) {
         </div>
       </Reveal>
 
-      <section className="mx-auto mt-28 max-w-[1200px] md:mt-36">
-        <SplitHeading strong="Diğer yazılar." soft="Okumaya devam et." />
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {related.map((a, i) => (
-            <Reveal key={a.slug} index={i}>
-              <Link href={`/blog/${a.slug}`} className="group block">
-                <div className="relative aspect-[4/3] overflow-hidden rounded-[22px] bg-[#F1F1F1]">
-                  <Image
-                    src={a.image}
-                    alt=""
-                    fill
-                    sizes="(min-width: 768px) 400px, 100vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <Badge kind="blog" className="absolute left-3 top-3" />
-                </div>
-                <p className={`${META} mt-4`}>
-                  {a.category} · {a.minutes} dk
-                </p>
-                <p className="mt-2 text-[20px] font-medium leading-[1.2] tracking-[-0.025em] text-[#111] underline-offset-4 group-hover:underline">
-                  {a.title}
-                </p>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      {related.length > 0 && (
+        <section className="mx-auto mt-28 max-w-[1200px] md:mt-36">
+          <SplitHeading strong="Diğer yazılar." soft="Okumaya devam et." />
+          <div className="mt-12 grid gap-4 md:grid-cols-3">
+            {related.map((a, i) => (
+              <Reveal key={a.slug} index={i}>
+                <Link href={`/blog/${a.slug}`} className="group block">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[22px] bg-[#F1F1F1]">
+                    <Image
+                      src={a.image}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 400px, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <Badge kind="blog" className="absolute left-3 top-3" />
+                  </div>
+                  <p className={`${META} mt-4`}>
+                    {a.category} · {a.minutes} dk
+                  </p>
+                  <p className="mt-2 text-[20px] font-medium leading-[1.2] tracking-[-0.025em] text-[#111] underline-offset-4 group-hover:underline">
+                    {a.title}
+                  </p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

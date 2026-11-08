@@ -117,9 +117,9 @@ export function AboutDisciplines() {
   return (
     <section data-dock="hizmetler" className="overflow-hidden bg-background pb-28 md:pb-36">
       <Reveal className="px-4 md:px-[4.5vw]">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">Tek masa</p>
+        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">Nasıl çalışıyoruz?</p>
         <h2 className="mt-8 max-w-[17em] text-[clamp(32px,3.4vw,60px)] font-medium leading-[1.04] tracking-[-0.05em] text-[#111]">
-          Markanın ihtiyacı olan her şey aynı masada, sıradaki adım hep belli.
+          Bir işin başından sonuna kadar, ne yaptığımızı ve neden yaptığımızı biliyoruz.
         </h2>
       </Reveal>
 

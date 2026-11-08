@@ -18,7 +18,7 @@ const SOLUTIONS: {
   {
     title: "Girişim",
     image: "/images/solutions/girisim.webp",
-    desc: "Fikrin var, zamanın yok. Seni hızlıca ayağa kaldıracak, büyüdükçe yanında duracak bir dijital temel kuruyoruz.",
+    desc: "Güzel bir fikrin var. Şimdi onu hayata geçirme zamanı. Markanın ilk adımlarından web sitesine ve reklamlara kadar ihtiyacın olan işlerde yanındayız.",
     items: ["Marka kimliği ve logo", "Landing page", "Sosyal medya kurulumu", "İlk reklam kampanyaları"],
     icon: (
       <>
@@ -33,7 +33,7 @@ const SOLUTIONS: {
   {
     title: "KOBİ",
     image: "/images/solutions/kobi.webp",
-    desc: "İşin büyüdü, dijitalin geride kaldı. Rakiplerinle aynı sahada, kendi sesini kaybetmeden var olmanı sağlıyoruz.",
+    desc: "İşin büyüdü, dijitalin geride kaldı. Web siteni, reklamlarını ve dijital görünürlüğünü işinin bugünkü ihtiyaçlarına göre birlikte geliştirelim.",
     items: ["Kurumsal web sitesi", "SEO ve Google Ads", "Sosyal medya yönetimi", "Performans raporlama"],
     icon: (
       <>
@@ -48,7 +48,7 @@ const SOLUTIONS: {
   {
     title: "Kurumsal",
     image: "/images/solutions/kurumsal.webp",
-    desc: "Yapı karmaşık, beklenti yüksek. Büyük organizasyonların dijital ihtiyaçlarını sessiz sedasız çözüyoruz.",
+    desc: "Yapı karmaşık, beklenti yüksek. Farklı ekiplerin ve süreçlerin ihtiyaçlarına uygun, mevcut sistemlerle uyumlu dijital çözümler geliştiriyoruz.",
     items: ["Özel yazılım ve entegrasyon", "Kampanya stratejisi", "Çok kanallı reklam yönetimi", "Özel ekip ve SLA"],
     icon: (
       <>

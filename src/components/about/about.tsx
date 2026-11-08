@@ -2,21 +2,13 @@
 
 import { motion } from "motion/react";
 import { Marquee } from "@/components/ui/marquee";
-import {
-  ClientsCard,
-  MultiplierCard,
-  QuoteCard,
-  RatingCard,
-  RevenueCard,
-  ServicesCard,
-  SpeedCard,
-  StatCard,
-} from "./about-cards";
+import { SERVICES } from "@/components/services/services-data";
+import { PlanCard, ServicesCard, StatCard } from "./about-cards";
 import { HoverHeadline } from "./hover-headline";
 
 // Metin yer tutucu.
 const SUBTEXT =
-  "Strateji, yaratıcılık ve teknolojiyi bir araya getirerek markaların dijitalde daha görünür ve daha etkili olmasını sağlıyoruz.";
+  "İster yeni bir marka kuruyor olun ister mevcut işinizi büyütmek isteyin; web sitesi, reklam, tasarım ve yazılım ihtiyaçlarınızda yanınızdayız.";
 
 // Kayan şeritteki kutular: hepsi aynı ölçüde.
 // Sıra değiştirmek / kutu eklemek için aşağıdaki listeyi düzenle.
@@ -58,15 +50,13 @@ export function About() {
       >
         <Marquee>
           <ServicesCard className={BOX} />
-          <RevenueCard className={BOX} />
-          <QuoteCard className={BOX} />
-          <ClientsCard className={BOX} />
-          <SpeedCard className={BOX} />
-          <StatCard value="15+" label="Farklı sektörde deneyim." className={BOX} />
-          <RatingCard className={BOX} />
-          <MultiplierCard className={BOX} />
-          <StatCard value="7/24" label="Kampanya takibi ve raporlama." tone="dark" className={BOX} />
-          <StatCard value="%98" label="Müşteri memnuniyeti." tone="outline" className={BOX} />
+          <StatCard value="Tek çatı" label="Reklam, tasarım ve yazılım aynı ekipte." tone="dark" className={BOX} />
+          <PlanCard className={BOX} />
+          <StatCard value="Ücretsiz" label="İlk görüşme ücretsiz, bağlayıcı değil." tone="outline" className={BOX} />
+          <StatCard value="Tek panel" label="Projelerini, taleplerini ve devam eden işleri tek yerden takip et." className={BOX} />
+          <StatCard value={`${SERVICES.length} hizmet`} label="Website'tan SEO'ya, tek ekipten." tone="dark" className={BOX} />
+          <StatCard value="QR menü" label="Mekanda ile menün, konumun ve duyuruların tek yerde." tone="outline" className={BOX} />
+          <StatCard value="Mobil uyumlu" label="Özel arayüz, SEO uyumlu teknik altyapı." className={BOX} />
         </Marquee>
       </motion.div>
     </section>

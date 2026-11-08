@@ -8,7 +8,7 @@ import type { ServicePage } from "./service-page-data";
 // Referans: "Built for the Global Workforce": ortada büyük kart, iki yanda komşu kartlar taşar.
 // Kartlar ortaya oturacak şekilde (snap-center) kayar; ortadaki dışındakiler hafifçe soluk.
 
-export function ServiceAudiences({ items }: { items: ServicePage["audiences"] }) {
+export function ServiceAudiences({ items, intro }: { items: ServicePage["audiences"]; intro?: ServicePage["audiencesIntro"] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
@@ -46,11 +46,13 @@ export function ServiceAudiences({ items }: { items: ServicePage["audiences"] })
     <section className="bg-background pb-24 md:pb-32">
       <div className="px-4 text-center md:px-[4.5vw]">
         <h2 className="text-[clamp(32px,3.2vw,60px)] font-medium leading-[1.08] tracking-[-0.045em] text-[#111]">
-          Kimler için?
+          {intro?.title ?? "Kimler için?"}
         </h2>
-        <p className="mt-4 text-[clamp(15px,1.05vw,18px)] tracking-[-0.01em] text-neutral-500">
-          Ölçeği ne olursa olsun, büyümek isteyen her marka için.
-        </p>
+        {(intro ? intro.desc : "Ölçeği ne olursa olsun, büyümek isteyen her marka için.") && (
+          <p className="mt-4 text-[clamp(15px,1.05vw,18px)] tracking-[-0.01em] text-neutral-500">
+            {intro ? intro.desc : "Ölçeği ne olursa olsun, büyümek isteyen her marka için."}
+          </p>
+        )}
       </div>
 
       <div

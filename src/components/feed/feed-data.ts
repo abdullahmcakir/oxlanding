@@ -29,7 +29,7 @@ export const FILTERS = [
     label: "Çalışmalar",
     href: "/calismalar/projeler",
     title: "Çalışmalar",
-    description: "Website, branding, e-ticaret ve otomasyon projelerimizden seçkiler: problem, çözüm ve sonuçlar.",
+    description: "Website, branding, e-ticaret ve otomasyon projelerimizden seçkiler: problem, çözüm ve süreç.",
   },
   {
     key: "blog",
@@ -77,7 +77,8 @@ export const TESTIMONIALS = [
 // Renk ritmi: gri metin kartları az ve farklı sütunlarda; siyah yorum kartı yeşil hizmetler kartının yanında.
 export const FEED_COLUMNS: FeedCard[][] = [
   [
-    { type: "post", tag: "Reklam", title: "2026'da Meta reklamlarında işe yarayan 5 strateji", meta: "9 dk okuma · 14 Ekim 2026", href: "/blog/meta-reklam-stratejileri" },
+    // Okuma süresi yazının kelime sayısından hesaplanır (article-data.ts readingMinutes); yazı değişirse burayı da güncelle
+    { type: "post", tag: "Web Tasarım", title: "Balıkesir web sitesi fiyatları 2026: web sitesi yaptırma rehberi", meta: "10 dk okuma · 3 Kasım 2026", href: "/blog/balikesir-web-sitesi-fiyatlari-2026" },
     { type: "testimonials" },
     { type: "image", label: "Çalışma", tag: "E-ticaret", title: "Moda Markası", image: "/images/services/e-ticaret.png", href: "/calismalar/moda-markasi" },
     { type: "image", label: "Blog", tag: "Sosyal medya", title: "Reels mi carousel mı?", image: "/images/services/sosyal-medya.png", short: true, href: "/blog/reels-mi-carousel-mi" },
@@ -96,11 +97,20 @@ export const FEED_COLUMNS: FeedCard[][] = [
   ],
 ];
 
+// Dengeli bento'ya sığmayan kartlar: "Tümü"de görünmez ama filtreli listelerde (ör. /blog) ve sayaçlarda yer alır.
+// Yeni bir yazı bento'da bir kartın yerini aldığında yerinden çıkan kart buraya taşınır.
+const OVERFLOW: FeedCard[] = [
+  { type: "post", tag: "Reklam", title: "2026'da Meta reklamlarında işe yarayan 5 strateji", meta: "9 dk okuma · 14 Ekim 2026", href: "/blog/meta-reklam-stratejileri" },
+];
+
 // Satır sırası (soldan sağa, yukarıdan aşağı): filtreli ızgara bu sırayla dizilir; ilk kartlar "en yeni" sayılır.
 const ROWS = Math.max(...FEED_COLUMNS.map((c) => c.length));
-export const READING_ORDER = Array.from({ length: ROWS }, (_, r) => FEED_COLUMNS.map((c) => c[r]))
-  .flat()
-  .filter(Boolean);
+export const READING_ORDER = [
+  ...Array.from({ length: ROWS }, (_, r) => FEED_COLUMNS.map((c) => c[r]))
+    .flat()
+    .filter(Boolean),
+  ...OVERFLOW,
+];
 
 export type FeedItem = Extract<FeedCard, { type: "image" | "post" }>;
 

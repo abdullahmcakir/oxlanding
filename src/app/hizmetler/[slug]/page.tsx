@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar/navbar";
 import { ServiceAudiences } from "@/components/service-page/service-audiences";
 import { ServiceFacts } from "@/components/service-page/service-facts";
 import { ServiceFeatures } from "@/components/service-page/service-features";
+import { ServiceFit } from "@/components/service-page/service-fit";
 import { ServiceHero } from "@/components/service-page/service-hero";
 import { ServiceHighlights } from "@/components/service-page/service-highlights";
 import { ServicePackages } from "@/components/service-page/service-packages";
@@ -22,7 +23,8 @@ import { breadcrumbJsonLd, jsonLdHtml, pageOpenGraph, serviceJsonLd } from "@/li
 // Kapanışta genel CTA yerine o hizmetin paketleri var.
 
 export function generateStaticParams() {
-  return SERVICE_SLUGS.map((slug) => ({ slug }));
+  // Mekanda kendi sayfasında (app/hizmetler/mekanda): ürün sayfası, bu şablonu kullanmaz
+  return SERVICE_SLUGS.filter((slug) => slug !== "mekanda").map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/hizmetler/[slug]">): Promise<Metadata> {
@@ -30,7 +32,7 @@ export async function generateMetadata({ params }: PageProps<"/hizmetler/[slug]"
   const page = getServicePage(slug);
   if (!page) return {};
   const canonical = `/hizmetler/${slug}`;
-  const meta = SERVICE_META[slug];
+  const meta = page.meta ?? SERVICE_META[slug];
   return {
     title: meta?.title ?? `${page.service.title} · OX Dijital`,
     description: meta?.description ?? page.service.description,
@@ -71,11 +73,12 @@ export default async function ServicePageRoute({ params }: PageProps<"/hizmetler
         <ServiceFacts items={page.facts} />
         <ServiceStatement text={page.statement} />
         <ServiceHighlights items={page.highlights} />
-        <ServiceSteps steps={page.steps} image={page.service.image} />
+        <ServiceSteps steps={page.steps} image={page.service.image} intro={page.stepsIntro} />
         <ServiceScope page={page} />
-        <ServiceAudiences items={page.audiences} />
+        <ServiceAudiences items={page.audiences} intro={page.audiencesIntro} />
+        {page.fit && <ServiceFit {...page.fit} slug={page.service.slug} />}
         <ServiceTestimonials items={page.testimonials} />
-        <Faq items={page.faq} schema />
+        <Faq items={page.faq} cta={page.faqCta} schema />
         <ServicePackages page={page} />
       </main>
       <Footer />

@@ -15,7 +15,7 @@ const TOKEN = /^\[\[(\d+)\]\](.*)$/;
 
 // Metin yer tutucu. [[n]] = KEYWORDS[n]
 const TEXT =
-  "Fikirleri markaya, markaları büyümeye dönüştürüyoruz. [[0]], [[1]] ve [[2]]la ölçülebilir sonuçlar üretiyoruz.";
+  "İyi fikirleri hayata geçiriyor, markaların büyümesine yardımcı oluyoruz. [[0]], [[1]] ve [[2]]la işinize değer katıyoruz.";
 
 export function HoverHeadline({ className }: { className?: string }) {
   const [active, setActive] = useState<number | null>(null);

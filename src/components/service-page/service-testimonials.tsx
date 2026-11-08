@@ -2,11 +2,12 @@ import { Marquee } from "@/components/ui/marquee";
 import type { ServicePage } from "./service-page-data";
 
 // Referans: "What Our Customers Say": iki sıra yorum kartı, zıt yönlerde sonsuz kayar.
-// Yorumlar YER TUTUCU; gerçek müşteri yorumları gelene kadar isimler genel bırakıldı.
+// Yalnız gerçek müşteri yorumları; liste boşsa bölüm hiç görünmez.
 
 type Testimonial = ServicePage["testimonials"][number];
 
 export function ServiceTestimonials({ items }: { items: Testimonial[] }) {
+  if (items.length === 0) return null;
   const half = Math.ceil(items.length / 2);
 
   return (

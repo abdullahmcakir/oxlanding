@@ -22,7 +22,7 @@ export function WorkSidebar({ work }: { work: Work }) {
     <aside className="order-last flex flex-col gap-2 lg:sticky lg:top-[84px] lg:order-none lg:h-[calc(100svh-92px)] lg:self-start">
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         <Collab work={work} />
-        <Contents />
+        <Contents hasResults={work.results.length > 0} />
 
         <Link
           href={`/calismalar/${next.slug}`}
@@ -71,9 +71,11 @@ function Collab({ work }: { work: Work }) {
 }
 
 /** İçindekiler: ekranın ortasından geçen bölüm vurgulanır; tıklayınca o bölüme kayar. */
-function Contents() {
+function Contents({ hasResults }: { hasResults: boolean }) {
   const lenis = useLenis();
   const [active, setActive] = useState<string>(WORK_SECTIONS[0].id);
+  // Sonuç yoksa o bölüm sayfada yok: içindekilerde de görünmez
+  const sections = WORK_SECTIONS.filter((s) => hasResults || s.id !== "sonuclar");
 
   useEffect(() => {
     const els = WORK_SECTIONS.map((s) => document.getElementById(s.id)).filter((el) => el !== null);
@@ -91,7 +93,7 @@ function Contents() {
     <nav aria-label="İçindekiler" className="hidden min-h-0 flex-1 flex-col rounded-[16px] bg-[#171717] p-2 lg:flex">
       <p className="px-3 pb-2 pt-2.5 text-[14px] text-white/50">Bu sayfada</p>
       <ol>
-        {WORK_SECTIONS.map((s, i) => {
+        {sections.map((s, i) => {
           const on = s.id === active;
           return (
             <li key={s.id}>

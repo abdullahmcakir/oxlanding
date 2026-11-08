@@ -50,7 +50,7 @@ export function Services() {
       <div className="flex flex-col gap-8 px-4 md:flex-row md:items-end md:justify-between md:px-[4.5vw]">
         <SplitHeading
           strong="Hizmetlerimiz."
-          soft="Markanı büyütmek için ihtiyaç duyduğun her şey, tek çatı altında."
+          soft="Markanın dijitalde ihtiyaç duyduğu her şey, tek çatı altında."
         />
         <CarouselNav edges={edges} onScroll={scroll} allHref="#hizmetler" allLabel="Tüm hizmetler" />
       </div>

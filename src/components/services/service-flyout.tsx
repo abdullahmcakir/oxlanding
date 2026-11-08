@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useLenis } from "lenis/react";
 import { talepUrl } from "@/lib/links";
-import type { ItemKind, Service } from "./services-data";
+import type { ItemKind, Service, ServiceFlyoutContent, ServicePrice } from "./services-data";
 
 // Kaynak: OX Dijital müşteri paneli "Paket" flyout'u (paket-flyout-handoff.md).
 // Görünüm ve metinler birebir; yalnızca bu projenin yığınına uyarlandı
@@ -118,12 +118,7 @@ export function ServiceFlyout({
   returnFocusTo?: React.RefObject<HTMLElement | null>;
 }) {
   if (!service) return null;
-
-  const groups = KIND_ORDER.map((kind) => ({
-    kind,
-    meta: KIND_META[kind],
-    list: service.items.filter((i) => i.kind === kind),
-  })).filter((g) => g.list.length > 0);
+  const content = service.flyout;
 
   return (
     <SidePanel
@@ -142,29 +137,41 @@ export function ServiceFlyout({
       }}
     >
       {/* Hero */}
-      <div className="relative h-52 w-full flex-shrink-0">
+      {/* Yazılmış içerikte yükseklik en az h-44, uzun açıklamada metinle birlikte uzar (görselin üstüne taşmasın) */}
+      <div
+        className={`relative w-full flex-shrink-0 ${content?.eyebrow ? "flex min-h-44 flex-col justify-end pt-14" : "h-52"}`}
+      >
         <Image src={service.image} alt="" fill sizes="(min-width: 640px) 560px, 100vw" quality={85} className="object-cover" />
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(12,10,8,0.75) 55%, #0c0a08 100%)",
+            background: content?.eyebrow
+              ? "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(12,10,8,0.85) 50%, #0c0a08 100%)"
+              : "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(12,10,8,0.75) 55%, #0c0a08 100%)",
           }}
         />
-        <div className="absolute inset-x-0 bottom-0 p-6">
-          <span
-            className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase"
-            style={{ background: "#fde68a", color: "#78350f" }}
-          >
-            Paket · {service.items.length} kalem
-          </span>
+        <div className={content?.eyebrow ? "relative p-6 pb-5" : "absolute inset-x-0 bottom-0 p-6"}>
+          {content?.eyebrow ? (
+            <p className="text-[10.5px] font-semibold tracking-[0.08em]" style={{ color: "#fde68a" }}>
+              {content.eyebrow}
+            </p>
+          ) : (
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold uppercase"
+              style={{ background: "#fde68a", color: "#78350f" }}
+            >
+              Paket · {service.items.length} kalem
+            </span>
+          )}
           <h2
             className="mt-2.5 text-[30px] font-light leading-tight text-white"
             style={{ letterSpacing: "-0.03em" }}
           >
-            {service.title}
+            {content?.title ?? service.title}
           </h2>
-          <p className="mt-1 text-[12.5px] text-white/60">{service.tagline}</p>
+          <p className={content?.intro ? "mt-1.5 text-[13.5px] leading-snug text-white/70" : "mt-1 text-[12.5px] text-white/60"}>
+            {content?.intro ?? service.tagline}
+          </p>
         </div>
       </div>
 
@@ -172,46 +179,163 @@ export function ServiceFlyout({
       {/* Kaydırma çubuğu koyu panele uygun: ince, yarı saydam (Windows'ta beyaz sistem çubuğu çıkıyordu) */}
       <div
         data-lenis-prevent
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin]"
+        className={`min-h-0 flex-1 overflow-y-auto px-6 [scrollbar-color:rgba(255,255,255,0.18)_transparent] [scrollbar-width:thin] ${content?.price ? "space-y-6 pb-6 pt-4" : "space-y-4 py-5"}`}
       >
-        <p className="text-[14px] leading-relaxed text-white/75">{service.description}</p>
+        {content?.price && <PriceBlock price={content.price} />}
+        {content?.does ? (
+          <WrittenBody content={{ ...content, does: content.does }} />
+        ) : (
+          <LegacyBody service={service} showPrice={!content?.price} />
+        )}
+      </div>
 
-        {/* KAPSAM — tipine göre gruplu. Satırlarda ikon / "dahil" rozeti bilerek yok; tek vurgu grubun rengi. */}
-        {groups.map((g) => (
-          <div key={g.kind} className="pt-1">
-            <div className="flex items-baseline gap-2">
-              <span className="text-[11px] font-semibold uppercase" style={{ color: g.meta.color }}>
-                {g.meta.label}
-              </span>
-              <span className="text-[11px] text-white/35">{g.list.length} kalem</span>
-            </div>
-            <p className="mt-1 text-[11.5px] leading-snug text-white/40">{g.meta.blurb}</p>
+      {/* CTA altta sabit: liste uzadıkça kaybolmasın. */}
+      <div
+        className="flex-shrink-0 px-6 pb-6 pt-4"
+        style={{ background: "rgba(0,0,0,0.35)", borderTop: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <a
+          href={talepUrl({ hizmet: service.slug })}
+          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full text-[13.5px] font-semibold transition-transform hover:scale-[1.02]"
+          style={{ background: "#fde68a", color: "#78350f", boxShadow: "0 6px 20px rgba(253,230,138,0.25)" }}
+        >
+          {content?.cta?.label ?? "Paketi Konuşalım"}
+          <Icon className="h-4 w-4" strokeWidth={2}>
+            <path d="M7 17 17 7" />
+            <path d="M8 7h9v9" />
+          </Icon>
+        </a>
+        <p className="mt-2.5 text-center text-[11px] text-white/40">
+          {content?.cta?.note ?? "Görüşme ~30 dakika · bağlayıcı değil"}
+        </p>
+      </div>
+    </SidePanel>
+  );
+}
 
+/** Başlangıç fiyatı: gövdenin en üstünde, kaydırmadan görünsün */
+function PriceBlock({ price }: { price: ServicePrice }) {
+  const label = "text-[10.5px] font-semibold uppercase tracking-[0.08em]";
+  if ("parts" in price) {
+    // Ayrı ücretler yan yana, aralarında ince çizgi: "başlayan" fiyat gibi okunmasın
+    return (
+      <section className="pb-5" style={{ borderBottom: "0.5px solid rgba(255,255,255,0.1)" }}>
+        <div className="grid grid-cols-2">
+          {price.parts.map((part, i) => (
             <div
-              className="mt-3 overflow-hidden rounded-2xl"
-              style={{
-                background: "rgba(255,255,255,0.045)",
-                border: "0.5px solid rgba(255,255,255,0.09)",
-              }}
+              key={part.label}
+              className={i === 0 ? "pr-4" : "pl-4"}
+              style={i === 0 ? undefined : { borderLeft: "0.5px solid rgba(255,255,255,0.12)" }}
             >
-              {g.list.map((item, i) => (
-                <div
-                  key={item.label}
-                  className="flex items-center gap-3 px-4 py-3.5"
-                  style={{ borderTop: i === 0 ? "none" : "0.5px solid rgba(255,255,255,0.07)" }}
-                >
-                  <span
-                    className="h-4 w-1 flex-shrink-0 rounded-full"
-                    style={{ background: g.meta.color, opacity: 0.7 }}
-                  />
-                  <span className="text-[14.5px] leading-snug text-white">{item.label}</span>
-                </div>
-              ))}
+              <p className={label} style={{ color: "#fde68a" }}>
+                {part.label}
+              </p>
+              <p className="mt-2 text-[34px] font-light leading-none text-white" style={{ letterSpacing: "-0.04em" }}>
+                {part.amount}
+              </p>
+              <p className="mt-1.5 text-[13px] text-white/60">{part.unit}</p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <p className="mt-4 text-[12.5px] leading-relaxed text-white/50">{price.note}</p>
+      </section>
+    );
+  }
+  return (
+    <section className="pb-5" style={{ borderBottom: "0.5px solid rgba(255,255,255,0.1)" }}>
+      <p className={label} style={{ color: "#fde68a" }}>
+        {price.billing}
+      </p>
+      {/* Satır içi: ekin başındaki boşluk (" / ay'dan") korunsun, "'den" bitişik kalsın */}
+      <p className="mt-2 leading-none">
+        <span className="text-[38px] font-light text-white" style={{ letterSpacing: "-0.04em" }}>
+          {price.amount}
+        </span>
+        <span className="whitespace-pre text-[14px] text-white/60">{price.suffix}</span>
+      </p>
+      {price.text && <p className="mt-3 text-[14px] leading-relaxed text-white/75">{price.text}</p>}
+      <p className="mt-2.5 text-[12.5px] leading-relaxed text-white/50">{price.note}</p>
+    </section>
+  );
+}
 
-        {/* Fiyat neden yok — söylenmezse "gizleniyor" hissi veriyor. */}
+/** Yazılmış içerik: ne yapıyoruz, nasıl çalışıyoruz. Kalem tipi ve sayısı gösterilmez. */
+function WrittenBody({ content }: { content: ServiceFlyoutContent & { does: string[] } }) {
+  const { does, doesNote, process } = content;
+  return (
+    <>
+      <section>
+        <h3 className="text-[15px] font-medium text-white">{content.doesTitle ?? "Neler yapıyoruz?"}</h3>
+        <ul className="mt-2.5 space-y-2">
+          {does.map((item) => (
+            <li key={item} className="flex items-start gap-3 text-[14px] leading-snug text-white/75">
+              <span className="mt-[7px] size-1 flex-shrink-0 rounded-full" style={{ background: "#fde68a" }} />
+              {item}
+            </li>
+          ))}
+        </ul>
+        {doesNote && <p className="mt-3 text-[12px] leading-relaxed text-white/45">{doesNote}</p>}
+      </section>
+
+      {process && (
+        <section>
+          <h3 className="text-[15px] font-medium text-white">{content.processTitle ?? "Nasıl çalışıyoruz?"}</h3>
+          <p className="mt-2 text-[14px] leading-relaxed text-white/65">{process}</p>
+        </section>
+      )}
+    </>
+  );
+}
+
+/** İçeriği henüz yazılmamış hizmetler: tipine göre gruplu kalem listesi. */
+function LegacyBody({ service, showPrice }: { service: Service; showPrice: boolean }) {
+  const groups = KIND_ORDER.map((kind) => ({
+    kind,
+    meta: KIND_META[kind],
+    list: service.items.filter((i) => i.kind === kind),
+  })).filter((g) => g.list.length > 0);
+
+  return (
+    <>
+      <p className="text-[14px] leading-relaxed text-white/75">{service.description}</p>
+
+      {/* KAPSAM — tipine göre gruplu. Satırlarda ikon / "dahil" rozeti bilerek yok; tek vurgu grubun rengi. */}
+      {groups.map((g) => (
+        <div key={g.kind} className="pt-1">
+          <div className="flex items-baseline gap-2">
+            <span className="text-[11px] font-semibold uppercase" style={{ color: g.meta.color }}>
+              {g.meta.label}
+            </span>
+            <span className="text-[11px] text-white/35">{g.list.length} kalem</span>
+          </div>
+          <p className="mt-1 text-[11.5px] leading-snug text-white/40">{g.meta.blurb}</p>
+
+          <div
+            className="mt-3 overflow-hidden rounded-2xl"
+            style={{
+              background: "rgba(255,255,255,0.045)",
+              border: "0.5px solid rgba(255,255,255,0.09)",
+            }}
+          >
+            {g.list.map((item, i) => (
+              <div
+                key={item.label}
+                className="flex items-center gap-3 px-4 py-3.5"
+                style={{ borderTop: i === 0 ? "none" : "0.5px solid rgba(255,255,255,0.07)" }}
+              >
+                <span
+                  className="h-4 w-1 flex-shrink-0 rounded-full"
+                  style={{ background: g.meta.color, opacity: 0.7 }}
+                />
+                <span className="text-[14.5px] leading-snug text-white">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {/* Fiyat neden yok — söylenmezse "gizleniyor" hissi veriyor. Yazılmış fiyat varsa onun yerine PriceBlock. */}
+      {showPrice && (
         <div
           className="rounded-3xl p-5"
           style={{
@@ -227,44 +351,25 @@ export function ServiceFlyout({
             Görüşmede ihtiyacınıza göre netleştirip size teklif gönderiyoruz.
           </p>
         </div>
+      )}
 
-        <div className="px-1">
-          <p className="mb-3 text-[10px] font-medium uppercase text-white/40">Sonra ne oluyor?</p>
-          <ol className="space-y-2.5">
-            {NEXT_STEPS.map((t, i) => (
-              <li key={i} className="flex items-start gap-2.5">
-                <span
-                  className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-semibold"
-                  style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}
-                >
-                  {i + 1}
-                </span>
-                <span className="text-[12.5px] leading-snug text-white/60">{t}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+      <div className="px-1">
+        <p className="mb-3 text-[10px] font-medium uppercase text-white/40">Sonra ne oluyor?</p>
+        <ol className="space-y-2.5">
+          {NEXT_STEPS.map((t, i) => (
+            <li key={i} className="flex items-start gap-2.5">
+              <span
+                className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-semibold"
+                style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}
+              >
+                {i + 1}
+              </span>
+              <span className="text-[12.5px] leading-snug text-white/60">{t}</span>
+            </li>
+          ))}
+        </ol>
       </div>
-
-      {/* CTA altta sabit: liste uzadıkça kaybolmasın. */}
-      <div
-        className="flex-shrink-0 px-6 pb-6 pt-4"
-        style={{ background: "rgba(0,0,0,0.35)", borderTop: "1px solid rgba(255,255,255,0.08)" }}
-      >
-        <a
-          href={talepUrl({ hizmet: service.slug })}
-          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full text-[13.5px] font-semibold transition-transform hover:scale-[1.02]"
-          style={{ background: "#fde68a", color: "#78350f", boxShadow: "0 6px 20px rgba(253,230,138,0.25)" }}
-        >
-          Paketi Konuşalım
-          <Icon className="h-4 w-4" strokeWidth={2}>
-            <path d="M7 17 17 7" />
-            <path d="M8 7h9v9" />
-          </Icon>
-        </a>
-        <p className="mt-2.5 text-center text-[11px] text-white/40">Görüşme ~30 dakika · bağlayıcı değil</p>
-      </div>
-    </SidePanel>
+    </>
   );
 }
 

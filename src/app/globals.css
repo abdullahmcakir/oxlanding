@@ -42,6 +42,15 @@ html {
 @keyframes ox-fade-in { from { opacity: 0 } to { opacity: 1 } }
 @keyframes ox-fade-out { from { opacity: 1 } to { opacity: 0 } }
 
+/* Mekanda sayfasındaki QR'ın tarama çizgisi */
+@keyframes mekanda-scan {
+  0% { top: 0; opacity: 0 }
+  10% { opacity: 1 }
+  50% { top: 100% }
+  90% { opacity: 1 }
+  100% { top: 0; opacity: 0 }
+}
+
 .ox-panel[data-state="open"] { animation: ox-slide-in 500ms ease-in-out; }
 .ox-panel[data-state="closed"] { animation: ox-slide-out 300ms ease-in-out; }
 .ox-overlay[data-state="open"] { animation: ox-fade-in 300ms ease-out; }

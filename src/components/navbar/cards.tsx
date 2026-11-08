@@ -41,14 +41,8 @@ export function ContactCard({ className }: { className?: string }) {
   return (
     <Card className={cn("px-7 py-8", className)}>
       <a
-        href="tel:+905000000000"
-        className="font-mono text-[13px] tracking-[0.04em] text-neutral-400 transition-colors hover:text-white"
-      >
-        +90 (500) 000 00 00
-      </a>
-      <a
         href={`mailto:${CONTACT_EMAIL}`}
-        className="mt-1.5 block text-[20px] tracking-[-0.02em] text-white"
+        className="block text-[20px] tracking-[-0.02em] text-white"
       >
         {CONTACT_EMAIL}
       </a>
@@ -87,8 +81,8 @@ export function AvailabilityCard({
           <span className="w-[3px] rounded-full bg-neutral-800" />
         </div>
         <div>
-          <p className="text-[17px] tracking-[-0.01em] text-white">2 proje slotu açık</p>
-          <p className="mt-0.5 text-[11px] text-neutral-500">Kasım dönemi için</p>
+          <p className="text-[17px] tracking-[-0.01em] text-white">Ön görüşme ücretsiz</p>
+          <p className="mt-0.5 text-[11px] text-neutral-500">Bağlayıcı değil</p>
         </div>
       </div>
 

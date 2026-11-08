@@ -10,24 +10,24 @@ import { cn } from "@/lib/utils";
 // fotoğraf zemin, beyaz başlık, dört kare kart; sol üstteki nabız düğmesine basınca kart açılır
 // (zemin koyulaşır, başlık yukarı kayar, açıklama belirir).
 // İçerik ana sayfadaki hizmetleri tekrar etmesin diye çalışma sürecine çevrildi.
-// Zemin: hero'daki fotoğrafın başka bir kadrajı (hero'ya gönderme). Metinler YER TUTUCU.
+// Zemin: hero'daki fotoğrafın başka bir kadrajı (hero'ya gönderme).
 
 const STEPS = [
   {
     title: "Keşif",
-    desc: "Markanızı, hedef kitlenizi ve rakiplerinizi dinleyerek başlıyoruz; neyin işe yaradığını ve neyin eksik olduğunu birlikte netleştiriyoruz.",
+    desc: "Önce seni ve işini tanıyoruz. Neye ihtiyacın olduğunu, neyi değiştirmek istediğini ve nasıl bir sonuç beklediğini birlikte netleştiriyoruz.",
   },
   {
     title: "Strateji",
-    desc: "Hedefleri ölçülebilir metriklere çeviriyor; kanalları, bütçeyi ve takvimi tek bir yol haritasında topluyoruz.",
+    desc: "Yapılacak işleri, öncelikleri ve bütçeyi belirliyoruz. Böylece işe başlamadan önce ne yapacağımız ve nasıl ilerleyeceğimiz belli oluyor.",
   },
   {
     title: "Üretim",
-    desc: "Tasarım, yazılım ve içerik ekipleri aynı plan üzerinde çalışır; her teslim onayınızdan geçerek yayına çıkar.",
+    desc: "Planı hayata geçiriyoruz. Tasarım, yazılım ve içerik çalışmalarını yürütüyor, önemli aşamalarda görüşünü ve onayını alıyoruz.",
   },
   {
-    title: "Büyüme",
-    desc: "Yayından sonra veriyi izliyor, test ediyor ve iyileştiriyoruz; her ay neyi neden değiştirdiğimizi raporluyoruz.",
+    title: "Teslim ve Devam",
+    desc: "Çalışmayı son kontrollerin ardından teslim ediyoruz. Sonrasında destek veya geliştirme ihtiyacın olursa birlikte nasıl devam edeceğimizi planlıyoruz.",
   },
 ];
 

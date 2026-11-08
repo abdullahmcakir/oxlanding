@@ -1,12 +1,25 @@
 // Blog detay sayfaları (/blog/[slug]).
 // Düzen referansı: clean-tuna-722417.framer.app/blogayrı (büyük başlık + geniş görsel, büyük puntolu giriş,
 // koyu zemin üstünde zikzak metin/görsel, sonda kişi kartları). Uzun yazılar için bloklarla çeşitlendirildi.
-// TÜMÜ YER TUTUCU (demo): yazılar, rakamlar, yazar bilgileri ve görseller gerçek içerikle değiştirilecek.
+// Gerçek içerik: posts/ klasöründeki yazılar (ör. Balıkesir web sitesi fiyatları 2026).
+// Aşağıdaki diğer yazılar YER TUTUCU (demo): yazılar, rakamlar, yazar bilgileri ve görseller gerçek içerikle değiştirilecek.
 // /calismalar akışındaki blog kartları buraya `href` ile bağlanır (feed-data.ts).
 
+import { BALIKESIR_PRICES } from "./posts/balikesir-web-sitesi-fiyatlari-2026";
+
+// Metin alanlarında iç bağlantı: [bağlantı metni](/adres) yazımı bağlantıya çevrilir (article-blocks.tsx RichText).
 export type ArticleBlock =
   | { type: "p"; text: string }
-  | { type: "list"; items: string[]; ordered?: boolean }
+  // check: kontrol listesi görünümü (her madde bir onay kutusu)
+  | { type: "list"; items: string[]; ordered?: boolean; check?: boolean }
+  // Bölüm içi alt başlık (H3)
+  | { type: "h3"; text: string }
+  // Karşılaştırma / kapsam tablosu; ilk sütun satır başlığı
+  | { type: "table"; caption: string; head: string[]; rows: string[][] }
+  // Görünür SSS listesi; aynı metin FAQPage şemasına da girer
+  | { type: "faq"; items: { q: string; a: string }[] }
+  // Yazı içi çağrı: başlık, kısa metin ve bir/iki buton
+  | { type: "cta"; title: string; text: string; actions: { label: string; href: string }[] }
   // Yeşil tırnaklı büyük alıntı
   | { type: "quote"; text: string; cite?: string }
   // Tek büyük rakam + açıklama
@@ -25,21 +38,81 @@ export type Article = {
   /** Okuma süresi (dakika) */
   minutes: number;
   image: string;
+  /** Kapak görselinin açıklaması (boşsa dekoratif sayılır) */
+  imageAlt?: string;
   /** Büyük puntolu açılış paragrafları */
   lede: string[];
   /** "Kısaca" kartı: yazının üç ana fikri */
   takeaways: string[];
   author: { name: string; role: string; bio: string };
   sections: { id: string; title: string; blocks: ArticleBlock[] }[];
+  /** Arama sonucu başlığı / açıklaması; yoksa "{başlık} · OX Dijital" ve ilk giriş paragrafı */
+  seo?: { title: string; description: string };
+  /** Yayın ve güncelleme tarihi (ISO, ör. 2026-11-03). Varsa BlogPosting şeması üretilir */
+  published?: string;
+  modified?: string;
+  /** Paylaşım görseli (1200×630); yoksa sitenin varsayılanı */
+  ogImage?: string;
+  /** "Diğer yazılar"da önce gösterilecek yazılar (slug) */
+  related?: string[];
 };
+
+/** Bağlantı yazımını düz metne çevirir: şema, kelime sayımı ve meta açıklama için */
+export function plainText(text: string) {
+  return text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+}
+
+function blockText(b: ArticleBlock): string[] {
+  switch (b.type) {
+    case "p":
+    case "h3":
+    case "quote":
+      return [b.text];
+    case "list":
+      return b.items;
+    case "table":
+      return [b.caption, ...b.head, ...b.rows.flat()];
+    case "faq":
+      return b.items.flatMap((i) => [i.q, i.a]);
+    case "cta":
+      return [b.title, b.text];
+    case "tip":
+      return [b.title, b.text];
+    case "stat":
+      return [b.value, b.label];
+    case "band":
+      return [b.title, ...b.text];
+    case "image":
+      return b.caption ? [b.caption] : [];
+  }
+}
+
+/** Gerçek kelime sayısından okuma süresi: dakikada ~200 kelime, en az 1 dk */
+export function readingMinutes(article: Omit<Article, "minutes">) {
+  const texts = [
+    article.title,
+    ...article.lede,
+    ...article.takeaways,
+    ...article.sections.flatMap((s) => [s.title, ...s.blocks.flatMap(blockText)]),
+  ];
+  const words = texts.map(plainText).join(" ").split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+/** Yazının içindeki tüm SSS maddeleri (FAQPage şeması için) */
+export function articleFaq(article: Article) {
+  return article.sections.flatMap((s) => s.blocks.flatMap((b) => (b.type === "faq" ? b.items : [])));
+}
 
 const AUTHOR = {
   name: "Yazar Adı",
   role: "Performans Pazarlama, OX Dijital",
-  bio: "Markaların reklam bütçesini ölçülebilir büyümeye çeviriyor. Meta ve Google kampanyalarında altı yıllık deneyim.",
+  bio: "Markaların reklam bütçesini ölçülebilir büyümeye çeviriyor.",
 };
 
 export const ARTICLES: Article[] = [
+  // En yeni yazı başta: "Diğer yazılar" ve ana sayfa sırayı buradan alır
+  { ...BALIKESIR_PRICES, minutes: readingMinutes(BALIKESIR_PRICES) },
   {
     slug: "meta-reklam-stratejileri",
     title: "2026'da Meta reklamlarında işe yarayan 5 strateji",
@@ -200,8 +273,8 @@ export const ARTICLES: Article[] = [
         title: "İkinci ay: yerel görünürlük",
         blocks: [
           { type: "p", text: "Çevrendeki müşteriler seni haritada arıyor. Google İşletme Profilini eksiksiz doldurmak, yorum toplamak ve düzenli fotoğraf eklemek yerel aramada hızlı sonuç verir." },
-          { type: "stat", value: "%46", label: "Google aramalarının yerel bir niyet taşıdığı tahmin ediliyor" },
           { type: "tip", title: "Yorumlara cevap ver", text: "Olumlu ya da olumsuz her yoruma kısa ve kişisel bir cevap yaz. Hem güven verir hem de profilinin aktif olduğunu gösterir." },
+          { type: "p", text: "Yerel görünürlüğün ikinci ayağı, profilden tıklayanın karşılaştığı web sitesi. Balıkesir'de hizmet veriyorsan sitenin nasıl kurgulanabileceğini [Balıkesir web sitesi sayfamızda](/balikesir-web-sitesi), bütçeyi nelerin belirlediğini de [Balıkesir web sitesi fiyatları rehberimizde](/blog/balikesir-web-sitesi-fiyatlari-2026) anlattık." },
         ],
       },
       {
@@ -288,7 +361,6 @@ export const ARTICLES: Article[] = [
         title: "Hangi iş otomatiğe uygun?",
         blocks: [
           { type: "p", text: "Sık tekrar eden, kuralları belli ve az karar gerektiren işler otomasyon için en iyi adaylar: fatura kesmek, form verisini tabloya aktarmak, sipariş bildirimi göndermek." },
-          { type: "stat", value: "4 sa", label: "Küçük bir ekibin haftada elle veri taşımaya harcadığı ortalama süre (örnek)" },
         ],
       },
       {
@@ -307,7 +379,10 @@ export function getArticle(slug: string) {
   return ARTICLES.find((a) => a.slug === slug) ?? null;
 }
 
-/** Yazının altındaki "Diğer yazılar": kendisi hariç ilk üç yazı. */
+/** Yazının altındaki "Diğer yazılar": önce yazının seçtikleri (related), sonra kendisi hariç en yeniler; toplam üç. */
 export function relatedArticles(slug: string) {
-  return ARTICLES.filter((a) => a.slug !== slug).slice(0, 3);
+  const self = getArticle(slug);
+  const picked = (self?.related ?? []).map(getArticle).filter((a): a is Article => !!a && a.slug !== slug);
+  const rest = ARTICLES.filter((a) => a.slug !== slug && !picked.includes(a));
+  return [...picked, ...rest].slice(0, 3);
 }
