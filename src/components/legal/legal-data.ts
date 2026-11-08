@@ -1,6 +1,7 @@
 // Yasal metinler: KVKK aydınlatma metni, çerez politikası, kullanım koşulları.
 // TASLAK: yapı 6698 sayılı KVKK ve Aydınlatma Yükümlülüğü Tebliği'ne göre kuruldu; yayından önce bir avukatın
 // gözden geçirmesi gerekir. Şirket bilgileri about-data.ts COMPANY'den gelir (YER TUTUCU).
+// Çerez ve ölçüm anlatımı lib/analytics.ts ve app/api/olcum/route.ts ile birebir: biri değişirse burası da güncellenir.
 
 import { KVKK_EMAIL } from "@/lib/links";
 
@@ -21,9 +22,9 @@ export const KVKK: LegalDoc = {
   label: "KVKK",
   title: "KVKK aydınlatma metni",
   description: "OX Dijital'in kişisel verileri nasıl işlediğine dair 6698 sayılı KVKK kapsamındaki aydınlatma metni.",
-  updated: "30 Ekim 2026",
+  updated: "2 Kasım 2026",
   intro:
-    "Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (\"KVKK\") uyarınca, web sitemizi ziyaret eden, bizimle iletişime geçen ve hizmet alan kişilerin kişisel verilerinin hangi amaçla ve nasıl işlendiğini açıklamak için hazırlandı.",
+    "Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (\"KVKK\") uyarınca, web sitemizi ziyaret eden, OX Panel üzerinden görüşme talebi oluşturan, bizimle iletişime geçen ve hizmet alan kişilerin kişisel verilerinin hangi amaçla ve nasıl işlendiğini açıklamak için hazırlandı.",
   sections: [
     {
       heading: "Veri sorumlusu",
@@ -35,44 +36,69 @@ export const KVKK: LegalDoc = {
       heading: "İşlenen kişisel veriler",
       list: [
         "Kimlik ve iletişim bilgileri: ad, soyad, e-posta adresi, telefon numarası, şirket adı.",
-        "Talep bilgileri: görüşme talebi, WhatsApp ya da e-posta ile ilettiğiniz mesajların içeriği.",
-        "Müşteri işlem bilgileri: teklif, sözleşme ve fatura bilgileri.",
-        "İşlem güvenliği bilgileri: IP adresi, tarayıcı bilgisi, ziyaret tarihi ve saati.",
-        "Pazarlama bilgileri: yalnızca onay vermeniz hâlinde çerezlerle elde edilen kullanım verileri.",
+        "Talep bilgileri: OX Panel'deki görüşme talebi, seçtiğiniz görüşme saati, WhatsApp ya da e-posta ile ilettiğiniz mesajların içeriği.",
+        "Müşteri işlem bilgileri: teklif, sözleşme, ödeme ve fatura bilgileri.",
+        "İşlem güvenliği bilgileri: IP adresi, tarayıcı ve cihaz bilgisi, ziyaret tarihi ve saati.",
+        "Kullanım ve pazarlama bilgileri (yalnızca çerezlere onay vermeniz hâlinde): ziyaret ettiğiniz sayfalar, tıkladığınız butonlar, siteye geldiğiniz kaynak ve kampanya, reklam tıklama kimlikleri.",
       ],
     },
     {
       heading: "İşleme amaçları",
       list: [
-        "Görüşme ve teklif taleplerinize dönüş yapmak,",
+        "Görüşme ve teklif taleplerinize dönüş yapmak, görüşmeleri planlamak,",
         "Hizmet sözleşmesini kurmak ve yürütmek, projeyi OX Panel üzerinden yönetmek,",
-        "Fatura ve muhasebe süreçlerini yürütmek,",
-        "Web sitesinin güvenliğini sağlamak ve teknik sorunları gidermek,",
-        "Onay vermeniz hâlinde site kullanımını analiz etmek ve hizmetlerimizi iyileştirmek.",
+        "Ödeme, fatura ve muhasebe süreçlerini yürütmek,",
+        "Web sitesinin güvenliğini sağlamak, kötüye kullanımı önlemek ve teknik sorunları gidermek,",
+        "Sitenin toplam ziyaret sayısını kimseyi tanımadan ölçmek,",
+        "Onay vermeniz hâlinde site kullanımını analiz etmek, reklam kampanyalarımızın etkisini ölçmek ve reklamlarımızı ilgili kişilere göstermek.",
       ],
     },
     {
       heading: "Hukuki sebepler",
-      paragraphs: [
-        "Kişisel verileriniz KVKK'nın 5. maddesinde yer alan; bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması, veri sorumlusunun hukuki yükümlülüğünü yerine getirmesi, ilgili kişinin temel hak ve özgürlüklerine zarar vermemek kaydıyla meşru menfaat ve açık rıza hukuki sebeplerine dayanılarak işlenir. Analiz ve pazarlama çerezleri yalnızca açık rızanızla kullanılır.",
+      paragraphs: ["Kişisel verileriniz KVKK'nın 5. maddesindeki şu hukuki sebeplere dayanılarak işlenir:"],
+      list: [
+        "Bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması: görüşme talebi, teklif, sözleşme ve proje yönetimi.",
+        "Veri sorumlusunun hukuki yükümlülüğünü yerine getirmesi: fatura, muhasebe ve yetkili kurumların talepleri.",
+        "Temel hak ve özgürlüklerinize zarar vermemek kaydıyla meşru menfaatimiz: site güvenliği ve çerezsiz toplam ziyaret sayımı.",
+        "Açık rızanız: analiz ve pazarlama çerezleri ile, görüşme talebi sırasında onay verirseniz iletişim bilgilerinizin şifrelenmiş hâlinin reklam ölçümü için Meta'ya iletilmesi. Açık rızanızı istediğiniz zaman geri alabilirsiniz.",
       ],
     },
     {
       heading: "Toplama yöntemi",
       paragraphs: [
-        "Verileriniz; web sitesindeki formlar, OX Panel, WhatsApp, e-posta, telefon ve çerezler aracılığıyla elektronik ortamda, otomatik ya da kısmen otomatik yollarla toplanır.",
+        "Verileriniz; web sitesi, OX Panel'deki formlar, görüşme planlama aracı, WhatsApp, e-posta, telefon ve çerezler aracılığıyla elektronik ortamda, otomatik ya da kısmen otomatik yollarla toplanır.",
+      ],
+    },
+    {
+      heading: "Onay vermeden önce ne ölçüyoruz",
+      paragraphs: [
+        "Çerezlere onay vermeseniz de sitenin kaç kez görüntülendiğini sayarız. Bu sayım için tarayıcınıza çerez ya da başka bir kayıt yazılmaz, size bir kimlik verilmez ve sizi bir sonraki ziyaretinizde tanımayız. Kaydedilen yalnızca açılan sayfanın adresi, siteye hangi siteden geldiğiniz (yalnız alan adı) ve adreste varsa kampanya etiketleridir. IP adresiniz ve tarayıcı bilginiz bu sayım için kaydedilmez ve kimseye iletilmez.",
+      ],
+    },
+    {
+      heading: "Kullandığımız hizmet sağlayıcılar",
+      paragraphs: ["Verileriniz, aşağıdaki hizmetleri sunan tedarikçilerimiz tarafından bizim adımıza ve talimatlarımızla işlenir:"],
+      list: [
+        "Sunucu ve barındırma: web sitesi, OX Panel, ziyaret istatistikleri (Rybbit) ve görüşme planlama aracı kendi yönettiğimiz sunucularda çalışır.",
+        "Supabase: OX Panel'in veritabanı ve kullanıcı girişi.",
+        "Resend ve Google Workspace: bilgilendirme e-postalarının gönderimi ve e-posta yazışmaları.",
+        "Cloudflare: alan adı yönetimi ve ağ güvenliği.",
+        "Google (Google Analytics, Google Ads): yalnızca onay vermeniz hâlinde site kullanımının analizi ve reklam ölçümü.",
+        "Meta (Meta Pixel, Dönüşümler API'si): yalnızca onay vermeniz hâlinde reklam ölçümü. Bize WhatsApp üzerinden yazdığınızda mesajlarınız WhatsApp (Meta) altyapısından geçer.",
       ],
     },
     {
       heading: "Aktarım",
       paragraphs: [
-        "Verileriniz, yukarıdaki amaçlarla sınırlı olarak; barındırma, e-posta ve mesajlaşma hizmeti aldığımız tedarikçilerle, muhasebe ve hukuk danışmanlarımızla ve kanunen yetkili kamu kurumlarıyla paylaşılabilir. Bu tedarikçilerin bir kısmının sunucuları yurt dışında bulunabilir; yurt dışına aktarım KVKK'nın 9. maddesindeki şartlara uygun yapılır.",
+        "Verileriniz, yukarıdaki amaçlarla sınırlı olarak; hizmet sağlayıcılarımızla, muhasebe ve hukuk danışmanlarımızla ve kanunen yetkili kamu kurumlarıyla paylaşılabilir.",
+        "Google, Meta, Supabase, Resend ve Cloudflare'in sunucularının bir kısmı yurt dışında bulunur. Bu hizmetlere yapılan aktarımlar KVKK'nın 9. maddesine uygun olarak; standart sözleşme gibi uygun güvencelere ya da açık rızanıza dayanılarak yapılır.",
+        "Görüşme talebi sırasında onay verirseniz e-posta adresiniz ve telefon numaranız, geri döndürülemez biçimde şifrelenerek (hash) Meta'ya iletilir. Meta bu bilgiyi yalnızca reklamlarımızın talep getirip getirmediğini ölçmek için eşleştirir; açık hâliyle görmez.",
       ],
     },
     {
       heading: "Saklama süresi",
       paragraphs: [
-        "Verileriniz, işleme amacının gerektirdiği süre ve ilgili mevzuatta öngörülen zamanaşımı süreleri boyunca saklanır; süre dolduğunda silinir, yok edilir ya da anonim hâle getirilir.",
+        "Verileriniz, işleme amacının gerektirdiği süre ve ilgili mevzuatta öngörülen zamanaşımı süreleri boyunca saklanır; süre dolduğunda silinir, yok edilir ya da anonim hâle getirilir. Çerezlerin saklama süreleri çerez politikamızda yer alır.",
       ],
     },
     {
@@ -91,7 +117,7 @@ export const KVKK: LegalDoc = {
     {
       heading: "Başvuru",
       paragraphs: [
-        `Taleplerinizi ${KVKK_EMAIL} adresine ya da aşağıdaki posta adresine yazılı olarak iletebilirsiniz. Başvurunuz en geç 30 gün içinde ücretsiz olarak sonuçlandırılır.`,
+        `Taleplerinizi ${KVKK_EMAIL} adresine ya da aşağıdaki posta adresine yazılı olarak iletebilirsiniz. Başvurunuz, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ uyarınca en geç 30 gün içinde ücretsiz olarak sonuçlandırılır. Başvurunuzun reddedilmesi, cevabı yetersiz bulmanız ya da süresinde cevap verilmemesi hâlinde Kişisel Verileri Koruma Kurulu'na şikâyette bulunabilirsiniz.`,
       ],
     },
   ],
@@ -101,33 +127,59 @@ export const COOKIES: LegalDoc = {
   href: "/cerez-politikasi",
   label: "Çerez politikası",
   title: "Çerez politikası",
-  description: "OX Dijital web sitesinde hangi çerezlerin, hangi amaçla kullanıldığı ve tercihlerinizi nasıl yönetebileceğiniz.",
-  updated: "30 Ekim 2026",
+  description: "OX Dijital web sitesinde hangi çerezlerin, hangi amaçla ve ne kadar süreyle kullanıldığı ve tercihlerinizi nasıl yönetebileceğiniz.",
+  updated: "2 Kasım 2026",
   intro:
-    "Çerezler, bir web sitesini ziyaret ettiğinizde tarayıcınıza kaydedilen küçük metin dosyalarıdır. Bu sayfa, sitemizde hangi çerezleri neden kullandığımızı ve tercihinizi nasıl değiştirebileceğinizi anlatır.",
+    "Çerezler, bir web sitesini ziyaret ettiğinizde tarayıcınıza kaydedilen küçük metin dosyalarıdır. Bu sayfada \"çerez\" derken tarayıcı depolaması gibi benzer teknolojileri de kastediyoruz. Aşağıda sitemizde neyi, neden ve ne kadar süreyle kullandığımızı anlatıyoruz.",
   sections: [
     {
-      heading: "Zorunlu çerezler",
+      heading: "Onay vermezseniz",
       paragraphs: [
-        "Sitenin çalışması için gereklidir ve kapatılamaz. Örneğin çerez tercihinizi hatırlamak için tarayıcınızda küçük bir kayıt tutarız.",
+        "Siteye ilk girdiğinizde sağ alttaki asistan çerez tercihinizi sorar. Cevap vermemek onay sayılmaz. Onay vermediğiniz sürece yalnızca aşağıdaki zorunlu kayıtlar kullanılır; analiz ve pazarlama araçları hiç yüklenmez.",
+        "Bu durumda da sayfaların kaç kez görüntülendiğini sayarız; ancak bunun için tarayıcınıza hiçbir şey yazılmaz ve sizi tanıyacak bir bilgi tutulmaz. Ayrıntısı KVKK aydınlatma metnimizde yer alır.",
+      ],
+    },
+    {
+      heading: "Zorunlu kayıtlar",
+      paragraphs: ["Sitenin çalışması için gereklidir ve kapatılamaz:"],
+      list: [
+        "ox-cookie-consent (tarayıcı depolaması): çerez tercihinizi hatırlar. Siz silene kadar saklanır.",
+        "ox-cookie-asked (oturum depolaması): aynı ziyarette her sayfada yeniden sorulmamanızı sağlar. Sekmeyi kapatınca silinir.",
       ],
     },
     {
       heading: "Analiz çerezleri",
       paragraphs: [
-        "Sitemizin nasıl kullanıldığını anlamamıza yardımcı olur: hangi sayfaların ziyaret edildiği, ziyaretçilerin siteye nereden geldiği gibi. Yalnızca \"Kabul et\" seçeneğiyle onay vermeniz hâlinde çalışır.",
+        "Sitemizin nasıl kullanıldığını anlamamıza yardımcı olur: hangi sayfaların ziyaret edildiği, ziyaretçilerin siteye nereden geldiği, hangi butonlara tıklandığı gibi. Yalnızca \"Kabul et\" seçeneğiyle onay vermeniz hâlinde çalışır:",
+      ],
+      list: [
+        "_ga, _ga_* (Google Analytics): ziyaretçileri birbirinden ayırt eder. 2 yıl saklanır.",
+        "ox-olcum-oturum (oturum depolaması): aynı ziyaretteki sayfa görüntülemelerini birbirine bağlar. Sekmeyi kapatınca silinir.",
+        "ox-olcum-kaynak (oturum depolaması): siteye hangi kaynak ya da kampanyadan geldiğinizi hatırlar; görüşme talebi oluşturursanız talebinizle eşleştirilir. Sekmeyi kapatınca silinir.",
+        "Rybbit: kendi sunucumuzda çalışan ziyaret istatistikleri aracıdır ve tarayıcınıza çerez yazmaz. Onay verdiğinizde IP adresiniz, tarayıcı ve dil bilginiz konum ve cihaz istatistikleri çıkarmak için ona iletilir.",
       ],
     },
     {
       heading: "Pazarlama çerezleri",
       paragraphs: [
-        "Reklam kampanyalarımızın etkisini ölçmek ve size daha ilgili reklamlar göstermek için kullanılır. Yalnızca onay vermeniz hâlinde çalışır.",
+        "Reklam kampanyalarımızın talep getirip getirmediğini ölçmek ve reklamlarımızı ilgili kişilere göstermek için kullanılır. Yalnızca onay vermeniz hâlinde çalışır:",
+      ],
+      list: [
+        "_fbp, _fbc (Meta Pixel): tarayıcınızı ve bir Meta reklamından gelip gelmediğinizi tanır. 90 gün saklanır.",
+        "_gcl_au ve Google Ads çerezleri: bir Google reklamından gelip gelmediğinizi ve sonrasında görüşme talebi oluşturup oluşturmadığınızı ölçer. 90 gün saklanır.",
+      ],
+    },
+    {
+      heading: "Üçüncü taraflar",
+      paragraphs: [
+        "Google ve Meta çerezleri bu şirketler tarafından yerleştirilir ve topladıkları veriler yurt dışındaki sunucularında işlenir. Bu şirketlerin veriyi nasıl kullandığı kendi gizlilik politikalarında anlatılır. Yurt dışına aktarıma ilişkin ayrıntılar KVKK aydınlatma metnimizde yer alır.",
       ],
     },
     {
       heading: "Tercihlerinizi yönetmek",
       paragraphs: [
-        "Çerez tercihinizi istediğiniz zaman bu sayfadaki \"Çerez tercihlerini değiştir\" butonuyla güncelleyebilirsiniz. Ayrıca tarayıcınızın ayarlarından çerezleri silebilir ya da engelleyebilirsiniz; zorunlu çerezleri engellemek sitenin bazı bölümlerinin çalışmamasına neden olabilir.",
+        "Çerez tercihinizi istediğiniz zaman bu sayfadaki \"Çerez tercihlerini değiştir\" butonuyla güncelleyebilirsiniz. Onayınızı geri aldığınızda analiz ve pazarlama araçları veri göndermeyi durdurur ve oturum kayıtlarımız silinir; daha önce yerleştirilmiş Google ve Meta çerezlerini tarayıcınızın ayarlarından silebilirsiniz.",
+        "Tarayıcınızın ayarlarından çerezleri tümüyle engelleyebilirsiniz; zorunlu kayıtları engellemek tercihinizin hatırlanmamasına neden olur.",
       ],
     },
     {
