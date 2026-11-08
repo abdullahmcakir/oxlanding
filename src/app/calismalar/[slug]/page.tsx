@@ -5,7 +5,7 @@ import { Footer } from "@/components/footer/footer";
 import { Navbar } from "@/components/navbar/navbar";
 import { WorkContent } from "@/components/work/work-content";
 import { DockPreset } from "@/components/dock/dock";
-import { getWork, neighbours, WORKS } from "@/components/work/work-data";
+import { getWork, LIVE_WORKS, neighbours, WORKS } from "@/components/work/work-data";
 import { WorkSidebar } from "@/components/work/work-sidebar";
 
 // Her çalışma için ayrı sayfa: /calismalar/teknoloji-girisimi …
@@ -13,6 +13,8 @@ import { WorkSidebar } from "@/components/work/work-sidebar";
 // Çalışmalar arası gezinme sağ alttaki asistanda (DockPreset).
 
 export function generateStaticParams() {
+  // Gizli çalışmalar da üretilir ama getWork onları bulmaz: derlemede 404 olarak kalır.
+  // (ensureStatic = "navigation" en az bir adres ister; hiç yayında çalışma yokken de derleme kırılmaz.)
   return WORKS.map((w) => ({ slug: w.slug }));
 }
 
@@ -45,8 +47,8 @@ export default async function WorkPage({ params }: PageProps<"/calismalar/[slug]
       <DockPreset
         preset={{
           kind: "work",
-          index: WORKS.indexOf(work) + 1,
-          total: WORKS.length,
+          index: LIVE_WORKS.indexOf(work) + 1,
+          total: LIVE_WORKS.length,
           prev: { href: `/calismalar/${prev.slug}`, title: prev.title },
           next: { href: `/calismalar/${next.slug}`, title: next.title },
         }}

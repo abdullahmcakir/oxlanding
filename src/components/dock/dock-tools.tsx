@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { PACKAGES } from "@/components/packages/packages-data";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
-import { WORKS } from "@/components/work/work-data";
+import { LIVE_WORKS } from "@/components/work/work-data";
 import { track } from "@/lib/analytics";
 import { openAssistant } from "@/lib/assistant";
 import { talepUrl } from "@/lib/links";
@@ -314,7 +314,7 @@ function SpeedCheck({ onFace, onEngage }: ToolProps) {
 
 /* --- Çalışmalar: sektöre göre en yakın iş --- */
 
-const SECTORS = [...new Map(WORKS.map((w) => [w.sector, w])).values()];
+const SECTORS = [...new Map(LIVE_WORKS.map((w) => [w.sector, w])).values()];
 
 function SectorPick({ onFace }: ToolProps) {
   return (

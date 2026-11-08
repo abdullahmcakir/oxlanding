@@ -11,6 +11,7 @@ import { absoluteUrl, breadcrumbJsonLd, faqJsonLd, jsonLdHtml, ORGANIZATION_REF,
 // Sağ alttaki asistan bu sayfada okuma arkadaşı olur: ilerleme, kalan süre, o an okunan bölüm (DockPreset).
 
 export function generateStaticParams() {
+  // Gizli yazılar da üretilir ama getArticle onları bulmaz: derlemede 404 olarak kalır
   return ARTICLES.map((a) => ({ slug: a.slug }));
 }
 

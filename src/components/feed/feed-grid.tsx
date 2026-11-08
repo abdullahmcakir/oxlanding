@@ -3,18 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useInView } from "motion/react";
+import { motion } from "motion/react";
 import { useLenis } from "lenis/react";
 import { Reveal } from "@/components/about/about-cards";
 import { SERVICES } from "@/components/services/services-data";
-import { Marquee } from "@/components/ui/marquee";
+import { WorksEmpty } from "@/components/work/works-empty";
 import { cn } from "@/lib/utils";
 import {
+  BENTO_READY,
   categoryOf,
-  CLIENTS,
   FEED_COLUMNS,
+  HAS_LIVE_WORKS,
   READING_ORDER,
-  TESTIMONIALS,
   type FeedCard,
   type FeedFilter,
 } from "./feed-data";
@@ -22,17 +22,13 @@ import { Badge, type BadgeKind } from "./feed-badge";
 import { FeedFilters } from "./feed-filters";
 
 // Referans: 3 sütunlu bento ızgara; her kartın sol üstünde nokta + tür etiketi, sağ üstünde
-// parantez içinde mono etiket. Kart türleri karışık: görsel, metin, logo şeridi, yorum, daktilo.
+// parantez içinde mono etiket. Kart türleri karışık: görsel, metin, daktilo.
 // Referanstaki doygun mavinin yerine kendi paletimiz: siyah (#111) ve vurgu yeşili kartlar yan yana,
 // kontrastı ikisi birlikte kuruyor. Köşeler navbar paneli kartlarıyla aynı (16px).
-
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
 const HEIGHT: Record<FeedCard["type"], string> = {
   image: "h-[480px] md:h-[620px]",
   post: "h-[320px] md:h-[370px]",
-  testimonials: "h-[420px] md:h-[480px]",
-  clients: "h-[230px]",
   services: "h-[230px]",
 };
 
@@ -41,8 +37,8 @@ const JUMP_KEY = "ox-feed-jump";
 const heightOf = (card: FeedCard) => (card.type === "image" && card.short ? HEIGHT.post : HEIGHT[card.type]);
 
 const COUNTS: Record<FeedFilter, number> = {
-  // "Tümü" sekmesi bento'yu gösterir: sayaç da yalnız bento'daki kartları sayar
-  tumu: FEED_COLUMNS.flat().filter((c) => categoryOf(c)).length,
+  // "Tümü" sekmesi bento'yu (hazırsa) gösterir: sayaç da yalnız görünen kartları sayar
+  tumu: (BENTO_READY ? FEED_COLUMNS.flat() : READING_ORDER).filter((c) => categoryOf(c)).length,
   calisma: READING_ORDER.filter((c) => categoryOf(c) === "calisma").length,
   blog: READING_ORDER.filter((c) => categoryOf(c) === "blog").length,
 };
@@ -80,7 +76,9 @@ export function FeedGrid({ id, filter }: { id: string; filter: FeedFilter }) {
       </div>
 
       <div aria-live="polite">
-        {filter === "tumu" ? (
+        {/* Yayında çalışma yokken: projeler hazırlanıyor mesajı + WhatsApp (Tümü ve Çalışmalar sekmelerinde) */}
+        {!HAS_LIVE_WORKS && filter !== "blog" && <WorksEmpty className="mb-4" />}
+        {filter === "tumu" && BENTO_READY ? (
           // Elle dengelenmiş bento: her sütunun toplam yüksekliği eşit
           <div className="flex flex-col gap-4 md:flex-row">
             {FEED_COLUMNS.map((column, c) => (
@@ -96,7 +94,7 @@ export function FeedGrid({ id, filter }: { id: string; filter: FeedFilter }) {
         ) : (
           // Tek türde bento dengesiz kalıyor: eşit yükseklikte düz ızgara
           <div key={filter} className="grid gap-4 md:grid-cols-3">
-            {READING_ORDER.filter((card) => categoryOf(card) === filter).map((card, i) => (
+            {READING_ORDER.filter((card) => filter === "tumu" || categoryOf(card) === filter).map((card, i) => (
               <Reveal key={i} index={i % 3} className="h-[420px] md:h-[520px]">
                 <Card card={card} />
               </Reveal>
@@ -114,10 +112,6 @@ function Card({ card }: { card: FeedCard }) {
       return <ImageCard {...card} />;
     case "post":
       return <PostCard {...card} />;
-    case "clients":
-      return <ClientsCard />;
-    case "testimonials":
-      return <TestimonialsCard />;
     case "services":
       return <ServicesCard />;
   }
@@ -203,83 +197,6 @@ function PostCard({ tag, title, meta, href }: Extract<FeedCard, { type: "post" }
         <span className="mt-5 text-[14px] tracking-[-0.01em] underline-offset-4 group-hover:underline">
           Devamını oku
         </span>
-      </div>
-    </Shell>
-  );
-}
-
-function ClientsCard() {
-  return (
-    <Shell tone="accent" badge="musteri" tag={String(CLIENTS.length).padStart(2, "0")}>
-      <div className="absolute inset-0 flex items-center">
-        <Marquee speed={36} className="w-full">
-          {CLIENTS.map((name) => (
-            <span key={name} className="whitespace-nowrap px-5 text-[clamp(22px,1.8vw,30px)] font-semibold tracking-[-0.04em]">
-              {name}
-            </span>
-          ))}
-        </Marquee>
-      </div>
-    </Shell>
-  );
-}
-
-const SLIDE_MS = 4500;
-
-function TestimonialsCard() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref);
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (!inView || paused) return;
-    const t = setTimeout(() => setIndex((i) => (i + 1) % TESTIMONIALS.length), SLIDE_MS);
-    return () => clearTimeout(t);
-  }, [index, inView, paused]);
-
-  const item = TESTIMONIALS[index];
-
-  return (
-    <Shell tone="dark" badge="yorum" tag={`${index + 1}/${TESTIMONIALS.length}`}>
-      <div
-        ref={ref}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-8 pb-10 md:px-10"
-      >
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.figure
-            key={index}
-            initial={{ x: "70%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-70%", opacity: 0 }}
-            transition={{ duration: 0.7, ease: EASE_OUT }}
-            className="text-center"
-          >
-            <span aria-hidden className="block text-[56px] leading-[0.6] text-accent">“</span>
-            <blockquote className="mt-3 text-[clamp(17px,1.25vw,20px)] font-medium leading-[1.25] tracking-[-0.02em]">
-              {item.quote}
-            </blockquote>
-            <figcaption className="mt-4 text-[13px] leading-[1.35]">
-              {item.name}
-              <span className="block text-white/50">{item.role}</span>
-            </figcaption>
-          </motion.figure>
-        </AnimatePresence>
-
-        <div className="absolute bottom-5 flex gap-1 rounded-full bg-white/10 p-1.5">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIndex(i)}
-              aria-label={`${i + 1}. yorum`}
-              aria-current={i === index}
-              className={cn("size-1.5 rounded-full transition-colors", i === index ? "bg-accent" : "bg-white/30")}
-            />
-          ))}
-        </div>
       </div>
     </Shell>
   );

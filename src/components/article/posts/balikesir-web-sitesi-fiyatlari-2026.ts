@@ -16,6 +16,7 @@ const startPrice = WEBSITE_START_PRICE
 
 export const BALIKESIR_PRICES: Omit<Article, "minutes"> = {
   slug: SLUG,
+  live: true,
   title: "Balıkesir Web Sitesi Fiyatları 2026: Web Sitesi Yaptırma Rehberi",
   seo: {
     title: "Balıkesir Web Sitesi Fiyatları 2026 | Maliyet Rehberi",
@@ -298,7 +299,7 @@ export const BALIKESIR_PRICES: Omit<Article, "minutes"> = {
         },
         {
           type: "p",
-          text: "Trafik artışı otomatik olarak müşteri artışı anlamına gelmez. Siteye gelen kişi aradığını bulamıyor, güven duymuyor ya da size kolayca ulaşamıyorsa ziyaretler talebe dönüşmez. Bu yüzden sayfaların anlaşılır olması ve çağrıların doğru yerde durması en az trafik kadar önemlidir; [landing page dönüşümü üzerine yazımız](/blog/landing-page-donusum) bu konuda pratik öneriler içeriyor.",
+          text: "Trafik artışı otomatik olarak müşteri artışı anlamına gelmez. Siteye gelen kişi aradığını bulamıyor, güven duymuyor ya da size kolayca ulaşamıyorsa ziyaretler talebe dönüşmez. Bu yüzden sayfaların anlaşılır olması ve çağrıların doğru yerde durması en az trafik kadar önemlidir.",
         },
       ],
     },

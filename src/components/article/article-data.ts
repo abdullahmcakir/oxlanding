@@ -32,6 +32,8 @@ export type ArticleBlock =
 
 export type Article = {
   slug: string;
+  /** Yayında mı? false: sayfası 404 döner; blogda, akışta, ilgili yazılarda ve sitemap'te görünmez. */
+  live: boolean;
   title: string;
   category: string;
   date: string;
@@ -115,6 +117,7 @@ export const ARTICLES: Article[] = [
   { ...BALIKESIR_PRICES, minutes: readingMinutes(BALIKESIR_PRICES) },
   {
     slug: "meta-reklam-stratejileri",
+    live: true,
     title: "2026'da Meta reklamlarında işe yarayan 5 strateji",
     category: "Reklam",
     date: "14 Ekim 2026",
@@ -245,6 +248,7 @@ export const ARTICLES: Article[] = [
   },
   {
     slug: "kucuk-isletmeler-icin-seo",
+    live: true,
     title: "Küçük işletmeler için SEO: ilk 90 günde ne yapmalı?",
     category: "SEO",
     date: "29 Eylül 2026",
@@ -289,6 +293,7 @@ export const ARTICLES: Article[] = [
   },
   {
     slug: "reels-mi-carousel-mi",
+    live: false, // demo içerik
     title: "Reels mi carousel mı? Hangi format ne zaman işe yarar",
     category: "Sosyal medya",
     date: "22 Eylül 2026",
@@ -318,6 +323,7 @@ export const ARTICLES: Article[] = [
   },
   {
     slug: "landing-page-donusum",
+    live: false, // demo içerik
     title: "Landing page dönüşümünü artırmanın 7 yolu",
     category: "Tasarım",
     date: "7 Ekim 2026",
@@ -347,6 +353,7 @@ export const ARTICLES: Article[] = [
   },
   {
     slug: "tekrar-eden-isleri-otomatige-almak",
+    live: false, // demo içerik
     title: "Tekrar eden işleri otomatiğe almak",
     category: "Otomasyon",
     date: "15 Eylül 2026",
@@ -375,14 +382,18 @@ export const ARTICLES: Article[] = [
   },
 ];
 
+/** Yayındaki yazılar: blog, akış, ilgili yazılar ve sitemap yalnız bunları kullanır. */
+export const LIVE_ARTICLES = ARTICLES.filter((a) => a.live);
+
+/** Yalnız yayındaki yazıyı döndürür; gizli yazının sayfası 404 olur. */
 export function getArticle(slug: string) {
-  return ARTICLES.find((a) => a.slug === slug) ?? null;
+  return LIVE_ARTICLES.find((a) => a.slug === slug) ?? null;
 }
 
 /** Yazının altındaki "Diğer yazılar": önce yazının seçtikleri (related), sonra kendisi hariç en yeniler; toplam üç. */
 export function relatedArticles(slug: string) {
   const self = getArticle(slug);
   const picked = (self?.related ?? []).map(getArticle).filter((a): a is Article => !!a && a.slug !== slug);
-  const rest = ARTICLES.filter((a) => a.slug !== slug && !picked.includes(a));
+  const rest = LIVE_ARTICLES.filter((a) => a.slug !== slug && !picked.includes(a));
   return [...picked, ...rest].slice(0, 3);
 }

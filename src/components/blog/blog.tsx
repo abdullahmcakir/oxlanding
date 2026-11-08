@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/about/about-cards";
-import { ARTICLES, type Article } from "@/components/article/article-data";
+import { LIVE_ARTICLES, type Article } from "@/components/article/article-data";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
 import { Chevron, SplitHeading } from "@/components/ui/section-parts";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ function Meta({ article }: { article: Article }) {
 }
 
 export function Blog() {
-  const [featured, ...others] = ARTICLES;
+  const [featured, ...others] = LIVE_ARTICLES;
   const rest = others.slice(0, RECENT);
   const single = rest.length === 0;
 

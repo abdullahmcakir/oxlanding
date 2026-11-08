@@ -16,6 +16,8 @@ export type WorkBlock =
 
 export type Work = {
   slug: string;
+  /** Yayında mı? false: sayfası 404 döner; listelerde, asistanda ve sitemap'te görünmez. Gerçek içerik gelince true yap. */
+  live: boolean;
   title: string;
   /** Hero ve kenar çubuğundaki kısa açıklama */
   summary: string;
@@ -75,6 +77,7 @@ const TEAM = [
 export const WORKS: Work[] = [
   {
     slug: "teknoloji-girisimi",
+    live: false, // demo içerik
     title: "Teknoloji Girişimi",
     summary: "Lansmana hazır web sitesi ve dijital vitrin",
     sector: "Teknoloji",
@@ -139,6 +142,7 @@ export const WORKS: Work[] = [
   },
   {
     slug: "kafe-zinciri",
+    live: false, // demo içerik
     title: "Kafe Zinciri",
     summary: "Yeni marka kimliği ve ambalaj sistemi",
     sector: "Yeme & İçme",
@@ -203,6 +207,7 @@ export const WORKS: Work[] = [
   },
   {
     slug: "moda-markasi",
+    live: false, // demo içerik
     title: "Moda Markası",
     summary: "Satışa odaklı e-ticaret altyapısı",
     sector: "Moda",
@@ -267,6 +272,7 @@ export const WORKS: Work[] = [
   },
   {
     slug: "butik-otel",
+    live: false, // demo içerik
     title: "Butik Otel",
     summary: "Misafirler için Mekanda dijital deneyimi",
     sector: "Konaklama",
@@ -331,13 +337,17 @@ export const WORKS: Work[] = [
   },
 ];
 
+/** Yayındaki çalışmalar: listeler, sitemap, asistan ve önceki/sonraki gezinmesi yalnız bunları kullanır. */
+export const LIVE_WORKS = WORKS.filter((w) => w.live);
+
+/** Yalnız yayındaki çalışmayı döndürür; gizli çalışmanın sayfası 404 olur. */
 export function getWork(slug: string) {
-  return WORKS.find((w) => w.slug === slug) ?? null;
+  return LIVE_WORKS.find((w) => w.slug === slug) ?? null;
 }
 
-/** Önceki / sonraki çalışma (döngüsel). */
+/** Önceki / sonraki yayındaki çalışma (döngüsel). */
 export function neighbours(slug: string) {
-  const i = WORKS.findIndex((w) => w.slug === slug);
-  const n = WORKS.length;
-  return { prev: WORKS[(i - 1 + n) % n], next: WORKS[(i + 1) % n] };
+  const i = LIVE_WORKS.findIndex((w) => w.slug === slug);
+  const n = LIVE_WORKS.length;
+  return { prev: LIVE_WORKS[(i - 1 + n) % n], next: LIVE_WORKS[(i + 1) % n] };
 }

@@ -1,3 +1,4 @@
+import { LIVE_WORKS } from "@/components/work/work-data";
 import { talepUrl, whatsappUrl } from "@/lib/links";
 import type { DockTool } from "./dock-tools";
 import type { Glyph } from "./pixel-matrix";
@@ -54,12 +55,11 @@ export const DOCK_MESSAGES = {
     primary: MEETING,
     tool: "quiz",
   },
-  calismalar: {
-    glyph: "frame",
-    line: "Sektörünü seç, sana en yakın işi göstereyim.",
-    primary: MEETING,
-    tool: "sector",
-  },
+  // Yayında çalışma yokken sektör aracı boş kalırdı: araç yerine görüşme önerisi
+  calismalar:
+    LIVE_WORKS.length > 0
+      ? { glyph: "frame", line: "Sektörünü seç, sana en yakın işi göstereyim.", primary: MEETING, tool: "sector" }
+      : { glyph: "frame", line: "Projeler yakında burada. Bu sırada ne yapabileceğimizi konuşalım.", primary: MEETING, secondary: WHATSAPP },
   // Süre tahmin aracı ("timeline") gizli: içindeki süreler doğrulanmamış. Kodu dock-tools.tsx'te duruyor;
   // gerçek süreler belli olunca `tool: "timeline"` geri eklenip cümle eski hâline ("Ne kadar sürer? İşini seç, söyleyeyim.") döner.
   surec: {
