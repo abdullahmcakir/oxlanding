@@ -27,13 +27,17 @@ const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 export function HeroCopy({
   words = HERO_WORDS,
   wordIndex,
+  tone = "dark",
   className,
 }: {
   words?: string[];
+  /** Zemin açıksa metin koyulaşır (tam ekran hero sahnelerinde) */
+  tone?: "light" | "dark";
   /** Verilirse kayan kelime sahneyle eşleşir (ör. sinyal hangi kutudaysa o kelime) */
   wordIndex?: number;
   className?: string;
 }) {
+  const light = tone === "light";
   return (
     <div className={cn("relative z-10", className)}>
       <h1 className="sr-only">OX Dijital: daha etkili {words.join(", ")}</h1>
@@ -42,7 +46,10 @@ export function HeroCopy({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.8, ease: EASE_OUT }}
-        className="flex items-center gap-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/50"
+        className={cn(
+          "flex items-center gap-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] transition-colors duration-500",
+          light ? "text-black/55" : "text-white/50",
+        )}
       >
         <span className="size-2 rounded-[2px] bg-accent" aria-hidden />
         OX Dijital · Dijital ajans
@@ -55,12 +62,12 @@ export function HeroCopy({
         transition={{ delay: 0.25, duration: 1, ease: EASE_OUT }}
         className="mt-5 flex min-w-0 flex-col items-start text-[40px] font-medium leading-[0.91] tracking-[-0.06em] sm:text-[52px] lg:text-[clamp(58px,5.5vw,90px)]"
       >
-        <span className="whitespace-nowrap text-white/65">Daha etkili</span>
+        <span className={cn("whitespace-nowrap transition-colors duration-500", light ? "text-black/60" : "text-white/65")}>Daha etkili</span>
         <WordCarousel
           words={words}
           visibleRows={3}
           index={wordIndex}
-          className="mt-1 text-white [--word-rows:1] lg:[--word-rows:3]"
+          className={cn("mt-1 transition-colors duration-500 [--word-rows:1] lg:[--word-rows:3]", light ? "text-[#0b0b0c]" : "text-white")}
         />
       </motion.div>
 
@@ -70,7 +77,12 @@ export function HeroCopy({
         transition={{ delay: 0.5, duration: 0.9, ease: EASE_OUT }}
         className="mt-7 max-w-[500px]"
       >
-        <p className="max-w-[460px] text-[clamp(15px,1.05vw,18px)] leading-[1.55] tracking-[-0.015em] text-white/62">
+        <p
+          className={cn(
+            "max-w-[460px] text-[clamp(15px,1.05vw,18px)] leading-[1.55] tracking-[-0.015em] transition-colors duration-500",
+            light ? "text-black/65" : "text-white/62",
+          )}
+        >
           İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Reklam, tasarım ve yazılım tek çatı altında;
           tek ekip, tek plan.
         </p>
@@ -87,7 +99,12 @@ export function HeroCopy({
           </a>
           <Link
             href="#hizmetler"
-            className="flex h-14 items-center rounded-full px-6 text-[15px] font-semibold tracking-[-0.02em] text-white ring-1 ring-white/20 outline-none transition-colors hover:bg-white/[0.06] focus-visible:ring-2 focus-visible:ring-white/60"
+            className={cn(
+              "flex h-14 items-center rounded-full px-6 text-[15px] font-semibold tracking-[-0.02em] ring-1 outline-none transition-colors duration-500 focus-visible:ring-2",
+              light
+                ? "text-[#0b0b0c] ring-black/20 hover:bg-black/[0.05] focus-visible:ring-black/50"
+                : "text-white ring-white/20 hover:bg-white/[0.06] focus-visible:ring-white/60",
+            )}
           >
             Hizmetleri gör
           </Link>

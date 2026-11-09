@@ -6,21 +6,20 @@ import { buildAssets, type Assets } from "./brand-film";
 import { OX_OUTLINE } from "./ox-outline";
 import { rng, sampleImage } from "./shape-sampler";
 
-// Hero sahnesi "Stiller 5": Stiller 4'ün (brand-film-ref.tsx, olduğu gibi duruyor) Referans'taki gibi dönen hâli.
-// Logo kesmeler boyunca kesintisiz döner (aynı nesne, değişen üslup). İki yüzü baskılı madeni para gibi davranır:
-// arkaya döndüğünde ters ("xo") görünmez; incelip yeniden genişler. Kalın (katmanlı) üsluplarda yan yüz dönüş yönüne göre
-// doğru tarafta görünür. Piksel üsluplarında dönüş piksel adımlarıyla, tarama/dither/ekolayzırda ızgaranın daralmasıyla olur.
+// Hero sahnesi "Stiller 6": site sahibinin ikinci referans setinden türetilen üsluplar (Stiller 5'in altyapısı:
+// çerçeve, tasarlanmış geçişler, bildirim/sticker çıkışları, vektör logo). Logo tam tur dönmez, ±30° salınır.
+//   Matematik (SEO) · HUD kadran (Reklam) · Neon karalama (Sosyal Medya) · Çizgi film (İçerik) ·
+//   Retro 8-bit oyun (Kampanya) · Blueprint (Marka) · Terminal + ASCII logo (Yazılım).
 // Ekrandan çıkınca ve sekme arka plandayken durur; "hareketi azalt"ta sabit kare.
 
 type Mode =
   | "beauty" | "chrome" | "cyber" | "clay" | "pixel" | "riso" | "glitch" | "brutal"
   | "cloud" | "zine" | "neon" | "pop" | "sketch" | "tracking" | "nodes"
-  | "glass" | "scanlines" | "bauhaus" | "pile" | "os" | "balloon" | "iso" | "eq" | "dither" | "grunge";
-const SEQUENCE: Mode[] = ["beauty", "glass", "scanlines", "bauhaus", "pile", "os", "balloon", "iso", "eq", "dither", "grunge", "neon"];
+  | "glass" | "scanlines" | "bauhaus" | "pile" | "os" | "balloon" | "iso" | "eq" | "dither" | "grunge"
+  | "math" | "hud" | "doodle" | "cartoon" | "arcade" | "blueprint2" | "terminal";
+const SEQUENCE: Mode[] = ["math", "hud", "doodle", "cartoon", "arcade", "blueprint2", "terminal"];
 /** Sol başlıkta moda eşlik eden kelimeler (SEQUENCE ile aynı sıra) */
-export const SPIN_WORDS = [
-  "sonuç", "Marka", "Sistem", "Tasarım", "Sosyal Medya", "Yazılım", "Kampanya", "Website", "Reels", "Logo", "Reklam", "Slogan",
-];
+export const SIX_WORDS = ["SEO", "Reklam", "Sosyal Medya", "İçerik", "Kampanya", "Marka", "Yazılım"];
 
 const SHOT_MS = 2300;
 const TRANS_MS = 520;
@@ -35,6 +34,7 @@ const FRAMING: Partial<Record<Mode, number>> = {
 };
 /** Çerçeve dışı ışımanın rengi */
 const ACCENT: Partial<Record<Mode, string>> = {
+  math: "#e6e4e0", hud: "#36e07a", doodle: "#ff2bd6", cartoon: "#2b3ff2", arcade: "#ff2bd6", blueprint2: "#2257b8", terminal: "#39ff88",
   glass: "#9fb4ff", scanlines: "#bdbdbd", bauhaus: "#e8432a", pile: "#ff5a1f", os: "#19ff9a", balloon: "#b9a6ff",
   iso: "#d9d9d7", eq: "#ff2d87", dither: "#e6e3db", grunge: "#e2ff6b",
   beauty: "#2f6bff", chrome: "#c9b8ff", cyber: "#ff2bd6", clay: "#ff8fb8", pixel: "#8a3dff", riso: "#ff48b0",
@@ -58,6 +58,19 @@ const ORANGE: [string, string] = ["#ffb347", "#ff6a1f"];
 const SKY: [string, string] = ["#5fd0ff", "#2f6bff"];
 
 const POPS: Partial<Record<Mode, Pop[]>> = {
+  math: [{ kind: "notif", at: 0.5, x: 0.6, y: 0.62, theme: "glass", app: SKY, glyph: "search", title: "Analiz hazır", body: "Anahtar kelime haritası" }],
+  hud: [{ kind: "notif", at: 0.4, x: 0.66, y: -0.98, theme: "os", app: GREEN, glyph: "target", title: "HEDEF KİLİTLENDİ", body: "KAMPANYA AKTİF" }],
+  doodle: [
+    { kind: "emoji", at: 0.3, chars: ["heart", "star", "sparkle"], n: 9 },
+    { kind: "chat", at: 0.45, x: 0.55, y: 0.62, text: "Bunu paylaşmam lazım", bg: "#ff2bd6", fg: "#fff" },
+  ],
+  cartoon: [
+    { kind: "sticker", at: 0.35, x: 0.62, y: -0.66, text: "YENİ BÖLÜM!", bg: "#ffd21f", fg: "#111", rot: -0.1 },
+    { kind: "emoji", at: 0.5, chars: ["heart", "star"], n: 7 },
+  ],
+  arcade: [],
+  blueprint2: [{ kind: "sticker", at: 0.62, x: 0.6, y: -0.7, text: "ONAYLANDI", bg: "#ffffff", fg: "#1d4ea8", rot: -0.08 }],
+  terminal: [{ kind: "notif", at: 0.78, x: -0.45, y: 0.85, theme: "os", app: GREEN, glyph: "check", title: "DEPLOY TAMAM", body: "OXDIJITAL.COM · ŞİMDİ" }],
   glass: [{ kind: "notif", at: 0.3, x: 0.62, y: -0.66, theme: "dark", app: VIOLET, glyph: "star", title: "Marka kiti hazır", body: "Logo, renkler ve yazı tipleri" }],
   scanlines: [{ kind: "notif", at: 0.4, x: 0.62, y: 0.6, theme: "dark", app: SKY, glyph: "chart", title: "Analiz tamamlandı", body: "Panelde görüntüle" }],
   bauhaus: [{ kind: "sticker", at: 0.5, x: 0.66, y: -0.62, text: "YENİ TASARIM", bg: "#1f56e0", fg: "#fff", rot: -0.08 }],
@@ -291,11 +304,36 @@ function buildRef(a: Assets): RefAssets {
   return { logo, parts, hm, hmW, hmH, gw, gh, mk, speckle };
 }
 
-export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) => void; className?: string }) {
+/** Tam ekranda metnin arkasındaki örtü: sahnenin kendi zemin rengi (siyaha çamurlaşmasın) */
+const SCRIM: Partial<Record<Mode, string>> = {
+  math: "#e4e2de", hud: "#050705", doodle: "#06030b", cartoon: "#2232c8", arcade: "#2a0b2e", blueprint2: "#1b48a3", terminal: "#090c0a",
+};
+/** Açık zeminli sahnelerde soldaki metin koyulaşır */
+const TONE: Partial<Record<Mode, "light" | "dark">> = { math: "light" };
+const withAlpha = (hex: string, a: number) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+};
+
+export function BrandFilmSix({
+  onWord,
+  onTone,
+  bleed = false,
+  className,
+}: {
+  onWord?: (index: number) => void;
+  /** Tam ekranda sahnenin zemini açık mı koyu mu (soldaki metnin rengi için) */
+  onTone?: (tone: "light" | "dark") => void;
+  /** true: çerçeve yok, sahne bütün hero'yu kaplar; logo ve süslemeler sağda, metnin arkasında sahne renginde örtü */
+  bleed?: boolean;
+  className?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const onWordRef = useRef(onWord);
+  const onToneRef = useRef(onTone);
   useEffect(() => {
     onWordRef.current = onWord;
+    onToneRef.current = onTone;
   });
 
   useEffect(() => {
@@ -342,6 +380,18 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       const wide = width >= 1024;
+      if (bleed) {
+        // Tam ekran: sahne bütün hero'da; logo ve süslemeler sağdaki bölgede (dar ekranda üstte)
+        const area = wide
+          ? { x0: width * 0.47, y0: 100, x1: width - width * 0.045, y1: height - 120 }
+          : { x0: 16, y0: 88, x1: width - 16, y1: Math.max(300, height * 0.44) };
+        frame = { x0: 0, y0: 0, x1: width, y1: height };
+        region = area;
+        baseX = (area.x0 + area.x1) / 2;
+        baseY = (area.y0 + area.y1) / 2;
+        baseSize = Math.min(area.x1 - area.x0, area.y1 - area.y0) * (wide ? 0.5 : 0.52);
+        return;
+      }
       frame = wide
         ? { x0: width * 0.5, y0: 92, x1: width - width * 0.045, y1: height - 108 }
         : { x0: 16, y0: 84, x1: width - 16, y1: Math.max(300, height * 0.42) };
@@ -2204,9 +2254,703 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
       finish(0.3, t, 0.55);
     };
 
+    /* ───────────── Stiller 6 üslupları ───────────── */
+
+    const rx = (f: number) => region.x0 + f * (region.x1 - region.x0);
+    const ry = (f: number) => region.y0 + f * (region.y1 - region.y0);
+    /** Renk kaymalı (kırmızı/camgöbeği) üç kat çizim */
+    const chroma = (draw: (col: string) => void, amt: number, main: string) => {
+      ctx.save();
+      ctx.translate(-amt, 0);
+      draw("rgba(255,40,70,0.55)");
+      ctx.translate(amt * 2, 0);
+      draw("rgba(0,190,255,0.55)");
+      ctx.restore();
+      draw(main);
+    };
+
+    // Matematik: açık tahtada el yazısı formüller yazılır, grafik ve tel küp çizilir, logo kalemle çizilir
+    const MATH = [
+      { s: "sin²x + cos²x = 1", x: 0.5, y: 0.13, at: 0.0 },
+      { s: "F(x) = ∫ f(x) dx", x: 0.02, y: 0.1, at: 0.08 },
+      { s: "R = a√3 / 3", x: 0.02, y: 0.6, at: 0.2 },
+      { s: "Σ k = n(n+1) / 2", x: 0.5, y: 0.95, at: 0.3 },
+      { s: "O × X = ∞", x: 0.66, y: 0.66, at: 0.42 },
+    ];
+    const math = (angle: number, t: number, p: number) => {
+      fill("#ecebe8", "#dcdad6");
+      const r = rng(81);
+      for (let i = 0; i < 8; i++) {
+        ctx.fillStyle = `rgba(255,255,255,${0.25 + r() * 0.25})`;
+        ctx.beginPath();
+        ctx.arc(rx(r()), ry(r()), 18 + r() * 50, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      const px = Math.round(size * 0.1);
+      for (const f of MATH) {
+        const k = easeOut(span(p, f.at, f.at + 0.3));
+        if (k <= 0) continue;
+        ctx.font = `italic ${px}px "Times New Roman", Georgia, serif`;
+        ctx.textAlign = "left";
+        const x = rx(f.x), y = ry(f.y);
+        const w = ctx.measureText(f.s).width;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x - 6, y - px * 1.1, (w + 12) * k, px * 1.5);
+        ctx.clip();
+        chroma((col) => {
+          ctx.fillStyle = col;
+          ctx.fillText(f.s, x, y);
+        }, 1.6, "#1c1c1f");
+        ctx.restore();
+      }
+      // Grafik: eksenler ve parabol çizilerek
+      const gk = span(p, 0.1, 0.5);
+      const gx = rx(0.78), gy = ry(0.36), gw = (region.x1 - region.x0) * 0.2;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      chroma((col) => {
+        ctx.strokeStyle = col;
+        ctx.beginPath();
+        ctx.moveTo(gx - gw, gy);
+        ctx.lineTo(gx - gw + gw * 2 * gk, gy);
+        ctx.moveTo(gx, gy + gw * 0.5);
+        ctx.lineTo(gx, gy + gw * 0.5 - gw * 1.3 * gk);
+        for (let i = 0; i <= 40 * gk; i++) {
+          const u = -1 + (i / 40) * 2;
+          const X = gx + u * gw * 0.8, Y = gy - gw * 0.35 + u * u * gw * 0.55;
+          if (i) ctx.lineTo(X, Y);
+          else ctx.moveTo(X, Y);
+        }
+        ctx.stroke();
+      }, 1.4, "#1c1c1f");
+      // Tel küp
+      const ck = span(p, 0.25, 0.6);
+      const kx = rx(0.12), ky = ry(0.84), ks = size * 0.16;
+      const V = [[0, 0], [1, 0], [1, 1], [0, 1]].flatMap(([a, b]) => [[a, b, 0], [a, b, 1]]);
+      const pr = ([a, b, c]: number[]) => [kx + (a - c * 0.45) * ks, ky - (b + c * 0.35) * ks] as const;
+      const E = [[0, 2], [2, 4], [4, 6], [6, 0], [1, 3], [3, 5], [5, 7], [7, 1], [0, 1], [2, 3], [4, 5], [6, 7]];
+      chroma((col) => {
+        ctx.strokeStyle = col;
+        ctx.fillStyle = col;
+        ctx.beginPath();
+        E.slice(0, Math.ceil(E.length * ck)).forEach(([a, b]) => {
+          const [ax, ay] = pr(V[a]), [bx, by] = pr(V[b]);
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+        });
+        ctx.stroke();
+        if (ck > 0.5)
+          V.forEach((v) => {
+            const [vx, vy] = pr(v);
+            ctx.beginPath();
+            ctx.arc(vx, vy, 4, 0, Math.PI * 2);
+            ctx.fill();
+          });
+      }, 1.4, "#1c1c1f");
+      // Logo: kalemle çizilir (kesik çizgi uzunluğu büyür)
+      const R = extra!.ref;
+      const lk = easeOut(span(p, 0.04, 0.6));
+      chroma((col) => {
+        logoT(angle, 0.86);
+        ctx.setLineDash([22 * lk, 22]);
+        ctx.lineWidth = 0.014;
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = col;
+        ctx.stroke(R.logo);
+        ctx.setLineDash([]);
+        reset();
+      }, 2, "#141416");
+      finish(0.1, t, 0.12);
+    };
+
+    // HUD: yeşil fosforlu kadran, hizmet dilimleri, dolaşan ibre, dijital sayaç, ortada logo, CRT çizgileri
+    const HUD_LABELS = ["SEO", "WEB", "SOSYAL", "REKLAM", "MARKA", "YAZILIM"];
+    const hud = (angle: number, t: number, p: number) => {
+      fill("#070a08", "#030403");
+      const G = "#36e07a";
+      const flick = rng(Math.floor(t * 20))() < 0.05 ? 0.6 : 1;
+      ctx.globalAlpha = flick;
+      ctx.shadowColor = G;
+      ctx.shadowBlur = 10;
+      ctx.strokeStyle = G;
+      ctx.fillStyle = G;
+      const R0 = size * 0.82, R1 = R0 * 0.6;
+      const a0 = Math.PI * 0.8, a1 = Math.PI * 2.2;
+      ctx.lineWidth = 2;
+      // Dış yay parçaları
+      for (let i = 0; i < 6; i++) {
+        const s = a0 + ((a1 - a0) / 6) * i + 0.03, e = a0 + ((a1 - a0) / 6) * (i + 1) - 0.03;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R0 + 14, s, e);
+        ctx.stroke();
+      }
+      // Segmentli şerit (dolar)
+      const lit = Math.floor(48 * (0.5 + 0.5 * Math.sin(t * 0.9)));
+      for (let i = 0; i < 48; i++) {
+        const a = a0 + ((a1 - a0) * i) / 47;
+        ctx.globalAlpha = flick * (i < lit ? 1 : 0.2);
+        ctx.save();
+        ctx.translate(cx + Math.cos(a) * (R0 + 26), cy + Math.sin(a) * (R0 + 26));
+        ctx.rotate(a);
+        ctx.fillRect(-3, -2.5, 8, 5);
+        ctx.restore();
+      }
+      ctx.globalAlpha = flick;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R0, a0, a1);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(cx, cy, R1, 0, Math.PI * 2);
+      ctx.stroke();
+      // Dilimler ve etiketler
+      const seg = (a1 - a0) / HUD_LABELS.length;
+      const needle = a0 + (a1 - a0) * (0.5 + 0.45 * Math.sin(t * 0.8 + Math.sin(t * 2.1) * 0.3));
+      const active = Math.min(HUD_LABELS.length - 1, Math.max(0, Math.floor((needle - a0) / seg)));
+      HUD_LABELS.forEach((lab, i) => {
+        const s = a0 + seg * i;
+        if (i === active) {
+          ctx.globalAlpha = flick * 0.28;
+          ctx.beginPath();
+          ctx.arc(cx, cy, R0, s, s + seg);
+          ctx.arc(cx, cy, R1, s + seg, s, true);
+          ctx.fill();
+          ctx.globalAlpha = flick;
+        }
+        ctx.beginPath();
+        ctx.moveTo(cx + Math.cos(s) * R1, cy + Math.sin(s) * R1);
+        ctx.lineTo(cx + Math.cos(s) * R0, cy + Math.sin(s) * R0);
+        ctx.stroke();
+        const m = s + seg / 2, rr = (R0 + R1) / 2;
+        ctx.save();
+        ctx.translate(cx + Math.cos(m) * rr, cy + Math.sin(m) * rr);
+        ctx.rotate(m + Math.PI / 2);
+        ctx.font = `700 ${Math.round(size * 0.065)}px ${mono}`;
+        ctx.textAlign = "center";
+        ctx.fillText(lab, 0, 4);
+        ctx.restore();
+      });
+      // İbre (dış halkada)
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(needle) * R1, cy + Math.sin(needle) * R1);
+      ctx.lineTo(cx + Math.cos(needle) * (R0 + 4), cy + Math.sin(needle) * (R0 + 4));
+      ctx.stroke();
+      // Sayaç
+      ctx.font = `700 ${Math.round(size * 0.15)}px ${mono}`;
+      ctx.textAlign = "center";
+      const sec = Math.floor(t * 10) % 1000;
+      ctx.font = `700 ${Math.round(size * 0.1)}px ${mono}`;
+      ctx.fillText(`OX/${String(sec).padStart(3, "0")}`, cx, cy + R0 * 0.74);
+      // Alt göstergeler
+      for (const sx of [-1, 1]) {
+        const gx = cx + sx * R0 * 0.85, gy = cy + R0 * 0.78, gr = size * 0.1;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.arc(gx, gy, gr, t * 2 * sx, t * 2 * sx + Math.PI * 1.3);
+        ctx.stroke();
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(gx, gy, gr * 0.45, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#ff4a4a";
+      ctx.shadowColor = "#ff4a4a";
+      ctx.font = `700 ${Math.round(size * 0.07)}px ${mono}`;
+      ctx.fillText("CANLI", cx, cy + R0 * 0.97);
+      // Ortada logo
+      const R = extra!.ref;
+      ctx.shadowColor = G;
+      logoT(angle, 0.5);
+      ctx.fillStyle = "rgba(54,224,122,0.14)";
+      ctx.fill(R.logo, "evenodd");
+      ctx.lineWidth = 0.014;
+      ctx.strokeStyle = G;
+      ctx.stroke(R.logo);
+      reset();
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "transparent";
+      ctx.globalAlpha = 1;
+      // CRT çizgileri
+      ctx.fillStyle = "rgba(0,0,0,0.28)";
+      for (let y = region.y0 - 40; y < region.y1 + 40; y += 3) ctx.fillRect(region.x0 - 30, y, region.x1 - region.x0 + 60, 1);
+      void p;
+      finish(0.12, t, 0.6);
+    };
+
+    // Neon karalama: titreyen neon kalem çizimleri (iki renk kaymalı), logo da neon kalemle
+    const wobble = (pts: number[][], closed: boolean, colA: string, colB: string, k: number, seed: number) => {
+      const n = Math.max(2, Math.ceil(pts.length * k));
+      const boil = rng(seed + Math.floor(performance.now() / 125));
+      const path = new Path2D();
+      for (let i = 0; i < n; i++) {
+        const [x, y] = pts[i];
+        const jx = x + (boil() - 0.5) * 2.4, jy = y + (boil() - 0.5) * 2.4;
+        if (i) path.lineTo(jx, jy);
+        else path.moveTo(jx, jy);
+      }
+      if (closed && k >= 1) path.closePath();
+      ctx.save();
+      ctx.lineWidth = 3.4;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.globalCompositeOperation = "lighter";
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = colA;
+      ctx.strokeStyle = colA;
+      ctx.translate(-2, 0);
+      ctx.stroke(path);
+      ctx.shadowColor = colB;
+      ctx.strokeStyle = colB;
+      ctx.translate(4, 1.5);
+      ctx.stroke(path);
+      ctx.restore();
+    };
+    const circ = (x: number, y: number, r: number, n = 28, sy = 1) =>
+      Array.from({ length: n + 1 }, (_, i) => [x + Math.cos((i / n) * Math.PI * 2) * r, y + Math.sin((i / n) * Math.PI * 2) * r * sy]);
+    const poly = (x: number, y: number, pts: number[][], s: number) => pts.map(([a, b]) => [x + a * s, y + b * s]);
+    const doodle = (angle: number, t: number, p: number) => {
+      fill("#08040e", "#04020a");
+      const s = size * 0.2;
+      const items: { pts: number[][]; closed: boolean; a: string; b: string; at: number }[] = [];
+      const add = (pts: number[][], closed: boolean, a: string, b: string, at: number) => items.push({ pts, closed, a, b, at });
+      // göz
+      add(circ(rx(0.16), ry(0.2), s * 0.9, 30, 0.5), true, "#c8ff3d", "#ff2bd6", 0.02);
+      add(circ(rx(0.16), ry(0.2), s * 0.32), true, "#ffe600", "#ff3b30", 0.08);
+      // TV
+      add(poly(rx(0.8), ry(0.16), [[-1.2, -0.8], [1.2, -0.8], [1.2, 0.8], [-1.2, 0.8], [-1.2, -0.8]], s), false, "#ff2bd6", "#3df0ff", 0.05);
+      add(poly(rx(0.8), ry(0.16), [[-0.5, -0.8], [-0.9, -1.3], [0.5, -0.8], [0.9, -1.3]], s), false, "#3df0ff", "#ff2bd6", 0.12);
+      // megafon
+      add(poly(rx(0.12), ry(0.78), [[-0.9, -0.3], [0.2, -0.3], [1, -0.8], [1, 0.8], [0.2, 0.3], [-0.9, 0.3], [-0.9, -0.3]], s), false, "#ff3b30", "#ffe600", 0.15);
+      // gözlük
+      add([...circ(rx(0.85), ry(0.82), s * 0.42), ...circ(rx(0.85) + s, ry(0.82), s * 0.42)], false, "#ff2bd6", "#5b6bff", 0.2);
+      // çiçek
+      add(circ(rx(0.55), ry(0.9), s * 0.25), true, "#3df0ff", "#c8ff3d", 0.25);
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2;
+        add(circ(rx(0.55) + Math.cos(a) * s * 0.45, ry(0.9) + Math.sin(a) * s * 0.45, s * 0.2, 14), true, "#3df0ff", "#c8ff3d", 0.27 + i * 0.01);
+      }
+      // kalp ve yıldız
+      const heart = Array.from({ length: 30 }, (_, i) => {
+        const u = (i / 29) * Math.PI * 2;
+        return [16 * Math.sin(u) ** 3 / 16, -(13 * Math.cos(u) - 5 * Math.cos(2 * u) - 2 * Math.cos(3 * u) - Math.cos(4 * u)) / 16];
+      });
+      add(poly(rx(0.36), ry(0.12), heart, s * 0.6), true, "#ff2bd6", "#ff3b30", 0.3);
+      const star = Array.from({ length: 11 }, (_, i) => {
+        const a = -Math.PI / 2 + (i * Math.PI) / 5, r = i % 2 ? 0.45 : 1;
+        return [Math.cos(a) * r, Math.sin(a) * r];
+      });
+      add(poly(rx(0.95), ry(0.5), star, s * 0.5), false, "#ffe600", "#ff3b30", 0.34);
+      items.forEach((it, i) => wobble(it.pts, it.closed, it.a, it.b, easeOut(span(p, it.at, it.at + 0.3)), i * 7));
+      // TV yazısı
+      if (p > 0.2) {
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.font = `800 italic ${Math.round(s * 0.42)}px ${sans}`;
+        ctx.textAlign = "center";
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "#c8ff3d";
+        ctx.fillStyle = "#c8ff3d";
+        ctx.fillText("YENİ", rx(0.8) - 2, ry(0.16) - s * 0.05);
+        ctx.fillText("MESAJ", rx(0.8) - 2, ry(0.16) + s * 0.45);
+        ctx.restore();
+      }
+      // Logo: neon kalem
+      const R = extra!.ref;
+      const j = rng(Math.floor(t * 8));
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      for (const [col, ox, oy] of [["#3df0ff", -3, 0], ["#ff2bd6", 3, 2], ["#ffffff", 0, 0]] as const) {
+        logoT(angle, 0.8, ox + (j() - 0.5) * 2, oy + (j() - 0.5) * 2);
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = col;
+        ctx.lineWidth = col === "#ffffff" ? 0.006 : 0.012;
+        ctx.strokeStyle = col;
+        ctx.stroke(R.logo);
+      }
+      ctx.restore();
+      reset();
+      finish(0.1, t, 0.5);
+    };
+
+    // Çizgi film: doygun mavi, mor sıçrama, koyu kenarlı gölgeli yeşil logo, süzülen göz küreleri ve atıştırmalıklar
+    const INK = "#1a1446";
+    const outlineFill = (path: Path2D | (() => void), fillCol: string, lw = 3) => {
+      ctx.lineWidth = lw;
+      ctx.strokeStyle = INK;
+      ctx.fillStyle = fillCol;
+      if (typeof path === "function") {
+        ctx.beginPath();
+        path();
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        ctx.fill(path);
+        ctx.stroke(path);
+      }
+    };
+    const eyeball = (x: number, y: number, r: number, look: number) => {
+      outlineFill(() => ctx.arc(x, y, r, 0, Math.PI * 2), "#ffffff");
+      ctx.fillStyle = "rgba(26,20,70,0.12)";
+      ctx.beginPath();
+      ctx.arc(x + r * 0.15, y + r * 0.15, r * 0.85, 0, Math.PI * 2);
+      ctx.fill();
+      const ix = x + Math.cos(look) * r * 0.35, iy = y + Math.sin(look) * r * 0.35;
+      outlineFill(() => ctx.arc(ix, iy, r * 0.42, 0, Math.PI * 2), "#ff6a2a", 2);
+      ctx.fillStyle = INK;
+      ctx.beginPath();
+      ctx.arc(ix, iy, r * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.arc(ix - r * 0.1, iy - r * 0.12, r * 0.07, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    const candy = (x: number, y: number, s: number, rot: number) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      outlineFill(() => {
+        ctx.moveTo(-s * 0.55, 0);
+        ctx.lineTo(-s * 0.95, -s * 0.28);
+        ctx.lineTo(-s * 0.95, s * 0.28);
+        ctx.closePath();
+        ctx.moveTo(s * 0.55, 0);
+        ctx.lineTo(s * 0.95, -s * 0.28);
+        ctx.lineTo(s * 0.95, s * 0.28);
+        ctx.closePath();
+      }, "#ff8a2a", 2.5);
+      outlineFill(() => ctx.ellipse(0, 0, s * 0.6, s * 0.3, 0, 0, Math.PI * 2), "#ff7a1a", 2.5);
+      ctx.strokeStyle = "rgba(255,255,255,0.7)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-s * 0.3, -s * 0.12);
+      ctx.lineTo(s * 0.1, -s * 0.18);
+      ctx.stroke();
+      ctx.restore();
+    };
+    const carton = (x: number, y: number, s: number, rot: number, col: string, spot: string) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(rot);
+      outlineFill(() => ctx.rect(-s * 0.35, -s * 0.5, s * 0.7, s), col);
+      outlineFill(() => {
+        ctx.moveTo(-s * 0.35, -s * 0.5);
+        ctx.lineTo(0, -s * 0.78);
+        ctx.lineTo(s * 0.35, -s * 0.5);
+        ctx.closePath();
+      }, col);
+      ctx.fillStyle = spot;
+      for (const [a, b, r] of [[-0.12, -0.15, 0.12], [0.15, 0.2, 0.1], [-0.1, 0.3, 0.07]]) {
+        ctx.beginPath();
+        ctx.ellipse(a * s, b * s, r * s, r * s * 0.7, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    };
+    const cartoon = (angle: number, t: number, p: number) => {
+      fill("#2b3ff2", "#2131c4");
+      // Mor sıçrama
+      const r = rng(91);
+      ctx.fillStyle = "rgba(205,150,255,0.85)";
+      ctx.beginPath();
+      for (let i = 0; i <= 40; i++) {
+        const a = (i / 40) * Math.PI * 2;
+        const rr = size * (0.85 + (r() - 0.5) * 0.35 + Math.sin(a * 5 + t) * 0.05);
+        const X = cx + Math.cos(a) * rr * 1.1, Y = cy + Math.sin(a) * rr * 0.75;
+        if (i) ctx.lineTo(X, Y);
+        else ctx.moveTo(X, Y);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = "rgba(170,110,255,0.9)";
+      ctx.lineWidth = 2;
+      for (let k = 0; k < 3; k++) {
+        ctx.beginPath();
+        let X = rx(0.05 + k * 0.35), Y = ry(0.92 - k * 0.3);
+        ctx.moveTo(X, Y);
+        for (let i = 0; i < 8; i++) {
+          X += size * 0.08;
+          Y += (i % 2 ? 1 : -1) * size * 0.06;
+          ctx.lineTo(X, Y);
+        }
+        ctx.stroke();
+      }
+      // Süzülen nesneler (sırayla belirir)
+      const show = (i: number) => span(p, i * 0.05, i * 0.05 + 0.1) > 0;
+      const fl = (i: number) => Math.sin(t * 1.6 + i) * 6;
+      if (show(0)) eyeball(rx(0.1), ry(0.2) + fl(0), size * 0.12, t * 1.5);
+      if (show(1)) candy(rx(0.88), ry(0.12) + fl(1), size * 0.22, -0.5 + Math.sin(t) * 0.2);
+      if (show(2)) carton(rx(0.82), ry(0.72) + fl(2), size * 0.32, 0.35, "#7ee8ff", "#e8d27a");
+      if (show(3)) eyeball(rx(0.9), ry(0.45) + fl(3), size * 0.08, -t * 2);
+      if (show(4)) candy(rx(0.12), ry(0.85) + fl(4), size * 0.2, 0.6);
+      if (show(5)) carton(rx(0.2), ry(0.52) + fl(5), size * 0.26, -0.3, "#ff8a4a", "#ffe0b0");
+      if (show(6)) eyeball(rx(0.55), ry(0.08) + fl(6), size * 0.07, t);
+      // Logo: koyu kenar, yeşil gövde, açık şerit, parlama
+      const R = extra!.ref;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      const bob = Math.sin(t * 2.2) * 5;
+      logoT(angle, 0.92, 0, bob);
+      ctx.strokeStyle = ctx.fillStyle = INK;
+      ctx.lineWidth = 0.085;
+      ctx.fill(R.logo, "evenodd");
+      ctx.stroke(R.logo);
+      ctx.strokeStyle = ctx.fillStyle = "#2fbf43";
+      ctx.lineWidth = 0.062;
+      ctx.fill(R.logo, "evenodd");
+      ctx.stroke(R.logo);
+      logoT(angle, 0.92, -size * 0.008, bob - size * 0.01);
+      ctx.strokeStyle = ctx.fillStyle = "#5fe36a";
+      ctx.lineWidth = 0.03;
+      ctx.fill(R.logo, "evenodd");
+      ctx.stroke(R.logo);
+      logoT(angle, 0.92, -size * 0.016, bob - size * 0.02);
+      ctx.setLineDash([0.02, 0.12]);
+      ctx.strokeStyle = "rgba(255,255,255,0.8)";
+      ctx.lineWidth = 0.012;
+      ctx.stroke(R.logo);
+      ctx.setLineDash([]);
+      reset();
+      finish(0.08, t, 0.15);
+    };
+
+    // Retro 8-bit oyun: dönen psikedelik ışınlar, glitch bantları, piksel logo, LEVEL UP rozetleri, Evet/Hayır, kalp ve para
+    const arcade = (_angle: number, t: number, p: number) => {
+      ctx.imageSmoothingEnabled = false;
+      const cols = ["#ff2bd6", "#26e0c9", "#ff3b30", "#ffcf33", "#ff2bd6", "#26e0c9"];
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(t * 0.35);
+      const n = 22;
+      for (let i = 0; i < n; i++) {
+        ctx.fillStyle = cols[i % cols.length];
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, Math.max(width, height), (i / n) * Math.PI * 2, ((i + 1) / n) * Math.PI * 2 + 0.01);
+        ctx.fill();
+      }
+      ctx.strokeStyle = "rgba(255,230,80,0.8)";
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 10; i++) {
+        ctx.beginPath();
+        for (let k = 0; k < 30; k++) {
+          const a = (i / 10) * Math.PI * 2 + Math.sin(k * 0.5 + t * 3) * 0.05;
+          const rr = size * 0.3 + k * size * 0.06;
+          if (k) ctx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+          else ctx.moveTo(Math.cos(a) * rr, Math.sin(a) * rr);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+      const c = Math.max(3, Math.round(size / 70));
+      // Glitch bantları
+      const g = rng(Math.floor(t * 8));
+      for (let i = 0; i < 4; i++) {
+        const y = snap(ry(g()), c);
+        const h = snap(4 + g() * 12, c);
+        const x = rx(g() * 0.3);
+        const w = (region.x1 - region.x0) * (0.4 + g() * 0.7);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(x, y - c, w, h + 2 * c);
+        ctx.fillStyle = ["#e6f03a", "#ffffff", "#3d63ff", "#ff2d87", "#6bff5a"][i % 5];
+        ctx.fillRect(x, y, w, h);
+      }
+      // Piksel logo (ten rengi, siyah kenar), bantların önünde
+      const ps = Math.max(3, Math.round((size * 1.0) / extra!.cells.cols));
+      pixLogo(cx, cy + (Math.floor(t * 4) % 2 ? -ps : 0), ps, "#e9c27c", "#111");
+      // LEVEL UP rozetleri
+      const badge = (x: number, y: number, bg: string, k: number) => {
+        if (k <= 0) return;
+        pixBox(x, y, size * 0.6, size * 0.14, bg, c);
+        pixText("LEVEL UP", x + size * 0.3, y + size * 0.1, Math.round(size * 0.08), "#111");
+      };
+      badge(rx(0.6), ry(0.08), "#e6f03a", span(p, 0.2, 0.25));
+      badge(rx(0.52), ry(0.2), "#ff2d87", span(p, 0.32, 0.37));
+      // Evet / Hayır balonları
+      if (p > 0.45) {
+        pixBox(rx(0.3), ry(0.86), size * 0.26, size * 0.13, "#ffffff", c);
+        pixText("Evet", rx(0.3) + size * 0.13, ry(0.86) + size * 0.095, Math.round(size * 0.07), "#111");
+      }
+      if (p > 0.55) {
+        pixBox(rx(0.74), ry(0.74), size * 0.28, size * 0.13, "#ffffff", c);
+        pixText("Hayır", rx(0.74) + size * 0.14, ry(0.74) + size * 0.095, Math.round(size * 0.07), "#111");
+      }
+      // Kalpler ve paralar
+      for (let i = 0; i < 4; i++) {
+        const u = (t * 0.6 + i * 0.25) % 1;
+        bitmap(PIX_HEART, snap(rx(0.08 + i * 0.05), c), snap(ry(0.7 - u * 0.5), c), c * 1.4, "#ff2d87");
+      }
+      for (let i = 0; i < 3; i++) {
+        const x = rx(0.06) + i * size * 0.16, y = ry(0.42);
+        const sq = Math.abs(Math.cos(t * 4 + i));
+        ctx.fillStyle = "#111";
+        ctx.fillRect(snap(x - size * 0.07 * sq, c) - c, snap(y - size * 0.07, c) - c, snap(size * 0.14 * sq, c) + 2 * c, snap(size * 0.14, c) + 2 * c);
+        ctx.fillStyle = "#ffcf33";
+        ctx.fillRect(snap(x - size * 0.07 * sq, c), snap(y - size * 0.07, c), snap(size * 0.14 * sq, c), snap(size * 0.14, c));
+      }
+      ctx.imageSmoothingEnabled = true;
+      finish(0.14, t, 0.2);
+    };
+
+    // Blueprint: mavi kâğıt, beyaz çizgiler; çizilerek beliren logo, derinlik hattı, ölçüler, pafta
+    const blueprint2 = (angle: number, t: number, p: number) => {
+      fill("#2257b8", "#173f93");
+      const { x0, y0, x1, y1 } = region;
+      ctx.lineWidth = 1;
+      for (let i = 0, x = x0 - 20; x <= x1 + 20; x += 18, i++) {
+        ctx.strokeStyle = i % 5 === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)";
+        ctx.beginPath();
+        ctx.moveTo(x + 0.5, y0 - 40);
+        ctx.lineTo(x + 0.5, y1 + 40);
+        ctx.stroke();
+      }
+      for (let i = 0, y = y0 - 40; y <= y1 + 40; y += 18, i++) {
+        ctx.strokeStyle = i % 5 === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.08)";
+        ctx.beginPath();
+        ctx.moveTo(x0 - 20, y + 0.5);
+        ctx.lineTo(x1 + 20, y + 0.5);
+        ctx.stroke();
+      }
+      const R = extra!.ref;
+      const k = easeOut(span(p, 0, 0.55));
+      const W = dims().w * 0.86 * ac(angle), H = size * 0.86;
+      // Yapım daireleri ve eksenler
+      ctx.strokeStyle = "rgba(255,255,255,0.45)";
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, Math.max(W, H) * 0.62, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * k);
+      ctx.moveTo(cx - W * 0.8, cy);
+      ctx.lineTo(cx - W * 0.8 + W * 1.6 * k, cy);
+      ctx.moveTo(cx, cy - H * 0.75);
+      ctx.lineTo(cx, cy - H * 0.75 + H * 1.5 * k);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      // Derinlik hattı (arka kopya) ve ön logo, çizilerek
+      for (const [ox, oy, a, lw] of [[size * 0.07, -size * 0.05, 0.45, 0.004], [0, 0, 1, 0.006]] as const) {
+        logoT(angle, 0.86, ox, oy);
+        ctx.setLineDash([22 * k, 22]);
+        ctx.lineWidth = lw;
+        ctx.strokeStyle = `rgba(255,255,255,${a})`;
+        ctx.stroke(R.logo);
+        ctx.setLineDash([]);
+      }
+      reset();
+      // Ölçüler
+      if (k > 0.6) {
+        ctx.strokeStyle = "#fff";
+        ctx.fillStyle = "#fff";
+        ctx.lineWidth = 1;
+        const ty = cy - H / 2 - 26, lx = cx - W / 2 - 26;
+        const arrow = (x: number, y: number, dx: number, dy: number) => {
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + dx * 7 - dy * 3, y + dy * 7 + dx * 3);
+          ctx.lineTo(x + dx * 7 + dy * 3, y + dy * 7 - dx * 3);
+          ctx.fill();
+        };
+        ctx.beginPath();
+        ctx.moveTo(cx - W / 2, ty);
+        ctx.lineTo(cx + W / 2, ty);
+        ctx.moveTo(lx, cy - H / 2);
+        ctx.lineTo(lx, cy + H / 2);
+        ctx.stroke();
+        arrow(cx - W / 2, ty, 1, 0);
+        arrow(cx + W / 2, ty, -1, 0);
+        arrow(lx, cy - H / 2, 0, 1);
+        arrow(lx, cy + H / 2, 0, -1);
+        label(`${Math.round(W)} PX`, cx, ty - 8, "#ffffff", "center", 10);
+        ctx.save();
+        ctx.translate(lx - 10, cy);
+        ctx.rotate(-Math.PI / 2);
+        label(`${Math.round(H)} PX`, 0, 0, "#ffffff", "center", 10);
+        ctx.restore();
+      }
+      // Pafta
+      const tb = { w: 200, h: 54 };
+      const tx = x1 - tb.w - 6, tyy = y1 - tb.h - 4;
+      ctx.strokeStyle = "rgba(255,255,255,0.85)";
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(tx + 0.5, tyy + 0.5, tb.w, tb.h);
+      ctx.beginPath();
+      ctx.moveTo(tx, tyy + 26.5);
+      ctx.lineTo(tx + tb.w, tyy + 26.5);
+      ctx.stroke();
+      label("OX DİJİTAL · SEMBOL", tx + 10, tyy + 18, "#ffffff");
+      label("MARKA KİMLİĞİ · PAFTA 02", tx + 10, tyy + 44, "rgba(255,255,255,0.75)", "left", 9);
+      finish(0.14, t, 0.3);
+    };
+
+    // Terminal: komutlar yazılır, logo ASCII karakterlerle belirir
+    const TERM = [
+      "$ ox build --marka",
+      "> logo.svg ............ ✓",
+      "> renkler.json ........ ✓",
+      "> site.tsx ............ ✓",
+      "$ ox deploy",
+      "> yayında: oxdijital.com",
+    ];
+    const ASCII = " .:-=+*#%@";
+    const terminal = (angle: number, t: number, p: number) => {
+      fill("#0b0e0c", "#060807");
+      const G = "#39ff88";
+      const { x0, y0, x1 } = region;
+      // Pencere çubuğu
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      ctx.fillRect(x0 - 10, y0 - 22, x1 - x0 + 20, 26);
+      ["#ff5f57", "#febc2e", "#28c840"].forEach((c, i) => {
+        ctx.fillStyle = c;
+        ctx.beginPath();
+        ctx.arc(x0 + 6 + i * 16, y0 - 9, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      label("ox@dijital: ~/marka", (x0 + x1) / 2, y0 - 5, "rgba(255,255,255,0.45)", "center", 10);
+      // Yazılan satırlar
+      const px = Math.round(size * 0.058);
+      ctx.font = `${px}px ${mono}`;
+      ctx.textAlign = "left";
+      const total = TERM.join("").length;
+      let budget = Math.floor(total * span(p, 0.02, 0.75));
+      TERM.forEach((line, i) => {
+        if (budget <= 0) return;
+        const shown = line.slice(0, budget);
+        budget -= line.length;
+        ctx.fillStyle = line.startsWith("$") ? "#ffffff" : line.includes("yayında") ? G : "rgba(57,255,136,0.75)";
+        ctx.fillText(shown, x0 + 4, y0 + 24 + i * px * 1.6);
+        if (budget <= 0 && Math.floor(t * 2.5) % 2) ctx.fillRect(x0 + 4 + ctx.measureText(shown).width + 2, y0 + 24 + i * px * 1.6 - px * 0.8, px * 0.55, px);
+      });
+      // ASCII logo (sağ altta), ızgara dönüşle daralır
+      const R = extra!.ref;
+      const ak = span(p, 0.15, 0.6);
+      const cw = size * 0.022, chH = cw * 1.9;
+      const step = 2;
+      const cols = Math.floor(R.gw / step), rows = Math.floor(R.gh / (step * 1.9));
+      const sx = ac(angle);
+      const ox = cx + size * 0.28 - (cols * cw * sx) / 2, oy = cy + size * 0.22 - (rows * chH) / 2;
+      ctx.font = `700 ${Math.round(chH)}px ${mono}`;
+      ctx.fillStyle = G;
+      ctx.shadowColor = G;
+      ctx.shadowBlur = 6;
+      ctx.textAlign = "center";
+      for (let j = 0; j < rows; j++) {
+        if (j / rows > ak) break;
+        for (let i = 0; i < cols; i++) {
+          const v = R.hm[(Math.floor(j * step * 1.9) + 14) * R.hmW + i * step + 14];
+          if (v < 0.12) continue;
+          ctx.fillText(ASCII[Math.min(ASCII.length - 1, Math.floor(v * ASCII.length))], ox + (i + 0.5) * cw * sx, oy + j * chH);
+        }
+      }
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "transparent";
+      ctx.fillStyle = "rgba(0,0,0,0.22)";
+      for (let y = region.y0 - 40; y < region.y1 + 40; y += 3) ctx.fillRect(region.x0 - 30, y, region.x1 - region.x0 + 60, 1);
+      finish(0.1, t, 0.5);
+    };
+
     const RENDER: Record<Mode, (angle: number, t: number, p: number) => void> = {
       beauty, chrome, cyber, clay, pixel, riso, glitch, brutal, cloud, zine, neon, pop, sketch, tracking, nodes,
       glass, scanlines, bauhaus, pile, os, balloon, iso, eq, dither, grunge,
+      math, hud, doodle, cartoon, arcade, blueprint2, terminal,
     };
 
     let forced = -1;
@@ -2224,12 +2968,13 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
       if (shot !== lastShot) {
         lastShot = shot;
         onWordRef.current?.(shot);
+        onToneRef.current?.(TONE[SEQUENCE[shot]] ?? "dark");
       }
       const p = reduced ? 0.85 : (elapsed % SHOT_MS) / SHOT_MS;
       const target = pointer ? ((pointer.x - baseX) / width) * 0.8 : 0;
       tilt += (target - tilt) * 0.05;
       const t = elapsed / 1000;
-      const angle = reduced ? 0.4 : t * 1.05 + tilt * 0.6;
+      const angle = reduced ? 0.3 : Math.sin(t * 0.6) * 0.52 + tilt * 0.3;
       curAngle = angle;
       const mode = SEQUENCE[shot];
       const fw = frame.x1 - frame.x0, fh = frame.y1 - frame.y0;
@@ -2250,7 +2995,7 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
       ctx.save();
       ctx.shadowColor = ACCENT[mode] ?? "#2f6bff";
       ctx.shadowBlur = 90;
-      ctx.globalAlpha = 0.32;
+      ctx.globalAlpha = bleed ? 0 : 0.32;
       ctx.fillStyle = "#030304";
       ctx.beginPath();
       ctx.roundRect(frame.x0 + 30, frame.y0 + 30, fw - 60, fh - 60, 28);
@@ -2259,7 +3004,7 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
 
       ctx.save();
       ctx.beginPath();
-      ctx.roundRect(frame.x0, frame.y0, fw, fh, 28);
+      ctx.roundRect(frame.x0, frame.y0, fw, fh, bleed ? 0 : 28);
       ctx.clip();
       const since = elapsed % SHOT_MS;
       const transit = !reduced && forced < 0 && elapsed > SHOT_MS && since < TRANS_MS;
@@ -2311,8 +3056,26 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
 
       ctx.restore();
 
-      // Çerçeve kenarı
       reset();
+      if (bleed) {
+        // Metnin arkasına sahnenin kendi renginde örtü (geniş ekranda soldan, dar ekranda alttan)
+        const c = SCRIM[mode] ?? "#030304";
+        const wideScreen = width >= 1024;
+        const g = wideScreen ? ctx.createLinearGradient(0, 0, width * 0.58, 0) : ctx.createLinearGradient(0, height * 0.4, 0, height * 0.66);
+        if (wideScreen) {
+          g.addColorStop(0, withAlpha(c, 0.94));
+          g.addColorStop(0.55, withAlpha(c, 0.78));
+          g.addColorStop(1, withAlpha(c, 0));
+        } else {
+          g.addColorStop(0, withAlpha(c, 0));
+          g.addColorStop(1, withAlpha(c, 0.96));
+        }
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, width, height);
+        return;
+      }
+
+      // Çerçeve kenarı
       ctx.strokeStyle = "rgba(255,255,255,0.1)";
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -2470,7 +3233,7 @@ export function BrandFilmSpin({ onWord, className }: { onWord?: (index: number) 
       host.removeEventListener("pointermove", onMove);
       host.removeEventListener("pointerleave", onLeave);
     };
-  }, []);
+  }, [bleed]);
 
   return <canvas ref={canvasRef} aria-hidden className={cn("pointer-events-none block", className)} />;
 }

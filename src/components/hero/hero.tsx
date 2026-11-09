@@ -12,16 +12,14 @@ import { BrandFilmStyles, STYLE_WORDS } from "./stages/brand-film-styles";
 import { BrandFilmPop, POP_WORDS } from "./stages/brand-film-pop";
 import { BrandFilmStudio, STUDIO_WORDS } from "./stages/brand-film-studio";
 import { BrandFilmRef, REF_WORDS } from "./stages/brand-film-ref";
-import { BrandFilmSpin, SPIN_WORDS } from "./stages/brand-film-spin";
+import { BrandFilmSix, SIX_WORDS } from "./stages/brand-film-six";
 import { BrandFilm3, FILM3_WORDS } from "./stages/brand-film-3";
 import { PREMIUM_WORDS, PremiumStage } from "./stages/premium-stage";
-import { ComboStage } from "./stages/combo-stage";
-import { GLASS_WORDS, GlassStage } from "./stages/glass-stage";
-import { SIGNAL_WORDS, SignalStage } from "./stages/signal-stage";
 
 // Hero denemeleri (video sonraya bırakıldı; eski geçici video: Cloudinary "reels/k9wv5dzwdcxfga6orb2o").
 // Solda hepsinde aynı metin (HeroCopy), sahne değişir:
-//   Stiller 5 – Stiller 4, Referans'taki gibi kesintisiz dönen logoyla (brand-film-spin.tsx)
+//   Stiller 6 Tam – Stiller 6 çerçevesiz: sahne bütün hero'yu kaplar, metnin arkasında sahne renginde örtü, açık sahnede metin koyulaşır
+//   Stiller 6 – ikinci referans seti: matematik, HUD, neon karalama, çizgi film, 8-bit oyun, blueprint, terminal (brand-film-six.tsx)
 //   Stiller 4 – site sahibinin referans görsellerinden türetilen üsluplar (brand-film-ref.tsx)
 //   Stiller 3 – Stiller 2'nin stüdyo işçiliği: çerçeve, sabit logo, tasarlanmış geçişler, kendi sticker seti (brand-film-studio.tsx)
 //   Stiller 2 – Stiller renkli ve çekici hâli (brand-film-pop.tsx): 15 üslup, bildirim/sohbet/sticker/emoji çıkışları
@@ -31,14 +29,13 @@ import { SIGNAL_WORDS, SignalStage } from "./stages/signal-stage";
 //   3D – Referans 2'nin gerçek 3B hâli (three.js + GSAP; motor film3-engine.ts, ayrı parça olarak yüklenir)
 //   Referans 2 – Marka filmi 2: OX sembolü her sekansta bir işin içinde (Marka, Website, SEO, Sosyal Medya, Reklam, Sonuç)
 //   Referans – Marka filmi (ilk hâli, olduğu gibi): site sahibinin verdiği referans videoya göre görüntüleme modları
-//   A – Sinyal hattı · B – Kombinasyon (önceki turun denemeleri) · C – Cam kartlar ve ışık izi
 // Karar verilince yalnız seçilen kalır; DEFAULT o olur ve geliştirme seçicisi kaldırılır.
 
-type Variant = "Stiller 5" | "Stiller 4" | "Stiller 3" | "Stiller 2" | "Stiller" | "Referans+" | "Premium" | "3D" | "Referans 2" | "Referans" | "A" | "B" | "C";
-const VARIANTS: Variant[] = ["Stiller 5", "Stiller 4", "Stiller 3", "Stiller 2", "Stiller", "Referans+", "Premium", "3D", "Referans 2", "Referans", "A", "B", "C"];
+type Variant = "Stiller 6 Tam" | "Stiller 6" | "Stiller 4" | "Stiller 3" | "Stiller 2" | "Stiller" | "Referans+" | "Premium" | "3D" | "Referans 2" | "Referans";
+const VARIANTS: Variant[] = ["Stiller 6 Tam", "Stiller 6", "Stiller 4", "Stiller 3", "Stiller 2", "Stiller", "Referans+", "Premium", "3D", "Referans 2", "Referans"];
 // Seçici geliştirmede ve NOINDEX=1 test sitesinde açık (next.config.ts → HERO_DENEME); asıl sitede kapalı ve hep Referans 2
 const SWITCH = process.env.NODE_ENV === "development" || process.env.HERO_DENEME === "1";
-const DEFAULT: Variant = SWITCH ? "Stiller 5" : "Referans 2";
+const DEFAULT: Variant = SWITCH ? "Stiller 6 Tam" : "Referans 2";
 const STORE_KEY = "ox-hero-deneme";
 
 // Seçilen deneme tarayıcıda hatırlanır (seçici kapalıyken hep DEFAULT)
@@ -67,9 +64,11 @@ const COPY_WRAP = "relative z-10 flex min-h-[calc(100svh)] items-end px-4 pb-24 
 export function Hero() {
   const variant = useSyncExternalStore(subscribe, SWITCH ? readVariant : () => DEFAULT, () => DEFAULT);
   const [word, setWord] = useState(0);
+  const [tone, setTone] = useState<"light" | "dark">("dark");
 
   const choose = (v: Variant) => {
     setWord(0);
+    setTone("dark");
     try {
       localStorage.setItem(STORE_KEY, v);
     } catch {}
@@ -82,7 +81,7 @@ export function Hero() {
       {stage}
       <div className={shade} />
       <div className={COPY_WRAP}>
-        <HeroCopy words={words} wordIndex={word} className="w-full min-w-0 lg:w-[45%]" />
+        <HeroCopy words={words} wordIndex={word} tone={tone} className="w-full min-w-0 lg:w-[45%]" />
       </div>
     </>
   );
@@ -90,7 +89,9 @@ export function Hero() {
   return (
     // Alttaki beyaz bölüm, hero'nun son 48px'inin üstüne yuvarlak köşeli bir sayfa gibi biner.
     <section className="relative min-h-[calc(100svh+48px)] overflow-hidden bg-[#030304] text-white">
-      {variant === "Stiller 5" && fullBleed(<BrandFilmSpin key="stiller5" onWord={setWord} className="absolute inset-0" />, SPIN_WORDS, SHADE_MOBILE)}
+      {variant === "Stiller 6 Tam" &&
+        fullBleed(<BrandFilmSix key="stiller6tam" bleed onTone={setTone} onWord={setWord} className="absolute inset-0" />, SIX_WORDS, "")}
+      {variant === "Stiller 6" && fullBleed(<BrandFilmSix key="stiller6" onWord={setWord} className="absolute inset-0" />, SIX_WORDS, SHADE_MOBILE)}
       {variant === "Stiller 4" && fullBleed(<BrandFilmRef key="stiller4" onWord={setWord} className="absolute inset-0" />, REF_WORDS, SHADE_MOBILE)}
       {variant === "Stiller 3" && fullBleed(<BrandFilmStudio key="stiller3" onWord={setWord} className="absolute inset-0" />, STUDIO_WORDS, SHADE_MOBILE)}
       {variant === "Stiller 2" && fullBleed(<BrandFilmPop key="stiller2" onWord={setWord} className="absolute inset-0" />, POP_WORDS)}
@@ -100,28 +101,16 @@ export function Hero() {
       {variant === "3D" && fullBleed(<BrandFilm3 key="3d" onWord={setWord} className="absolute inset-0" />, FILM3_WORDS)}
       {variant === "Referans 2" && fullBleed(<BrandFilm2 key="ref2" onWord={setWord} className="absolute inset-0" />, FILM2_WORDS)}
       {variant === "Referans" && fullBleed(<BrandFilm key="ref" onWord={setWord} className="absolute inset-0" />, FILM_WORDS)}
-      {(variant === "A" || variant === "B") && (
-        <div className="relative z-10 grid min-h-[calc(100svh)] items-center gap-14 px-4 pb-32 pt-28 md:px-[4.5vw] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 lg:pb-24">
-          <HeroCopy words={variant === "A" ? SIGNAL_WORDS : undefined} wordIndex={variant === "A" ? word : undefined} />
-          <div className="mx-auto w-full max-w-[min(720px,calc((100svh-230px)*1.39))] lg:mr-0">
-            {variant === "A" ? <SignalStage key="A" onWord={setWord} /> : <ComboStage key="B" />}
-          </div>
-        </div>
-      )}
-      {variant === "C" && (
-        <div className="relative z-10 grid min-h-[calc(100svh)] items-center gap-14 px-4 pb-32 pt-28 md:px-[4.5vw] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 lg:pb-24">
-          <HeroCopy words={GLASS_WORDS} wordIndex={word} />
-          {/* Kısa ekranlarda sahnenin tamamı (alttaki "Yeni talep" dahil) görünsün: genişlik ekran yüksekliğine bağlı */}
-          <GlassStage key="C" onWord={setWord} className="mx-auto max-w-[min(680px,calc((100svh-230px)*1.11))] lg:mr-0" />
-        </div>
-      )}
 
       {/* Alt satır: künye + kaydırma işareti (alttaki 48px'in hemen üstünde) */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1, duration: 0.8 }}
-        className="absolute inset-x-4 bottom-[72px] z-20 hidden items-center justify-between font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/35 md:inset-x-[4.5vw] md:flex"
+        className={cn(
+          "absolute inset-x-4 bottom-[72px] z-20 hidden items-center justify-between font-mono text-[10px] font-bold uppercase tracking-[0.18em] transition-colors duration-500 md:inset-x-[4.5vw] md:flex",
+          tone === "light" ? "text-black/45" : "text-white/35",
+        )}
       >
         <span>İstanbul · Türkiye geneli</span>
         <a href="#hakkimizda" aria-label="Aşağı kaydır" className="flex items-center gap-2.5 transition-colors hover:text-white">
