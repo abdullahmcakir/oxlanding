@@ -1,104 +1,153 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { motion } from "motion/react";
-import { cn } from "@/lib/utils";
 import { PixelIcon } from "@/components/navbar/pixel-icon";
-import { QuestionCard } from "./question-card";
-import { WordCarousel } from "./word-carousel";
+import { cn } from "@/lib/utils";
+import { HeroCopy } from "./hero-copy";
+import { BrandFilm, FILM_WORDS } from "./stages/brand-film";
+import { BrandFilm2, FILM2_WORDS } from "./stages/brand-film-2";
+import { BrandFilmPlus, FILM_PLUS_WORDS } from "./stages/brand-film-plus";
+import { BrandFilmStyles, STYLE_WORDS } from "./stages/brand-film-styles";
+import { BrandFilmPop, POP_WORDS } from "./stages/brand-film-pop";
+import { BrandFilmStudio, STUDIO_WORDS } from "./stages/brand-film-studio";
+import { BrandFilmRef, REF_WORDS } from "./stages/brand-film-ref";
+import { BrandFilmSpin, SPIN_WORDS } from "./stages/brand-film-spin";
+import { BrandFilm3, FILM3_WORDS } from "./stages/brand-film-3";
+import { PREMIUM_WORDS, PremiumStage } from "./stages/premium-stage";
+import { ComboStage } from "./stages/combo-stage";
+import { GLASS_WORDS, GlassStage } from "./stages/glass-stage";
+import { SIGNAL_WORDS, SignalStage } from "./stages/signal-stage";
 
-const WORDS = [
-  "Website",
-  "SEO",
-  "Sosyal Medya",
-  "Reklam",
-  "Tasarım",
-  "Yazılım",
-  "Logo",
-  "Sistem",
-  "Slogan",
-  "Hizmet",
-];
+// Hero denemeleri (video sonraya bırakıldı; eski geçici video: Cloudinary "reels/k9wv5dzwdcxfga6orb2o").
+// Solda hepsinde aynı metin (HeroCopy), sahne değişir:
+//   Stiller 5 – Stiller 4, Referans'taki gibi kesintisiz dönen logoyla (brand-film-spin.tsx)
+//   Stiller 4 – site sahibinin referans görsellerinden türetilen üsluplar (brand-film-ref.tsx)
+//   Stiller 3 – Stiller 2'nin stüdyo işçiliği: çerçeve, sabit logo, tasarlanmış geçişler, kendi sticker seti (brand-film-studio.tsx)
+//   Stiller 2 – Stiller renkli ve çekici hâli (brand-film-pop.tsx): 15 üslup, bildirim/sohbet/sticker/emoji çıkışları
+//   Stiller – Referans+ çeşitlendirilmiş: her kesme başka üslup (eskiz, cyberpunk, 8-bit, glitch…) + hizmete özel bildirim
+//   Referans+ – Referans'ın premium hâli (brand-film-plus.tsx): salınan gölgeli sembol, yansıma, kadraj değişimi, temiz kesme
+//   Premium – gerçek HTML ile sade, premium kompozisyonlar (premium-stage.tsx); neon/ızgara/kod etiketi yok
+//   3D – Referans 2'nin gerçek 3B hâli (three.js + GSAP; motor film3-engine.ts, ayrı parça olarak yüklenir)
+//   Referans 2 – Marka filmi 2: OX sembolü her sekansta bir işin içinde (Marka, Website, SEO, Sosyal Medya, Reklam, Sonuç)
+//   Referans – Marka filmi (ilk hâli, olduğu gibi): site sahibinin verdiği referans videoya göre görüntüleme modları
+//   A – Sinyal hattı · B – Kombinasyon (önceki turun denemeleri) · C – Cam kartlar ve ışık izi
+// Karar verilince yalnız seçilen kalır; DEFAULT o olur ve geliştirme seçicisi kaldırılır.
 
-// Geçici video; tasarım bitince kendi dosyamızla değişecek.
-const HERO_VIDEO =
-  "https://res.cloudinary.com/durdzswls/video/upload/q_90/v1/reels/k9wv5dzwdcxfga6orb2o?_a=DATAg1AAZAA0";
+type Variant = "Stiller 5" | "Stiller 4" | "Stiller 3" | "Stiller 2" | "Stiller" | "Referans+" | "Premium" | "3D" | "Referans 2" | "Referans" | "A" | "B" | "C";
+const VARIANTS: Variant[] = ["Stiller 5", "Stiller 4", "Stiller 3", "Stiller 2", "Stiller", "Referans+", "Premium", "3D", "Referans 2", "Referans", "A", "B", "C"];
+// Seçici geliştirmede ve NOINDEX=1 test sitesinde açık (next.config.ts → HERO_DENEME); asıl sitede kapalı ve hep Referans 2
+const SWITCH = process.env.NODE_ENV === "development" || process.env.HERO_DENEME === "1";
+const DEFAULT: Variant = SWITCH ? "Stiller 5" : "Referans 2";
+const STORE_KEY = "ox-hero-deneme";
 
-const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+// Seçilen deneme tarayıcıda hatırlanır (seçici kapalıyken hep DEFAULT)
+const CHANGE = "ox-hero-deneme";
+function readVariant(): Variant {
+  try {
+    const saved = localStorage.getItem(STORE_KEY) as Variant | null;
+    return saved && VARIANTS.includes(saved) ? saved : DEFAULT;
+  } catch {
+    return DEFAULT;
+  }
+}
+function subscribe(onChange: () => void) {
+  window.addEventListener(CHANGE, onChange);
+  return () => window.removeEventListener(CHANGE, onChange);
+}
+
+// Sahne bütün hero'yu kapladığında metin okunur kalsın: solu (dar ekranda altı) koyulaştırır
+const SHADE =
+  "pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(3,3,4,0.98)_0%,rgba(3,3,4,0.82)_31%,rgba(3,3,4,0.08)_56%,transparent_100%)] max-lg:bg-[linear-gradient(180deg,transparent_0%,rgba(3,3,4,0.08)_34%,rgba(3,3,4,0.96)_62%,#030304_100%)]";
+// Çerçeveli sahnede geniş ekranda gölge gerekmez (sahne metnin yanında); dar ekranda metin altta, alt koyulaşma kalır
+const SHADE_MOBILE =
+  "pointer-events-none absolute inset-0 lg:hidden bg-[linear-gradient(180deg,transparent_0%,transparent_40%,rgba(3,3,4,0.96)_58%,#030304_100%)]";
+const COPY_WRAP = "relative z-10 flex min-h-[calc(100svh)] items-end px-4 pb-24 pt-28 md:px-[4.5vw] md:pb-32 lg:items-center lg:pb-20";
 
 export function Hero() {
-  const [videoReady, setVideoReady] = useState(false);
+  const variant = useSyncExternalStore(subscribe, SWITCH ? readVariant : () => DEFAULT, () => DEFAULT);
+  const [word, setWord] = useState(0);
+
+  const choose = (v: Variant) => {
+    setWord(0);
+    try {
+      localStorage.setItem(STORE_KEY, v);
+    } catch {}
+    window.dispatchEvent(new Event(CHANGE));
+  };
+
+  // Tam ekran sahneler: sahne arkada, metin solda
+  const fullBleed = (stage: React.ReactNode, words: string[], shade = SHADE) => (
+    <>
+      {stage}
+      <div className={shade} />
+      <div className={COPY_WRAP}>
+        <HeroCopy words={words} wordIndex={word} className="w-full min-w-0 lg:w-[45%]" />
+      </div>
+    </>
+  );
 
   return (
     // Alttaki beyaz bölüm, hero'nun son 48px'inin üstüne yuvarlak köşeli bir sayfa gibi biner.
-    // Hero bu yüzden 48px uzun; ilk ekrandaki görünüm değişmez, alt öğeler 48px yukarıda konumlanır.
-    <section className="relative h-[calc(100svh+48px)] min-h-[688px] overflow-hidden bg-black">
-      <video
-        src={HERO_VIDEO}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        onCanPlay={() => setVideoReady(true)}
-        className={cn(
-          "absolute inset-0 size-full object-cover transition-opacity duration-1000",
-          videoReady ? "opacity-100" : "opacity-0",
-        )}
-      />
-
-      {/* Video açık tonlara girdiğinde yazılar okunur kalsın */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
-
-      <h1 className="sr-only">Daha etkili {WORDS.join(", ")}</h1>
-
-      <motion.div
-        aria-hidden
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 1, ease: EASE_OUT }}
-        className="absolute bottom-12 top-0 left-4 flex items-center gap-[0.5em] text-[clamp(28px,2.35vw,46px)] tracking-[-0.025em] text-[#E3DBD8] md:left-6"
-      >
-        <span className="whitespace-nowrap">Daha etkili</span>
-        <WordCarousel words={WORDS} />
-      </motion.div>
-
-      {/* Sol alt: tanım + künye */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, duration: 0.9, ease: EASE_OUT }}
-        className="absolute bottom-18 left-6 hidden max-w-[360px] md:block"
-      >
-        <p className="text-[15px] leading-[1.45] tracking-[-0.01em] text-neutral-300">
-          İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Reklam, tasarım ve yazılım
-          tek çatı altında.
-        </p>
-        <div className="mt-4 border-t border-white/10 pt-4 font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-neutral-500">
-          Showreel 2026 · İstanbul, TR
+    <section className="relative min-h-[calc(100svh+48px)] overflow-hidden bg-[#030304] text-white">
+      {variant === "Stiller 5" && fullBleed(<BrandFilmSpin key="stiller5" onWord={setWord} className="absolute inset-0" />, SPIN_WORDS, SHADE_MOBILE)}
+      {variant === "Stiller 4" && fullBleed(<BrandFilmRef key="stiller4" onWord={setWord} className="absolute inset-0" />, REF_WORDS, SHADE_MOBILE)}
+      {variant === "Stiller 3" && fullBleed(<BrandFilmStudio key="stiller3" onWord={setWord} className="absolute inset-0" />, STUDIO_WORDS, SHADE_MOBILE)}
+      {variant === "Stiller 2" && fullBleed(<BrandFilmPop key="stiller2" onWord={setWord} className="absolute inset-0" />, POP_WORDS)}
+      {variant === "Stiller" && fullBleed(<BrandFilmStyles key="stiller" onWord={setWord} className="absolute inset-0" />, STYLE_WORDS)}
+      {variant === "Referans+" && fullBleed(<BrandFilmPlus key="refplus" onWord={setWord} className="absolute inset-0" />, FILM_PLUS_WORDS)}
+      {variant === "Premium" && fullBleed(<PremiumStage key="premium" onWord={setWord} className="absolute inset-0" />, PREMIUM_WORDS)}
+      {variant === "3D" && fullBleed(<BrandFilm3 key="3d" onWord={setWord} className="absolute inset-0" />, FILM3_WORDS)}
+      {variant === "Referans 2" && fullBleed(<BrandFilm2 key="ref2" onWord={setWord} className="absolute inset-0" />, FILM2_WORDS)}
+      {variant === "Referans" && fullBleed(<BrandFilm key="ref" onWord={setWord} className="absolute inset-0" />, FILM_WORDS)}
+      {(variant === "A" || variant === "B") && (
+        <div className="relative z-10 grid min-h-[calc(100svh)] items-center gap-14 px-4 pb-32 pt-28 md:px-[4.5vw] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 lg:pb-24">
+          <HeroCopy words={variant === "A" ? SIGNAL_WORDS : undefined} wordIndex={variant === "A" ? word : undefined} />
+          <div className="mx-auto w-full max-w-[min(720px,calc((100svh-230px)*1.39))] lg:mr-0">
+            {variant === "A" ? <SignalStage key="A" onWord={setWord} /> : <ComboStage key="B" />}
+          </div>
         </div>
-      </motion.div>
+      )}
+      {variant === "C" && (
+        <div className="relative z-10 grid min-h-[calc(100svh)] items-center gap-14 px-4 pb-32 pt-28 md:px-[4.5vw] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-10 lg:pb-24">
+          <HeroCopy words={GLASS_WORDS} wordIndex={word} />
+          {/* Kısa ekranlarda sahnenin tamamı (alttaki "Yeni talep" dahil) görünsün: genişlik ekran yüksekliğine bağlı */}
+          <GlassStage key="C" onWord={setWord} className="mx-auto max-w-[min(680px,calc((100svh-230px)*1.11))] lg:mr-0" />
+        </div>
+      )}
 
-      {/* Alt orta: kaydırma işareti */}
-      <motion.a
-        href="#hakkimizda"
-        aria-label="Aşağı kaydır"
+      {/* Alt satır: künye + kaydırma işareti (alttaki 48px'in hemen üstünde) */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="group absolute bottom-18 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-neutral-500 transition-colors hover:text-white md:flex"
+        transition={{ delay: 1.1, duration: 0.8 }}
+        className="absolute inset-x-4 bottom-[72px] z-20 hidden items-center justify-between font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-white/35 md:inset-x-[4.5vw] md:flex"
       >
-        Kaydır
-        <motion.span
-          animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <PixelIcon variant="arrow" className="size-[9px] rotate-90" />
-        </motion.span>
-      </motion.a>
+        <span>İstanbul · Türkiye geneli</span>
+        <a href="#hakkimizda" aria-label="Aşağı kaydır" className="flex items-center gap-2.5 transition-colors hover:text-white">
+          Kaydır
+          <motion.span animate={{ y: [0, 4, 0] }} transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}>
+            <PixelIcon variant="arrow" className="size-[9px] rotate-90" />
+          </motion.span>
+        </a>
+      </motion.div>
 
-      <QuestionCard className="absolute bottom-15 right-4" />
+      {/* Geliştirmede ve test sitesinde: denemeler arasında geçiş */}
+      {SWITCH && (
+        <div className="fixed bottom-4 left-1/2 z-[60] flex max-w-[calc(100vw-24px)] -translate-x-1/2 items-center gap-1 overflow-x-auto rounded-full bg-white p-1 text-[13px] font-semibold text-[#111] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.6)]">
+          <span className="px-2.5 font-mono text-[10px] uppercase tracking-[0.12em] text-neutral-500">Hero</span>
+          {VARIANTS.map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => choose(v)}
+              className={cn("h-8 whitespace-nowrap rounded-full px-3 transition-colors", variant === v ? "bg-accent text-white" : "hover:bg-neutral-100")}
+            >
+              {v}
+            </button>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

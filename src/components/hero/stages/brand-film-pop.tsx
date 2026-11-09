@@ -1,0 +1,1598 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
+import { buildAssets, type Assets } from "./brand-film";
+import { rng, sampleImage } from "./shape-sampler";
+
+// Hero sahnesi "Stiller 2": Stiller'in (brand-film-styles.tsx, olduğu gibi duruyor) renkli ve çekici hâli.
+// Aynı OX sembolü her kesmede başka bir üslupta (2026 akımları: krom/Y2K, şişkin kil, risograf, neo-brutalizm, kolaj,
+// pop-art, neon tabela, 8-bit, glitch, cyberpunk, eskiz…) görünür; renk paleti üsluba göre değişir (dopamin renkleri),
+// koyu ve açık sahneler sırayla gelir. Her üslup bir hizmete bağlıdır; sembolden o hizmete ait "çıkışlar" fırlar:
+// telefon bildirimi, sohbet balonu, sticker, emoji patlaması. Bildirimler de üsluba göre giydirilir.
+// Bildirimlerde iş rakamı ya da vaat yok. Sembol ±35° salınır (arka yüz görünmez).
+// Ekrandan çıkınca ve sekme arka plandayken durur; "hareketi azalt"ta sabit kare.
+
+type Mode =
+  | "beauty" | "chrome" | "cyber" | "clay" | "pixel" | "riso" | "glitch" | "brutal"
+  | "cloud" | "zine" | "neon" | "pop" | "sketch" | "tracking" | "nodes";
+const SEQUENCE: Mode[] = [
+  "beauty", "chrome", "cyber", "clay", "pixel", "riso", "glitch", "brutal",
+  "cloud", "zine", "neon", "pop", "sketch", "tracking", "nodes",
+];
+/** Sol başlıkta moda eşlik eden kelimeler (SEQUENCE ile aynı sıra) */
+export const POP_WORDS = [
+  "sonuç", "Marka", "Yazılım", "Logo", "Sosyal Medya", "Kampanya", "Reels", "Website",
+  "SEO", "İçerik", "Slogan", "Reklam", "Tasarım", "Hedefleme", "Sistem",
+];
+
+const SHOT_MS = 1900;
+const LAYERS = 40;
+const CAMERA = 1500;
+const CLOUD_POINTS = 5200;
+const EMOJI = `"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
+
+const FRAMING: Record<Mode, { scale: number; dx: number; dy: number }> = {
+  beauty: { scale: 0.92, dx: -0.1, dy: 0.04 },
+  chrome: { scale: 0.9, dx: -0.1, dy: 0.04 },
+  cyber: { scale: 0.74, dx: -0.06, dy: -0.12 },
+  clay: { scale: 0.86, dx: -0.1, dy: 0.02 },
+  pixel: { scale: 0.86, dx: -0.06, dy: 0.04 },
+  riso: { scale: 0.92, dx: -0.06, dy: 0.02 },
+  glitch: { scale: 1, dx: -0.08, dy: 0.02 },
+  brutal: { scale: 0.86, dx: -0.1, dy: 0.04 },
+  cloud: { scale: 0.96, dx: -0.08, dy: 0.04 },
+  zine: { scale: 0.82, dx: -0.08, dy: 0.04 },
+  neon: { scale: 0.9, dx: -0.06, dy: 0 },
+  pop: { scale: 0.88, dx: -0.08, dy: 0.04 },
+  sketch: { scale: 0.78, dx: -0.08, dy: 0.04 },
+  tracking: { scale: 1.06, dx: -0.12, dy: 0.06 },
+  nodes: { scale: 0.7, dx: 0, dy: -0.02 },
+};
+
+type Icon = "user" | "pencil" | "check" | "globe" | "search" | "heart" | "play" | "target" | "chart" | "comment" | "calendar" | "bolt" | "star";
+type Theme = "glass" | "dark" | "sketch" | "cyber" | "pixel" | "brutal" | "glitch" | "neon";
+type Pop =
+  | { kind: "notif"; at: number; x: number; y: number; theme: Theme; app: [string, string]; glyph: Icon; title: string; body: string }
+  | { kind: "chat"; at: number; x: number; y: number; text: string; bg: string; fg: string; comic?: boolean }
+  | { kind: "sticker"; at: number; x: number; y: number; text: string; bg: string; fg: string; rot: number }
+  | { kind: "emoji"; at: number; chars: string[]; n?: number };
+
+const GREEN: [string, string] = ["#3ee27a", "#12a150"];
+const VIOLET: [string, string] = ["#a77bff", "#5b3df5"];
+const PINK: [string, string] = ["#ff7ac6", "#ff2d87"];
+const ORANGE: [string, string] = ["#ffb347", "#ff6a1f"];
+const SKY: [string, string] = ["#5fd0ff", "#2f6bff"];
+
+const POPS: Record<Mode, Pop[]> = {
+  beauty: [
+    { kind: "notif", at: 0.14, x: 0.58, y: -0.66, theme: "glass", app: GREEN, glyph: "comment", title: "Yeni müşteri 🎉", body: "Ayşe: Fiyat alabilir miyim?" },
+    { kind: "notif", at: 0.34, x: 0.7, y: -0.2, theme: "glass", app: SKY, glyph: "calendar", title: "Yeni randevu", body: "Ücretsiz görüşme · Perşembe" },
+    { kind: "emoji", at: 0.5, chars: ["🎉", "✨", "💙"] },
+  ],
+  chrome: [
+    { kind: "sticker", at: 0.16, x: 0.62, y: -0.62, text: "YENİ LOGO ✦", bg: "#ff4fa3", fg: "#fff", rot: -0.14 },
+    { kind: "notif", at: 0.36, x: 0.62, y: 0.5, theme: "glass", app: VIOLET, glyph: "star", title: "Marka kiti hazır ✨", body: "Logo, renkler ve yazı tipleri" },
+  ],
+  cyber: [{ kind: "notif", at: 0.2, x: 0.66, y: -0.56, theme: "cyber", app: ["#ff2bd6", "#7a00ff"], glyph: "bolt", title: "SİSTEM ÇEVRİMİÇİ", body: "Tüm entegrasyonlar bağlı" }],
+  clay: [
+    { kind: "emoji", at: 0.14, chars: ["😍", "💖", "✨", "🍬"] },
+    { kind: "chat", at: 0.36, x: 0.6, y: -0.58, text: "Bu logo çok tatlı olmuş 😍", bg: "#ff5fa2", fg: "#fff" },
+  ],
+  pixel: [{ kind: "notif", at: 0.3, x: 0.62, y: -0.66, theme: "pixel", app: PINK, glyph: "heart", title: "YENİ TAKİPÇİ ♥", body: "SENİ TAKİP ETMEYE BAŞLADI" }],
+  riso: [
+    { kind: "sticker", at: 0.16, x: 0.58, y: -0.62, text: "KAMPANYA BAŞLADI", bg: "#0078bf", fg: "#fff", rot: 0.1 },
+    { kind: "emoji", at: 0.38, chars: ["📣", "🔥", "💥"] },
+  ],
+  glitch: [
+    { kind: "emoji", at: 0.12, chars: ["🔥", "👏", "❤️", "🤯"] },
+    { kind: "notif", at: 0.34, x: 0.6, y: -0.62, theme: "glitch", app: ["#ff2a4d", "#22e6ff"], glyph: "play", title: "VİDEO YAYINDA ▶", body: "REELS · ŞİMDİ" },
+  ],
+  brutal: [
+    { kind: "notif", at: 0.16, x: 0.6, y: -0.62, theme: "brutal", app: ORANGE, glyph: "globe", title: "Site yayında 🚀", body: "oxdijital.com" },
+    { kind: "sticker", at: 0.4, x: 0.72, y: 0.46, text: "CANLI ●", bg: "#3ee27a", fg: "#000", rot: 0.12 },
+  ],
+  cloud: [{ kind: "notif", at: 0.2, x: 0.62, y: -0.62, theme: "dark", app: SKY, glyph: "search", title: "Dizine eklendi 🔎", body: "Aramada görünür oldun" }],
+  zine: [
+    { kind: "sticker", at: 0.12, x: 0.6, y: -0.64, text: "YENİ GÖNDERİ", bg: "#ffd60a", fg: "#111", rot: -0.1 },
+    { kind: "emoji", at: 0.3, chars: ["❤️", "💬", "🔁", "🙌"] },
+    { kind: "chat", at: 0.46, x: 0.66, y: 0.44, text: "Kaydettim, harika 🙌", bg: "#2f4bff", fg: "#fff" },
+  ],
+  neon: [{ kind: "notif", at: 0.26, x: 0.62, y: -0.62, theme: "neon", app: PINK, glyph: "comment", title: "Yeni yorum 💬", body: "Bu slogan akılda kalıyor" }],
+  pop: [
+    { kind: "sticker", at: 0.14, x: 0.6, y: -0.66, text: "WOW!", bg: "#ff2a2a", fg: "#fff", rot: -0.16 },
+    { kind: "chat", at: 0.34, x: 0.62, y: 0.42, text: "Reklamınızı gördüm, bilgi alabilir miyim? 👋", bg: "#ffffff", fg: "#111", comic: true },
+  ],
+  sketch: [{ kind: "notif", at: 0.22, x: 0.64, y: -0.6, theme: "sketch", app: ["#555", "#222"], glyph: "pencil", title: "Taslak hazır ✏️", body: "Eskizler seni bekliyor" }],
+  tracking: [{ kind: "notif", at: 0.3, x: 0.72, y: 0.46, theme: "glass", app: ORANGE, glyph: "target", title: "Yeni talep 🎯", body: "Reklamdan geldi · şimdi" }],
+  nodes: [{ kind: "notif", at: 0.42, x: 0.02, y: -0.84, theme: "dark", app: VIOLET, glyph: "chart", title: "Rapor hazır 📊", body: "Panelde görüntüle" }],
+};
+
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+const span = (p: number, a: number, b: number) => clamp01((p - a) / (b - a));
+const easeOut = (t: number) => 1 - (1 - t) ** 3;
+const easeBack = (t: number) => 1 + 2.4 * (t - 1) ** 3 + 1.4 * (t - 1) ** 2;
+
+function tintFrom(mask: HTMLCanvasElement, color: string) {
+  const c = document.createElement("canvas");
+  c.width = mask.width;
+  c.height = mask.height;
+  const x = c.getContext("2d")!;
+  x.drawImage(mask, 0, 0);
+  x.globalCompositeOperation = "source-in";
+  x.fillStyle = color;
+  x.fillRect(0, 0, c.width, c.height);
+  return c;
+}
+/** Maskeyi dikey renk geçişiyle boyar (krom) */
+function gradientFrom(mask: HTMLCanvasElement, stops: [number, string][]) {
+  const c = document.createElement("canvas");
+  c.width = mask.width;
+  c.height = mask.height;
+  const x = c.getContext("2d")!;
+  x.drawImage(mask, 0, 0);
+  x.globalCompositeOperation = "source-in";
+  const g = x.createLinearGradient(0, 0, c.width * 0.25, c.height);
+  for (const [o, col] of stops) g.addColorStop(o, col);
+  x.fillStyle = g;
+  x.fillRect(0, 0, c.width, c.height);
+  return c;
+}
+/** Maskenin dışına kalın kenar (dış hat): kaydırılmış kopyalar */
+function strokeFrom(mask: HTMLCanvasElement, color: string, r: number, pad: number) {
+  const c = document.createElement("canvas");
+  c.width = mask.width + pad * 2;
+  c.height = mask.height + pad * 2;
+  const x = c.getContext("2d")!;
+  const t = tintFrom(mask, color);
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * Math.PI * 2;
+    x.drawImage(t, pad + Math.cos(a) * r, pad + Math.sin(a) * r);
+  }
+  x.drawImage(t, pad, pad);
+  return c;
+}
+/** Maske içine nokta tram */
+function dotsFrom(mask: HTMLCanvasElement, color: string, step: number, r: number) {
+  const c = document.createElement("canvas");
+  c.width = mask.width;
+  c.height = mask.height;
+  const x = c.getContext("2d")!;
+  x.fillStyle = color;
+  for (let y = 0; y < c.height; y += step)
+    for (let i = 0, xx = (y / step) % 2 ? step / 2 : 0; xx < c.width; xx += step, i++) {
+      x.beginPath();
+      x.arc(xx, y, r, 0, Math.PI * 2);
+      x.fill();
+    }
+  x.globalCompositeOperation = "destination-in";
+  x.drawImage(mask, 0, 0);
+  return c;
+}
+
+const PIX_HEART = [".XX.XX.", "XXXXXXX", "XXXXXXX", ".XXXXX.", "..XXX..", "...X..."];
+const PIX_BUBBLE = ["XXXXXXX", "X.....X", "X.X.X.X", "X.....X", "XXXXXXX", ".X....."];
+
+type Extra = Record<
+  | "faceCyan" | "faceRed" | "faceTeal" | "faceWhite" | "faceChrome" | "faceClay" | "faceBlack" | "facePink" | "faceRisoBlue"
+  | "risoDots" | "popFace" | "popDots" | "hatch" | "pencil" | "sheen" | "neonTube" | "neonCore" | "blackStroke" | "whiteStroke",
+  HTMLCanvasElement
+> & {
+  pad: number;
+  blueSides: HTMLCanvasElement[];
+  graySides: HTMLCanvasElement[];
+  glowSides: HTMLCanvasElement[];
+  magentaSides: HTMLCanvasElement[];
+  chromeSides: HTMLCanvasElement[];
+  claySides: HTMLCanvasElement[];
+  cloud: Float32Array;
+  cloudZ: Float32Array;
+  cells: { cols: number; rows: number; on: Uint8Array };
+};
+
+export function BrandFilmPop({ onWord, className }: { onWord?: (index: number) => void; className?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const onWordRef = useRef(onWord);
+  useEffect(() => {
+    onWordRef.current = onWord;
+  });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const host = canvas?.parentElement;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !host || !ctx) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const mono =
+      getComputedStyle(document.documentElement).getPropertyValue("--font-space-mono").trim() || "ui-monospace, monospace";
+    const sans = getComputedStyle(document.body).fontFamily || "system-ui, sans-serif";
+
+    const grain = document.createElement("canvas");
+    grain.width = grain.height = 160;
+    const g = grain.getContext("2d")!;
+    const gimg = g.createImageData(160, 160);
+    const noise = rng(9);
+    for (let i = 0; i < gimg.data.length; i += 4) {
+      const v = Math.floor(noise() * 255);
+      gimg.data[i] = gimg.data[i + 1] = gimg.data[i + 2] = v;
+      gimg.data[i + 3] = 255;
+    }
+    g.putImageData(gimg, 0, 0);
+    const grainPattern = ctx.createPattern(grain, "repeat")!;
+
+    let assets: Assets | null = null;
+    let extra: Extra | null = null;
+    let width = 0, height = 0, dpr = 1;
+    let baseX = 0, baseY = 0, baseSize = 1;
+    let cx = 0, cy = 0, size = 1;
+    let region = { x0: 0, y0: 0, x1: 0, y1: 0 };
+    let pointer: { x: number; y: number } | null = null;
+    let tilt = 0;
+
+    const layout = () => {
+      const rect = host.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      const wide = width >= 1024;
+      region = wide
+        ? { x0: width * 0.47, y0: 104, x1: width - width * 0.045, y1: height - 132 }
+        : { x0: 16, y0: 96, x1: width - 16, y1: Math.max(320, height * 0.46) };
+      baseX = (region.x0 + region.x1) / 2;
+      baseY = (region.y0 + region.y1) / 2;
+      baseSize = Math.min(region.x1 - region.x0, region.y1 - region.y0) * (wide ? 0.5 : 0.52);
+    };
+
+    const reset = () => ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const label = (s: string, x: number, y: number, color = "rgba(255,255,255,0.55)", align: CanvasTextAlign = "left", px = 10) => {
+      ctx.font = `${px}px ${mono}`;
+      ctx.letterSpacing = "1.2px";
+      ctx.fillStyle = color;
+      ctx.textAlign = align;
+      ctx.fillText(s, x, y);
+      ctx.letterSpacing = "0px";
+    };
+
+    const dims = () => {
+      const a = assets!;
+      const h = size;
+      const w = (size * a.w) / a.h;
+      return { w, h, depth: Math.max(w, h) * 0.12, half: Math.max(w, h) / 2 };
+    };
+
+    const sheenFace = (face: HTMLCanvasElement, p: number, strength: number) => {
+      const s = extra!.sheen;
+      const x = s.getContext("2d")!;
+      x.globalCompositeOperation = "source-over";
+      x.clearRect(0, 0, s.width, s.height);
+      x.drawImage(face, 0, 0);
+      x.globalCompositeOperation = "source-atop";
+      const bx = (p * 1.8 - 0.4) * s.width;
+      const grad = x.createLinearGradient(bx - s.width * 0.25, 0, bx + s.width * 0.25, s.height * 0.4);
+      grad.addColorStop(0, "rgba(255,255,255,0)");
+      grad.addColorStop(0.5, `rgba(255,255,255,${strength})`);
+      grad.addColorStop(1, "rgba(255,255,255,0)");
+      x.fillStyle = grad;
+      x.fillRect(0, 0, s.width, s.height);
+      return s;
+    };
+
+    const drawSolid = (angle: number, face: HTMLCanvasElement, sides: HTMLCanvasElement[], alpha = 1) => {
+      const { w, h, depth } = dims();
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      const layers: { k: number; z: number; zr: number }[] = [];
+      for (let k = 0; k < LAYERS; k++) {
+        const z = (k / (LAYERS - 1) - 0.5) * depth;
+        layers.push({ k, z, zr: z * cos });
+      }
+      layers.sort((p, q) => q.zr - p.zr);
+      ctx.globalAlpha = alpha;
+      for (const l of layers) {
+        const f = CAMERA / (CAMERA + l.zr);
+        const x = cx + l.z * sin * f;
+        ctx.setTransform(dpr * cos * f, 0, 0, dpr * f, dpr * x, dpr * cy);
+        const img = l.k === 0 ? face : sides[Math.min(sides.length - 1, Math.floor((l.k / LAYERS) * sides.length))];
+        ctx.drawImage(img, -w / 2, -h / 2, w, h);
+      }
+      ctx.globalAlpha = 1;
+      reset();
+    };
+
+    /** Düz yüz (dönüşle daralır). padded: kenarlı (dış hatlı) kopyalar için kenar payı */
+    const drawFlat = (img: HTMLCanvasElement, angle: number, dx = 0, dy = 0, alpha = 1, padded = false) => {
+      const { w, h } = dims();
+      const k = w / assets!.w;
+      const pw = padded ? extra!.pad * k : 0;
+      ctx.globalAlpha = alpha;
+      ctx.setTransform(dpr * Math.cos(angle), 0, 0, dpr, dpr * (cx + dx), dpr * (cy + dy));
+      ctx.drawImage(img, -w / 2 - pw, -h / 2 - pw, w + pw * 2, h + pw * 2);
+      ctx.globalAlpha = 1;
+      reset();
+    };
+
+    const reflection = (angle: number, face: HTMLCanvasElement, floor: string, alpha: number) => {
+      const { w, h } = dims();
+      const top = cy + h / 2 + size * 0.05;
+      const k = 0.55;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.setTransform(dpr * Math.cos(angle), 0, 0, -dpr * k, dpr * cx, dpr * (top + (h * k) / 2));
+      ctx.drawImage(face, -w / 2, -h / 2, w, h);
+      ctx.restore();
+      reset();
+      const grad = ctx.createLinearGradient(0, top, 0, top + h * k);
+      grad.addColorStop(0, floor.replace("1)", "0.2)"));
+      grad.addColorStop(0.7, floor);
+      ctx.fillStyle = grad;
+      ctx.fillRect(cx - w, top, w * 2, h * k + 2);
+    };
+
+    const project = (px: number, py: number, angle: number) => {
+      const { half, depth } = dims();
+      const z = -depth / 2;
+      const X = px * half;
+      const xr = X * Math.cos(angle) + z * Math.sin(angle);
+      const zr = -X * Math.sin(angle) + z * Math.cos(angle);
+      const f = CAMERA / (CAMERA + zr);
+      return { x: cx + xr * f, y: cy + py * half * f };
+    };
+
+    const fill = (top: string, bottom: string, light: string | null = null) => {
+      const grad = ctx.createLinearGradient(0, 0, 0, height);
+      grad.addColorStop(0, top);
+      grad.addColorStop(1, bottom);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+      if (light) {
+        const r = size * 1.7;
+        const rg = ctx.createRadialGradient(cx, cy - size * 0.1, 0, cx, cy - size * 0.1, r);
+        rg.addColorStop(0, light);
+        rg.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = rg;
+        ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+      }
+    };
+
+    const finish = (grainAlpha: number, t: number, vignette = 0.5) => {
+      const r = Math.max(width, height) * 0.75;
+      const v = ctx.createRadialGradient(baseX, baseY, r * 0.35, baseX, baseY, r);
+      v.addColorStop(0, "rgba(0,0,0,0)");
+      v.addColorStop(1, `rgba(0,0,0,${vignette})`);
+      ctx.fillStyle = v;
+      ctx.fillRect(0, 0, width, height);
+      ctx.save();
+      ctx.globalAlpha = grainAlpha;
+      ctx.globalCompositeOperation = "overlay";
+      ctx.translate((t * 9301) % 160, (t * 4973) % 160);
+      ctx.fillStyle = grainPattern;
+      ctx.fillRect(-160, -160, width + 320, height + 320);
+      ctx.restore();
+    };
+
+    const corners = (x0: number, y0: number, x1: number, y1: number, len: number, color: string, lw = 1) => {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+      ctx.beginPath();
+      for (const [x, y, sx, sy] of [[x0, y0, 1, 1], [x1, y0, -1, 1], [x1, y1, -1, -1], [x0, y1, 1, -1]]) {
+        ctx.moveTo(x + 0.5, y + sy * len + 0.5);
+        ctx.lineTo(x + 0.5, y + 0.5);
+        ctx.lineTo(x + sx * len + 0.5, y + 0.5);
+      }
+      ctx.stroke();
+    };
+
+    const sparkle = (x: number, y: number, r: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x, y - r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.quadraticCurveTo(x, y, x, y + r);
+      ctx.quadraticCurveTo(x, y, x - r, y);
+      ctx.quadraticCurveTo(x, y, x, y - r);
+      ctx.fill();
+    };
+
+    /* ───────────── İkonlar ───────────── */
+
+    const icon = (name: Icon, x: number, y: number, s: number, color: string) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(s / 24, s / 24);
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      switch (name) {
+        case "user":
+          ctx.arc(0, -4, 4.5, 0, Math.PI * 2);
+          ctx.moveTo(-8, 9);
+          ctx.bezierCurveTo(-8, 2, 8, 2, 8, 9);
+          ctx.stroke();
+          break;
+        case "pencil":
+          ctx.moveTo(-8, 8);
+          ctx.lineTo(-7, 3);
+          ctx.lineTo(5, -9);
+          ctx.lineTo(9, -5);
+          ctx.lineTo(-3, 7);
+          ctx.closePath();
+          ctx.stroke();
+          break;
+        case "check":
+          ctx.moveTo(-7, 0);
+          ctx.lineTo(-2, 5);
+          ctx.lineTo(8, -6);
+          ctx.stroke();
+          break;
+        case "globe":
+          ctx.arc(0, 0, 9, 0, Math.PI * 2);
+          ctx.moveTo(-9, 0);
+          ctx.lineTo(9, 0);
+          ctx.ellipse(0, 0, 4, 9, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          break;
+        case "search":
+          ctx.arc(-2, -2, 6.5, 0, Math.PI * 2);
+          ctx.moveTo(3, 3);
+          ctx.lineTo(8, 8);
+          ctx.stroke();
+          break;
+        case "heart":
+          ctx.moveTo(0, 8);
+          ctx.bezierCurveTo(-11, 1, -8, -10, 0, -4);
+          ctx.bezierCurveTo(8, -10, 11, 1, 0, 8);
+          ctx.fill();
+          break;
+        case "comment":
+          ctx.moveTo(9, -1);
+          ctx.arc(0, -1, 9, 0, Math.PI * 1.75, true);
+          ctx.lineTo(-9, 9);
+          ctx.lineTo(-4, 7);
+          ctx.closePath();
+          ctx.fill();
+          break;
+        case "play":
+          ctx.moveTo(-5, -8);
+          ctx.lineTo(8, 0);
+          ctx.lineTo(-5, 8);
+          ctx.closePath();
+          ctx.fill();
+          break;
+        case "target":
+          ctx.arc(0, 0, 9, 0, Math.PI * 2);
+          ctx.moveTo(5, 0);
+          ctx.arc(0, 0, 5, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(0, 0, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+          break;
+        case "chart":
+          ctx.moveTo(-8, 8);
+          ctx.lineTo(8, 8);
+          ctx.moveTo(-5, 8);
+          ctx.lineTo(-5, 1);
+          ctx.moveTo(0, 8);
+          ctx.lineTo(0, -6);
+          ctx.moveTo(5, 8);
+          ctx.lineTo(5, -2);
+          ctx.stroke();
+          break;
+        case "calendar":
+          ctx.roundRect(-8, -7, 16, 15, 3);
+          ctx.moveTo(-8, -2);
+          ctx.lineTo(8, -2);
+          ctx.moveTo(-4, -10);
+          ctx.lineTo(-4, -5);
+          ctx.moveTo(4, -10);
+          ctx.lineTo(4, -5);
+          ctx.stroke();
+          break;
+        case "bolt":
+          ctx.moveTo(2, -10);
+          ctx.lineTo(-6, 2);
+          ctx.lineTo(0, 2);
+          ctx.lineTo(-2, 10);
+          ctx.lineTo(6, -2);
+          ctx.lineTo(0, -2);
+          ctx.closePath();
+          ctx.fill();
+          break;
+        case "star":
+          for (let i = 0; i < 10; i++) {
+            const a = -Math.PI / 2 + (i * Math.PI) / 5;
+            const r = i % 2 ? 4 : 9.5;
+            ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+          }
+          ctx.closePath();
+          ctx.fill();
+          break;
+      }
+      ctx.restore();
+    };
+
+    const bitmap = (rows: string[], x: number, y: number, cell: number, color: string) => {
+      ctx.fillStyle = color;
+      rows.forEach((r, j) => {
+        for (let i = 0; i < r.length; i++) if (r[i] === "X") ctx.fillRect(Math.round(x + i * cell), Math.round(y + j * cell), cell, cell);
+      });
+    };
+
+    const sketchRect = (x: number, y: number, w: number, h: number, seed: number) => {
+      const r = rng(seed);
+      const j = () => (r() - 0.5) * 3;
+      for (let pass = 0; pass < 2; pass++) {
+        ctx.beginPath();
+        ctx.moveTo(x + j(), y + j());
+        ctx.lineTo(x + w + j(), y + j());
+        ctx.lineTo(x + w + j(), y + h + j());
+        ctx.lineTo(x + j(), y + h + j());
+        ctx.closePath();
+        ctx.stroke();
+      }
+    };
+
+    /* ───────────── Çıkışlar: bildirim, sohbet, sticker, emoji ───────────── */
+
+    /** Sembolden fırlayıp yerine yaylanarak oturma: konum, ölçek, dönüş, saydamlık */
+    const launch = (p: number, at: number, tx: number, ty: number, t: number, i: number) => {
+      const k = span(p, at, at + 0.2);
+      if (k <= 0) return null;
+      const e = easeBack(k);
+      const x = cx + (tx - cx) * easeOut(k);
+      const y = cy + (ty - cy) * easeOut(k) + (k >= 1 ? Math.sin(t * 2.2 + i) * 2.5 : 0);
+      return { x, y, s: 0.2 + 0.8 * e, rot: (1 - k) * -0.35 + Math.sin(t * 1.6 + i) * 0.012, a: Math.min(1, k * 3) };
+    };
+
+    const notif = (pop: Extract<Pop, { kind: "notif" }>, t: number) => {
+      const w = 276, h = 68;
+      const x0 = -w / 2, y0 = -h / 2;
+      const th = pop.theme;
+      const pixel = th === "pixel";
+      const r = th === "glass" || th === "dark" ? 20 : th === "brutal" ? 14 : th === "neon" ? 16 : pixel || th === "sketch" ? 0 : 6;
+      const bg: Record<Theme, string> = {
+        glass: "rgba(255,255,255,0.9)",
+        dark: "rgba(22,23,28,0.95)",
+        sketch: "#f6f3ec",
+        cyber: "rgba(14,4,26,0.94)",
+        pixel: "#0b0f2a",
+        brutal: "#ffffff",
+        glitch: "#050505",
+        neon: "rgba(26,8,20,0.92)",
+      };
+      const fg = th === "glass" || th === "brutal" || th === "sketch" ? "#0b0b0c" : "#ffffff";
+      const sub = th === "glass" || th === "brutal" || th === "sketch" ? "rgba(0,0,0,0.55)" : th === "cyber" ? "#ff8bea" : th === "neon" ? "#ffb3ef" : "rgba(255,255,255,0.6)";
+      // Gölge / ışıma
+      if (th === "brutal") {
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.roundRect(x0 + 7, y0 + 7, w, h, r);
+        ctx.fill();
+      } else if (th === "cyber" || th === "neon") {
+        ctx.shadowColor = th === "cyber" ? "#33f0ff" : "#ff4fd8";
+        ctx.shadowBlur = 26;
+      } else if (!pixel) {
+        ctx.shadowColor = "rgba(0,0,0,0.45)";
+        ctx.shadowBlur = 34;
+        ctx.shadowOffsetY = 14;
+      }
+      ctx.fillStyle = bg[th];
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, w, h, r);
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      // Kenar
+      if (th === "brutal") {
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      } else if (th === "cyber" || th === "neon") {
+        ctx.strokeStyle = th === "cyber" ? "#33f0ff" : "#ff4fd8";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      } else if (pixel) {
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(x0 + 3, y0, w - 6, 3);
+        ctx.fillRect(x0 + 3, y0 + h - 3, w - 6, 3);
+        ctx.fillRect(x0, y0 + 3, 3, h - 6);
+        ctx.fillRect(x0 + w - 3, y0 + 3, 3, h - 6);
+      } else if (th === "sketch") {
+        ctx.strokeStyle = "#232327";
+        ctx.lineWidth = 1.4;
+        sketchRect(x0, y0, w, h, Math.floor(t * 8));
+      } else if (th === "glitch") {
+        ctx.strokeStyle = "rgba(255,255,255,0.8)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      } else if (th === "dark") {
+        ctx.strokeStyle = "rgba(255,255,255,0.1)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      // Uygulama ikonu
+      const ix = x0 + 13, iy = y0 + 13, is = 42;
+      if (pixel) {
+        bitmap(PIX_HEART, ix + 7, iy + 9, 4, "#ff4d6d");
+      } else {
+        const gr = ctx.createLinearGradient(ix, iy, ix + is, iy + is);
+        gr.addColorStop(0, pop.app[0]);
+        gr.addColorStop(1, pop.app[1]);
+        ctx.fillStyle = gr;
+        ctx.beginPath();
+        ctx.roundRect(ix, iy, is, is, th === "brutal" ? 10 : th === "sketch" ? 0 : 12);
+        ctx.fill();
+        if (th === "brutal") {
+          ctx.strokeStyle = "#000";
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+        }
+        icon(pop.glyph, ix + is / 2, iy + is / 2, 22, "#fff");
+      }
+      // Yazılar
+      const tx = x0 + 68;
+      const titleFont =
+        th === "pixel" || th === "cyber" || th === "glitch" ? `700 13px ${mono}` : th === "sketch" ? `italic 650 15px ${sans}` : `650 15px ${sans}`;
+      const bodyFont = th === "pixel" || th === "cyber" || th === "glitch" ? `10.5px ${mono}` : th === "sketch" ? `italic 13px ${sans}` : `13px ${sans}`;
+      const drawText = (col: string, subCol: string, ox = 0) => {
+        ctx.textAlign = "left";
+        ctx.font = titleFont;
+        ctx.fillStyle = col;
+        ctx.fillText(pop.title, tx + ox, y0 + 29);
+        ctx.font = bodyFont;
+        ctx.fillStyle = subCol;
+        ctx.fillText(pop.body, tx + ox, y0 + 49);
+        if (!pixel && th !== "glitch" && th !== "cyber") {
+          ctx.font = `11px ${sans}`;
+          ctx.textAlign = "right";
+          ctx.fillStyle = subCol;
+          ctx.fillText("şimdi", x0 + w - 14, y0 + 27);
+        }
+      };
+      if (th === "glitch") {
+        const j = Math.floor(t * 14) % 3 === 0 ? 3 : 1;
+        ctx.globalCompositeOperation = "lighter";
+        drawText("#ff2a4d", "#ff2a4d", -j);
+        drawText("#22e6ff", "#22e6ff", j);
+        ctx.globalCompositeOperation = "source-over";
+      }
+      drawText(fg, sub);
+    };
+
+    const chat = (pop: Extract<Pop, { kind: "chat" }>) => {
+      ctx.font = `${pop.comic ? "800 italic 16px" : "600 15px"} ${sans}`;
+      const tw = Math.min(260, ctx.measureText(pop.text).width);
+      const lines: string[] = [];
+      {
+        // basit satır kırma
+        let line = "";
+        for (const word of pop.text.split(" ")) {
+          const test = line ? `${line} ${word}` : word;
+          if (ctx.measureText(test).width > 240 && line) {
+            lines.push(line);
+            line = word;
+          } else line = test;
+        }
+        lines.push(line);
+      }
+      const w = Math.min(tw, 240) + 34, h = 22 + lines.length * 20;
+      const x0 = -w / 2, y0 = -h / 2;
+      if (pop.comic) {
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.ellipse(5, 5, w / 2 + 12, h / 2 + 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.shadowColor = "rgba(0,0,0,0.35)";
+        ctx.shadowBlur = 24;
+        ctx.shadowOffsetY = 10;
+      }
+      ctx.fillStyle = pop.bg;
+      ctx.beginPath();
+      if (pop.comic) ctx.ellipse(0, 0, w / 2 + 12, h / 2 + 10, 0, 0, Math.PI * 2);
+      else ctx.roundRect(x0, y0, w, h, 20);
+      ctx.fill();
+      // kuyruk
+      ctx.beginPath();
+      ctx.moveTo(x0 + 18, y0 + h - 6);
+      ctx.lineTo(x0 + 2, y0 + h + 12);
+      ctx.lineTo(x0 + 34, y0 + h - 2);
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      if (pop.comic) {
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, w / 2 + 12, h / 2 + 10, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.fillStyle = pop.fg;
+      ctx.textAlign = "center";
+      lines.forEach((l, i) => ctx.fillText(l, 0, y0 + 26 + i * 20));
+    };
+
+    const sticker = (pop: Extract<Pop, { kind: "sticker" }>) => {
+      ctx.rotate(pop.rot);
+      ctx.font = `900 22px ${sans}`;
+      ctx.letterSpacing = "0.5px";
+      const w = ctx.measureText(pop.text).width + 40, h = 50;
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = 18;
+      ctx.shadowOffsetY = 8;
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.roundRect(-w / 2 - 6, -h / 2 - 6, w + 12, h + 12, 18);
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.fillStyle = pop.bg;
+      ctx.beginPath();
+      ctx.roundRect(-w / 2, -h / 2, w, h, 13);
+      ctx.fill();
+      ctx.fillStyle = pop.fg;
+      ctx.textAlign = "center";
+      ctx.fillText(pop.text, 0, 8);
+      ctx.letterSpacing = "0px";
+    };
+
+    const emojiBurst = (pop: Extract<Pop, { kind: "emoji" }>, p: number, angle: number) => {
+      const n = pop.n ?? 11;
+      const r = rng(pop.at * 1000 + 3);
+      const pts = assets!.points;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (let i = 0; i < n; i++) {
+        const at = pop.at + r() * 0.16;
+        const dir = -Math.PI / 2 + (r() - 0.5) * 2.6;
+        const dist = size * (0.45 + r() * 0.55);
+        const px = 26 + r() * 22;
+        const k = (i * 233) % 2600;
+        const ch = pop.chars[i % pop.chars.length];
+        const u = span(p, at, at + 0.42);
+        if (u <= 0 || u >= 1) continue;
+        const from = project(pts[k * 2] * 0.6, pts[k * 2 + 1] * 0.6, angle);
+        const e = easeOut(u);
+        const x = from.x + Math.cos(dir) * dist * e;
+        const y = from.y + Math.sin(dir) * dist * e - size * 0.15 * u;
+        const s = u < 0.2 ? easeBack(u / 0.2) : 1;
+        ctx.save();
+        ctx.globalAlpha = u > 0.7 ? (1 - u) / 0.3 : 1;
+        ctx.translate(x, y);
+        ctx.rotate((r() - 0.5) * 0.8 * e);
+        ctx.font = `${px * s}px ${EMOJI}`;
+        ctx.fillText(ch, 0, 0);
+        ctx.restore();
+      }
+      ctx.textBaseline = "alphabetic";
+    };
+
+    const pops = (mode: Mode, p: number, t: number, angle: number) => {
+      // Emojiler kartların altında kalsın: önce onlar çizilir
+      [...POPS[mode]].sort((x, y) => Number(y.kind === "emoji") - Number(x.kind === "emoji")).forEach((pop, i) => {
+        reset();
+        if (pop.kind === "emoji") return emojiBurst(pop, p, angle);
+        const m = launch(p, pop.at, cx + pop.x * size, cy + pop.y * size, t, i);
+        if (!m) return;
+        ctx.save();
+        ctx.globalAlpha = m.a;
+        ctx.translate(m.x, m.y);
+        ctx.rotate(m.rot);
+        ctx.scale(m.s, m.s);
+        if (pop.kind === "notif") notif(pop, t);
+        else if (pop.kind === "chat") chat(pop);
+        else sticker(pop);
+        ctx.restore();
+      });
+      reset();
+    };
+
+    /** Sembolden süzülen küçük ikonlar (piksel kalp/yorum ya da çizgi ikon) */
+    const emit = (angle: number, p: number, style: "pixel" | "line", n = 9) => {
+      const pts = assets!.points;
+      const r = rng(77);
+      for (let i = 0; i < n; i++) {
+        const t0 = 0.08 + r() * 0.62;
+        const k = (i * 211) % 2600;
+        const side = r() - 0.5;
+        const isHeart = r() < 0.65;
+        const u = span(p, t0, t0 + 0.38);
+        if (u <= 0 || u >= 1) continue;
+        const from = project(pts[k * 2], pts[k * 2 + 1], angle);
+        let x = from.x + side * size * 0.8 * easeOut(u) + Math.sin(u * 7 + i) * 8;
+        let y = from.y - size * 0.75 * easeOut(u);
+        const s = 0.6 + 0.4 * easeOut(Math.min(1, u * 3));
+        if (style === "pixel") {
+          const cell = 4;
+          x = Math.round(x / cell) * cell;
+          y = Math.round(y / cell) * cell;
+          if (u > 0.8 && Math.floor(u * 30) % 2) continue;
+          bitmap(isHeart ? PIX_HEART : PIX_BUBBLE, x, y, cell, isHeart ? "#ff4d6d" : "#ffffff");
+        } else {
+          ctx.globalAlpha = Math.min(1, u * 5) * (1 - u);
+          icon(isHeart ? "heart" : "comment", x, y, 26 * s, isHeart ? "#ff3b5c" : "#ffffff");
+          ctx.globalAlpha = 1;
+        }
+      }
+    };
+
+    /* ───────────── Üsluplar ───────────── */
+
+    const beauty = (angle: number, t: number, p: number) => {
+      fill("#060912", "#020203", "rgba(47,107,255,0.2)");
+      reflection(angle, assets!.faceBlue, "rgba(2,2,3,1)", 0.16);
+      drawSolid(angle, sheenFace(assets!.faceBlue, p, 0.55), extra!.blueSides);
+      finish(0.05, t);
+    };
+
+    // Y2K krom: holografik zemin, sıvı krom sembol, parıltılar
+    const chrome = (angle: number, t: number, p: number) => {
+      const cg = ctx.createConicGradient(t * 0.35, cx, cy);
+      for (const [o, c] of [[0, "#ffd6f5"], [0.2, "#c9f2ff"], [0.4, "#e3d6ff"], [0.6, "#fff1c4"], [0.8, "#cdfbe8"], [1, "#ffd6f5"]] as const)
+        cg.addColorStop(o, c);
+      ctx.fillStyle = cg;
+      ctx.fillRect(0, 0, width, height);
+      const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.4);
+      rg.addColorStop(0, "rgba(255,255,255,0.75)");
+      rg.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, width, height);
+      // Zemin gölgesi
+      ctx.fillStyle = "rgba(90,60,140,0.18)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + size * 0.62, size * 0.55, size * 0.06, 0, 0, Math.PI * 2);
+      ctx.fill();
+      drawSolid(angle, sheenFace(extra!.faceChrome, p, 0.9), extra!.chromeSides);
+      const r = rng(13);
+      for (let i = 0; i < 9; i++) {
+        const x = cx + (r() - 0.5) * size * 1.9;
+        const y = cy + (r() - 0.5) * size * 1.5;
+        const tw = Math.max(0, Math.sin(t * 3 + i * 1.7));
+        sparkle(x, y, (5 + r() * 9) * tw, "rgba(255,255,255,0.95)");
+      }
+      label("Y2K · LIQUID CHROME", region.x0 + 4, region.y0 + 4, "rgba(60,40,90,0.6)");
+      finish(0.07, t, 0.15);
+    };
+
+    const cyber = (angle: number, t: number, p: number) => {
+      const { x0, x1, y1 } = region;
+      const bg = ctx.createLinearGradient(0, 0, 0, height);
+      bg.addColorStop(0, "#0a0214");
+      bg.addColorStop(0.6, "#1a0430");
+      bg.addColorStop(1, "#06010c");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
+      const horizon = cy + size * 0.42;
+      const sr = size * 0.62;
+      const sy = horizon - sr * 0.35;
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, sy, sr, 0, Math.PI * 2);
+      ctx.clip();
+      const sg = ctx.createLinearGradient(0, sy - sr, 0, sy + sr);
+      sg.addColorStop(0, "#ffd34d");
+      sg.addColorStop(0.55, "#ff5a8a");
+      sg.addColorStop(1, "#c41fd6");
+      ctx.fillStyle = sg;
+      ctx.fillRect(cx - sr, sy - sr, sr * 2, sr * 2);
+      ctx.fillStyle = "#1a0430";
+      for (let i = 0; i < 6; i++) {
+        const yy = sy + sr * (0.1 + i * 0.16) + ((t * 18) % (sr * 0.16));
+        ctx.fillRect(cx - sr, yy, sr * 2, 2 + i * 1.6);
+      }
+      ctx.restore();
+      ctx.globalAlpha = 0.35;
+      ctx.filter = "blur(30px)";
+      ctx.fillStyle = "#ff2bd6";
+      ctx.beginPath();
+      ctx.arc(cx, sy, sr * 0.9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.filter = "none";
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#07010e";
+      ctx.fillRect(x0 - 40, horizon, x1 - x0 + 80, height - horizon);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x0 - 40, horizon, x1 - x0 + 80, y1 + 140 - horizon);
+      ctx.clip();
+      ctx.strokeStyle = "rgba(255,43,214,0.7)";
+      ctx.lineWidth = 1;
+      ctx.shadowColor = "#ff2bd6";
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      const phase = (t * 0.8) % 1;
+      for (let i = 0; i < 12; i++) {
+        const k = (i + phase) / 12;
+        const yy = horizon + (height - horizon) * k * k;
+        ctx.moveTo(x0 - 40, yy);
+        ctx.lineTo(x1 + 40, yy);
+      }
+      for (let i = -14; i <= 14; i++) {
+        ctx.moveTo(cx + i * 10, horizon);
+        ctx.lineTo(cx + i * 120, height);
+      }
+      ctx.stroke();
+      ctx.restore();
+      const { w, h } = dims();
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.globalAlpha = 0.6;
+      ctx.filter = "blur(16px)";
+      ctx.setTransform(dpr * Math.cos(angle), 0, 0, dpr, dpr * cx, dpr * cy);
+      ctx.drawImage(extra!.faceCyan, -w / 2, -h / 2, w, h);
+      ctx.restore();
+      reset();
+      drawSolid(angle, sheenFace(extra!.faceCyan, p, 0.6), extra!.magentaSides);
+      label("NEO-İSTANBUL · 2077", region.x0 + 4, region.y0 + 4, "rgba(255,111,230,0.8)");
+      finish(0.08, t, 0.45);
+    };
+
+    // Şişkin kil: pastel zemin, yumuşak gölgeli pembe sembol, süzülen kil damlaları
+    const clay = (angle: number, t: number) => {
+      fill("#ffe0cf", "#e4d2ff");
+      const r = rng(31);
+      for (let i = 0; i < 5; i++) {
+        const bx = cx + (r() - 0.5) * size * 2.1;
+        const by = cy + (r() - 0.5) * size * 1.6 + Math.sin(t * 1.4 + i) * 6;
+        const br = size * (0.06 + r() * 0.08);
+        const col = ["#ffd166", "#7bdff2", "#b5a8ff", "#ff9bb3", "#9ef0b8"][i];
+        const gg = ctx.createRadialGradient(bx - br * 0.35, by - br * 0.35, br * 0.1, bx, by, br);
+        gg.addColorStop(0, "#ffffff");
+        gg.addColorStop(0.25, col);
+        gg.addColorStop(1, col);
+        ctx.shadowColor = "rgba(120,70,120,0.25)";
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetY = 10;
+        ctx.fillStyle = gg;
+        ctx.beginPath();
+        ctx.arc(bx, by, br, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.fillStyle = "rgba(140,70,110,0.2)";
+      ctx.filter = "blur(10px)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + size * 0.6, size * 0.55, size * 0.07, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.filter = "none";
+      const bob = Math.sin(t * 2) * 5;
+      cy += bob;
+      drawSolid(angle * 0.7, extra!.faceClay, extra!.claySides);
+      cy -= bob;
+      finish(0.06, t, 0.1);
+    };
+
+    const pixel = (angle: number, t: number, p: number) => {
+      ctx.imageSmoothingEnabled = false;
+      ctx.fillStyle = "#130b3a";
+      ctx.fillRect(0, 0, width, height);
+      const { x0, y0, x1, y1 } = region;
+      const ps = Math.max(4, Math.round(size / extra!.cells.rows));
+      const r = rng(5);
+      for (let i = 0; i < 46; i++) {
+        const sx = Math.round((x0 + r() * (x1 - x0)) / ps) * ps;
+        const sy = Math.round((y0 + r() * (y1 - y0)) / ps) * ps;
+        const on = (Math.floor(t * 4) + i) % 5 !== 0;
+        ctx.fillStyle = on ? ["#ffffff", "#ffe066", "#7cf9ff"][i % 3] : "rgba(255,255,255,0.2)";
+        ctx.fillRect(sx, sy, ps / 2, ps / 2);
+      }
+      const groundY = Math.round((cy + size * 0.62) / ps) * ps;
+      for (let x = Math.floor(x0 / ps) * ps; x < x1; x += ps) {
+        ctx.fillStyle = (x / ps) % 2 ? "#3ddc84" : "#2fbf6f";
+        ctx.fillRect(x, groundY, ps, ps);
+        ctx.fillStyle = "#7a4a2a";
+        ctx.fillRect(x, groundY + ps, ps, ps * 3);
+      }
+      const { cols, rows, on } = extra!.cells;
+      const bob = Math.floor(t * 3) % 2 ? -ps : 0;
+      const sx = Math.max(0.55, Math.round(Math.cos(angle) * 4) / 4);
+      const lx = Math.round((cx - (cols * ps * sx) / 2) / ps) * ps;
+      const ly = Math.round((cy - (rows * ps) / 2) / ps) * ps + bob;
+      const cw = Math.max(2, Math.round(ps * sx));
+      const dir = Math.sin(angle) >= 0 ? 1 : -1;
+      const filled = (i: number, j: number) => i >= 0 && j >= 0 && i < cols && j < rows && on[j * cols + i] === 1;
+      for (let d = 2; d >= 1; d--) {
+        ctx.fillStyle = d === 2 ? "#7a1fa8" : "#b02fd6";
+        for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) if (filled(i, j)) ctx.fillRect(lx + i * cw + dir * d * (ps / 2), ly + j * ps + d * (ps / 2), cw, ps);
+      }
+      for (let j = 0; j < rows; j++)
+        for (let i = 0; i < cols; i++) {
+          if (!filled(i, j)) continue;
+          ctx.fillStyle = !filled(i, j - 1) ? "#ffe066" : !filled(i - 1, j) ? "#ffb347" : "#ff8a3d";
+          ctx.fillRect(lx + i * cw, ly + j * ps, cw, ps);
+        }
+      emit(angle, p, "pixel", 12);
+      label("1P · OX DİJİTAL   ♥♥♥", x0 + 4, y0 + 4, "#ffe066");
+      ctx.imageSmoothingEnabled = true;
+    };
+
+    // Risograf: kâğıt, sarı daire, mavi düz baskı + pembe nokta tram, kayık baskı
+    const riso = (angle: number, t: number) => {
+      fill("#f3eee3", "#ece5d6");
+      const view = angle * 0.3;
+      const mis = Math.floor(t * 4) % 2 ? 4 : 2;
+      ctx.globalCompositeOperation = "multiply";
+      ctx.fillStyle = "#ffe800";
+      ctx.beginPath();
+      ctx.arc(cx + size * 0.18, cy - size * 0.1, size * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+      drawFlat(extra!.faceRisoBlue, view, mis, mis * 0.5, 0.92);
+      drawFlat(extra!.risoDots, view, -mis, -mis * 0.5, 1);
+      drawFlat(extra!.facePink, view, -mis * 2.2, mis * 1.6, 0.35);
+      ctx.globalCompositeOperation = "source-over";
+      // Kesim işaretleri
+      const { x0, y0, x1, y1 } = region;
+      ctx.strokeStyle = "rgba(255,72,176,0.7)";
+      ctx.lineWidth = 1;
+      corners(x0 + 20, y0 + 20, x1 - 20, y1 - 20, 22, "rgba(0,120,191,0.6)");
+      label("RİSO BASKI · 2 RENK", x0 + 28, y1 - 30, "rgba(0,120,191,0.8)");
+      finish(0.22, t, 0.12);
+    };
+
+    const glitch = (angle: number, t: number, p: number) => {
+      fill("#050505", "#020202");
+      const view = angle * 0.6;
+      const tick = Math.floor(t * 12);
+      const r = rng(tick);
+      const amt = 4 + (tick % 4 === 0 ? 10 : 0);
+      ctx.globalCompositeOperation = "lighter";
+      drawFlat(extra!.faceRed, view, -amt, 0, 0.9);
+      drawFlat(extra!.faceTeal, view, amt, 0, 0.9);
+      ctx.globalCompositeOperation = "source-over";
+      drawFlat(extra!.faceWhite, view, 0, 0, 0.85);
+      const { h } = dims();
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      for (let i = 0; i < 5; i++) {
+        const sx = Math.floor((cx + (r() - 0.5) * size * 0.9) * dpr);
+        const sy = Math.floor((cy + (r() - 0.2) * h * 0.5) * dpr);
+        const sw = Math.floor((6 + r() * 40) * dpr);
+        ctx.globalAlpha = 0.55;
+        ctx.drawImage(canvas, sx, sy, sw, 1, sx, sy, sw, Math.floor((40 + r() * 120) * dpr));
+      }
+      ctx.globalAlpha = 1;
+      for (let i = 0; i < 7; i++) {
+        const y = Math.floor((cy - h / 2 + r() * h) * dpr);
+        const bh = Math.floor((3 + r() * 22) * dpr);
+        const dx = Math.floor((r() - 0.5) * 70 * dpr);
+        ctx.drawImage(canvas, 0, y, canvas.width, bh, dx, y, canvas.width, bh);
+      }
+      ctx.restore();
+      ctx.fillStyle = "rgba(0,0,0,0.25)";
+      for (let y = region.y0; y < region.y1; y += 3) ctx.fillRect(region.x0, y, region.x1 - region.x0, 1);
+      emit(angle, p, "line", 8);
+      label(`REC ● ${String(Math.floor(t % 60)).padStart(2, "0")}:${String(Math.floor((t * 24) % 24)).padStart(2, "0")}`, region.x0 + 4, region.y0 + 4, "rgba(255,80,100,0.9)");
+      finish(0.14, t, 0.6);
+    };
+
+    // Neo-brutalizm: sarı zemin, siyah kalın kenar, sert gölge, basit şekiller
+    const brutal = (angle: number, t: number) => {
+      fill("#ffe14d", "#ffd23a");
+      const { x0, y0, x1, y1 } = region;
+      ctx.strokeStyle = "rgba(0,0,0,0.08)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = x0; x < x1; x += 32) {
+        ctx.moveTo(x + 0.5, y0 - 60);
+        ctx.lineTo(x + 0.5, y1 + 60);
+      }
+      for (let y = y0 - 60; y < y1 + 60; y += 32) {
+        ctx.moveTo(x0, y + 0.5);
+        ctx.lineTo(x1, y + 0.5);
+      }
+      ctx.stroke();
+      // Şekiller
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#000";
+      ctx.fillStyle = "#7c5cff";
+      ctx.beginPath();
+      ctx.arc(cx - size * 0.85, cy + size * 0.45, size * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.save();
+      ctx.translate(cx + size * 0.9, cy - size * 0.1);
+      ctx.rotate(t * 0.8);
+      ctx.fillStyle = "#3ee27a";
+      ctx.fillRect(-size * 0.08, -size * 0.08, size * 0.16, size * 0.16);
+      ctx.strokeRect(-size * 0.08, -size * 0.08, size * 0.16, size * 0.16);
+      ctx.restore();
+      const view = angle * 0.35;
+      drawFlat(extra!.blackStroke, view, 12, 12, 1, true);
+      drawFlat(extra!.blackStroke, view, 0, 0, 1, true);
+      drawFlat(extra!.facePink, view);
+      finish(0.06, t, 0.1);
+    };
+
+    const cloud = (angle: number, t: number) => {
+      fill("#061018", "#020407", "rgba(0,200,255,0.1)");
+      const { w, h, depth, half } = dims();
+      const pts = extra!.cloud;
+      const zs = extra!.cloudZ;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      const cols = ["rgba(80,120,255,0.35)", "rgba(80,200,255,0.55)", "rgba(120,255,220,0.75)", "rgba(230,255,250,0.95)"];
+      for (let b = 0; b < 4; b++) {
+        ctx.fillStyle = cols[b];
+        const s = 1 + b * 0.4;
+        for (let i = 0; i < CLOUD_POINTS; i++) {
+          const z = zs[i] * depth * 0.5;
+          const X = pts[i * 2] * half;
+          const xr = X * cos + z * sin;
+          const zr = -X * sin + z * cos;
+          const near = Math.min(3, Math.max(0, Math.floor(((-zr / (half * 0.6)) * 0.5 + 0.5) * 4)));
+          if (near !== b) continue;
+          const f = CAMERA / (CAMERA + zr);
+          ctx.fillRect(cx + xr * f - s / 2, cy + pts[i * 2 + 1] * half * f - s / 2, s, s);
+        }
+      }
+      corners(cx - w * 0.62, cy - h * 0.62, cx + w * 0.62, cy + h * 0.62, 16, "rgba(160,255,230,0.5)");
+      finish(0.08, t);
+    };
+
+    // Kolaj / fanzin: gazete kâğıdı, yırtık renkli parçalar, bant, kesilmiş sembol
+    const zine = (angle: number, t: number) => {
+      fill("#ece7dc", "#e2dccd");
+      const torn = (x: number, y: number, w: number, h: number, rot: number, color: string, seed: number) => {
+        const r = rng(seed);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.fillStyle = color;
+        ctx.shadowColor = "rgba(0,0,0,0.18)";
+        ctx.shadowBlur = 8;
+        ctx.shadowOffsetY = 3;
+        ctx.beginPath();
+        const step = 9;
+        ctx.moveTo(-w / 2, -h / 2);
+        for (let i = 0; i <= w; i += step) ctx.lineTo(-w / 2 + i, -h / 2 + (r() - 0.5) * 5);
+        for (let i = 0; i <= h; i += step) ctx.lineTo(w / 2 + (r() - 0.5) * 5, -h / 2 + i);
+        for (let i = w; i >= 0; i -= step) ctx.lineTo(-w / 2 + i, h / 2 + (r() - 0.5) * 5);
+        for (let i = h; i >= 0; i -= step) ctx.lineTo(-w / 2 + (r() - 0.5) * 5, -h / 2 + i);
+        ctx.fill();
+        ctx.restore();
+      };
+      // Gazete satırları
+      ctx.fillStyle = "rgba(0,0,0,0.07)";
+      const r = rng(61);
+      for (let y = region.y0; y < region.y1; y += 9) {
+        const lw = (region.x1 - region.x0) * (0.3 + r() * 0.6);
+        ctx.fillRect(region.x0 + 10, y, lw, 3);
+      }
+      torn(cx - size * 0.35, cy - size * 0.25, size * 1.05, size * 0.8, -0.08, "#ff3b30", 1);
+      torn(cx + size * 0.4, cy + size * 0.22, size * 0.9, size * 0.7, 0.07, "#2f4bff", 2);
+      torn(cx + size * 0.55, cy - size * 0.5, size * 0.42, size * 0.3, 0.2, "#ffd60a", 3);
+      // Bantlar
+      ctx.fillStyle = "rgba(255,250,220,0.65)";
+      for (const [tx, ty, rot] of [[-0.75, -0.62, -0.5], [0.8, 0.55, 0.4]] as const) {
+        ctx.save();
+        ctx.translate(cx + tx * size, cy + ty * size);
+        ctx.rotate(rot);
+        ctx.fillRect(-size * 0.16, -size * 0.04, size * 0.32, size * 0.08);
+        ctx.restore();
+      }
+      const view = angle * 0.25 + Math.sin(t * 6) * 0.01;
+      drawFlat(extra!.whiteStroke, view, 6, 8, 0.35, true);
+      drawFlat(extra!.whiteStroke, view, 0, 0, 1, true);
+      drawFlat(extra!.faceBlack, view);
+      label("SAYI 01 · OX FANZİN", region.x0 + 14, region.y1 - 18, "rgba(0,0,0,0.6)");
+      finish(0.18, t, 0.12);
+    };
+
+    // Neon tabela: koyu tuğla duvar, pembe neon tüp, ara sıra titreme
+    const neon = (angle: number, t: number) => {
+      ctx.fillStyle = "#150b0d";
+      ctx.fillRect(0, 0, width, height);
+      const bh = 26, bw = 62;
+      const r = rng(71);
+      for (let row = 0, y = region.y0 - 40; y < region.y1 + 60; y += bh, row++)
+        for (let x = region.x0 - 60 + (row % 2) * (bw / 2); x < region.x1 + 60; x += bw) {
+          const v = 26 + Math.floor(r() * 12);
+          ctx.fillStyle = `rgb(${v + 14},${v - 6},${v - 4})`;
+          ctx.fillRect(x + 2, y + 2, bw - 4, bh - 4);
+        }
+      const flick = rng(Math.floor(t * 18))() < 0.07;
+      const on = flick ? 0.25 : 1;
+      // Duvara vuran ışık
+      const wg = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.3);
+      wg.addColorStop(0, `rgba(255,60,200,${0.32 * on})`);
+      wg.addColorStop(1, "rgba(255,60,200,0)");
+      ctx.fillStyle = wg;
+      ctx.fillRect(0, 0, width, height);
+      const view = angle * 0.15;
+      ctx.globalCompositeOperation = "lighter";
+      ctx.filter = "blur(14px)";
+      drawFlat(extra!.neonTube, view, 0, 0, 0.9 * on, true);
+      ctx.filter = "blur(4px)";
+      drawFlat(extra!.neonTube, view, 0, 0, 0.9 * on, true);
+      ctx.filter = "none";
+      ctx.globalCompositeOperation = "source-over";
+      drawFlat(extra!.neonCore, view, 0, 0, 0.35 + 0.65 * on, true);
+      // Küçük camgöbeği tabela
+      ctx.font = `italic 700 26px ${sans}`;
+      ctx.textAlign = "left";
+      ctx.shadowColor = "#33f0ff";
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = "#c9fbff";
+      ctx.fillText("açığız", cx + size * 0.55, cy + size * 0.68);
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      finish(0.1, t, 0.65);
+    };
+
+    // Pop-art: sarı zemin, dönen ışın patlaması, kırmızı tram, kalın siyah kenarlı mavi sembol + beyaz noktalar
+    const pop = (angle: number, t: number) => {
+      ctx.fillStyle = "#ffd400";
+      ctx.fillRect(0, 0, width, height);
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(t * 0.25);
+      ctx.fillStyle = "#ffe866";
+      for (let i = 0; i < 16; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, Math.max(width, height), (i / 16) * Math.PI * 2, ((i + 0.5) / 16) * Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+      // Kenarlarda kırmızı tram
+      ctx.fillStyle = "rgba(255,40,60,0.55)";
+      for (let y = region.y0 - 40; y < region.y1 + 80; y += 12)
+        for (let x = region.x0 - 40; x < region.x1 + 40; x += 12) {
+          const d = Math.hypot(x - cx, y - cy) / (size * 1.6);
+          const rr = Math.max(0, Math.min(4.5, (d - 0.55) * 6));
+          if (rr <= 0.2) continue;
+          ctx.beginPath();
+          ctx.arc(x + ((y / 12) % 2) * 6, y, rr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      const view = angle * 0.3;
+      drawFlat(extra!.blackStroke, view, 9, 9, 1, true);
+      drawFlat(extra!.blackStroke, view, 0, 0, 1, true);
+      drawFlat(extra!.popFace, view);
+      drawFlat(extra!.popDots, view, 0, 0, 0.55);
+      finish(0.06, t, 0.08);
+    };
+
+    const sketch = (angle: number, t: number, p: number) => {
+      fill("#0c0c0d", "#060606");
+      const { x0, y0, x1, y1 } = region;
+      const pw = (x1 - x0) * 0.86, ph = (y1 - y0) * 0.92;
+      ctx.save();
+      ctx.translate(baseX, baseY);
+      ctx.rotate(-0.035);
+      ctx.shadowColor = "rgba(0,0,0,0.6)";
+      ctx.shadowBlur = 40;
+      ctx.shadowOffsetY = 18;
+      ctx.fillStyle = "#ebe6db";
+      ctx.fillRect(-pw / 2, -ph / 2, pw, ph);
+      ctx.shadowColor = "transparent";
+      const r = rng(41);
+      for (let i = 0; i < 7; i++) {
+        const sx = (r() - 0.5) * pw, sy = (r() - 0.5) * ph, sr = 30 + r() * 90;
+        const rg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
+        rg.addColorStop(0, `rgba(120,100,70,${0.05 + r() * 0.06})`);
+        rg.addColorStop(1, "rgba(120,100,70,0)");
+        ctx.fillStyle = rg;
+        ctx.fillRect(sx - sr, sy - sr, sr * 2, sr * 2);
+      }
+      ctx.strokeStyle = "rgba(60,60,70,0.12)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let y = -ph / 2 + 28; y < ph / 2; y += 28) {
+        ctx.moveTo(-pw / 2 + 18, y);
+        ctx.lineTo(pw / 2 - 18, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+      reset();
+      const { w, h } = dims();
+      const draw = span(p, 0, 0.5);
+      ctx.strokeStyle = "rgba(40,40,45,0.35)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, Math.max(w, h) * 0.6, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * draw);
+      ctx.moveTo(cx - w * 0.75, cy);
+      ctx.lineTo(cx - w * 0.75 + w * 1.5 * draw, cy);
+      ctx.stroke();
+      const view = angle * 0.3;
+      drawFlat(extra!.hatch, view, 0, 0, 0.55 + 0.45 * span(p, 0.15, 0.6));
+      const boil = rng(Math.floor(t * 8));
+      for (let i = 0; i < 3; i++) drawFlat(extra!.pencil, view, (boil() - 0.5) * 3, (boil() - 0.5) * 3, 0.55);
+      finish(0.12, t, 0.45);
+    };
+
+    const tracking = (angle: number, t: number, p: number) => {
+      fill("#0b0306", "#020102", "rgba(255,90,40,0.12)");
+      const { w, h, depth } = dims();
+      const cos = Math.cos(angle);
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      ctx.globalCompositeOperation = "lighter";
+      ctx.filter = "blur(28px)";
+      ctx.setTransform(dpr * cos, 0, 0, dpr, dpr * cx, dpr * cy);
+      ctx.drawImage(assets!.sideGlow, -w / 2, -h / 2, w, h);
+      ctx.restore();
+      reset();
+      drawSolid(angle, sheenFace(assets!.faceGlow, p, 0.4), extra!.glowSides);
+      const bw = (w * Math.abs(cos) + depth * Math.abs(Math.sin(angle))) / 2 + 22;
+      const bh = h / 2 + 22;
+      const lock = Math.min(1, p / 0.3);
+      const pad = (1 - lock) ** 2 * 40;
+      corners(cx - bw - pad, cy - bh - pad, cx + bw + pad, cy + bh + pad, 18, lock >= 1 ? "#ff7a3d" : "rgba(255,255,255,0.9)", 2);
+      label("HEDEF KİTLE KİLİTLENDİ", cx - bw - pad, cy - bh - pad - 12, "#ffb08a");
+      finish(0.05, t);
+    };
+
+    const NODE_NAMES = ["Website", "Panel", "WhatsApp", "Form", "Analitik"];
+    const NODE_COLORS = ["#2f6bff", "#a77bff", "#3ee27a", "#ffb347", "#ff4fa3"];
+    const NODE_POS = [
+      [-0.98, -0.5],
+      [0.98, -0.62],
+      [1.04, 0.16],
+      [-1.04, 0.5],
+      [0.86, 0.84],
+    ];
+    const nodes = (angle: number, t: number, p: number) => {
+      fill("#0d0e12", "#060608", "rgba(255,255,255,0.05)");
+      reflection(angle, assets!.faceGray, "rgba(6,6,8,1)", 0.1);
+      drawSolid(angle, sheenFace(assets!.faceGray, p, 0.7), extra!.graySides);
+      const pts = assets!.points;
+      const rx = (region.x1 - region.x0) / 2;
+      const ry = (region.y1 - region.y0) / 2;
+      NODE_NAMES.forEach((name, i) => {
+        const appear = clamp01((p - i * 0.05) / 0.22);
+        if (appear <= 0) return;
+        const [nx0, ny0] = NODE_POS[i];
+        const nx = baseX + nx0 * rx * 0.78;
+        const ny = baseY + ny0 * ry * 0.78;
+        const bw = 128, bh = 44;
+        const left = nx0 < 0;
+        const ax = left ? nx + bw / 2 : nx - bw / 2;
+        const k = (i * 517) % 2600;
+        const target = project(pts[k * 2] * 0.85, pts[k * 2 + 1] * 0.85, angle);
+        const c1x = ax + (left ? 60 : -60);
+        const c2x = target.x + (left ? -40 : 40);
+        ctx.globalAlpha = appear;
+        ctx.strokeStyle = "rgba(255,255,255,0.18)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ax, ny);
+        ctx.bezierCurveTo(c1x, ny, c2x, target.y, target.x, target.y);
+        ctx.stroke();
+        const u = (t * 0.55 + i * 0.23) % 1;
+        const iu = 1 - u;
+        const dx = iu ** 3 * ax + 3 * iu * iu * u * c1x + 3 * iu * u * u * c2x + u ** 3 * target.x;
+        const dy = iu ** 3 * ny + 3 * iu * iu * u * ny + 3 * iu * u * u * target.y + u ** 3 * target.y;
+        ctx.fillStyle = NODE_COLORS[i];
+        ctx.beginPath();
+        ctx.arc(dx, dy, 2.6, 0, Math.PI * 2);
+        ctx.fill();
+        const y = ny - bh / 2 + (1 - appear) * 8;
+        ctx.fillStyle = "rgba(18,19,24,0.92)";
+        ctx.beginPath();
+        ctx.roundRect(nx - bw / 2, y, bw, bh, 12);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.1)";
+        ctx.stroke();
+        ctx.fillStyle = NODE_COLORS[i];
+        ctx.beginPath();
+        ctx.roundRect(nx - bw / 2 + 10, y + 10, 24, 24, 7);
+        ctx.fill();
+        ctx.font = `600 13px ${sans}`;
+        ctx.fillStyle = "rgba(255,255,255,0.92)";
+        ctx.textAlign = "left";
+        ctx.fillText(name, nx - bw / 2 + 42, y + 20);
+        label("BAĞLI", nx - bw / 2 + 42, y + 34, "#4ade80", "left", 9);
+        ctx.globalAlpha = 1;
+      });
+      finish(0.08, t);
+    };
+
+    const RENDER: Record<Mode, (angle: number, t: number, p: number) => void> = {
+      beauty, chrome, cyber, clay, pixel, riso, glitch, brutal, cloud, zine, neon, pop, sketch, tracking, nodes,
+    };
+
+    let forced = -1;
+    try {
+      if (process.env.NODE_ENV === "development") forced = Number(localStorage.getItem("ox-film-sekans") ?? -1);
+    } catch {}
+
+    let start = performance.now();
+    let lastShot = -1;
+    const draw = (now: number) => {
+      if (!assets || !extra) return;
+      const elapsed = Math.max(0, now - start);
+      let shot = reduced ? 0 : Math.floor(elapsed / SHOT_MS) % SEQUENCE.length;
+      if (forced >= 0 && forced < SEQUENCE.length) shot = forced;
+      if (shot !== lastShot) {
+        lastShot = shot;
+        onWordRef.current?.(shot);
+      }
+      const p = reduced ? 0.85 : (elapsed % SHOT_MS) / SHOT_MS;
+      const target = pointer ? ((pointer.x - baseX) / width) * 0.8 : 0;
+      tilt += (target - tilt) * 0.05;
+      const t = elapsed / 1000;
+      const angle = reduced ? 0.35 : Math.sin(t * 0.55) * 0.6 + tilt * 0.4;
+      const mode = SEQUENCE[shot];
+      const fr = FRAMING[mode];
+      const wide = width >= 1024;
+      size = baseSize * fr.scale * (1 + p * 0.04);
+      cx = baseX + (wide ? fr.dx : 0) * baseSize;
+      cy = baseY + fr.dy * baseSize;
+      reset();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      ctx.filter = "none";
+      RENDER[mode](angle, t, p);
+      pops(mode, p, t, angle);
+      const since = elapsed % SHOT_MS;
+      if (!reduced && elapsed > SHOT_MS && since < 60) {
+        reset();
+        ctx.fillStyle = `rgba(255,255,255,${0.1 * (1 - since / 60)})`;
+        ctx.fillRect(0, 0, width, height);
+      }
+    };
+
+    let frame = 0;
+    let visible = true;
+    const loop = (now: number) => {
+      draw(now);
+      frame = visible && !document.hidden ? requestAnimationFrame(loop) : 0;
+    };
+    const run = () => {
+      if (!frame && !reduced && assets) frame = requestAnimationFrame(loop);
+    };
+
+    const logo = new Image();
+    logo.onload = () => {
+      const a = buildAssets(logo);
+      const mask = a.faceBlue;
+      const ramp = (colors: string[]) => colors.map((c) => tintFrom(mask, c));
+      const sheen = document.createElement("canvas");
+      sheen.width = a.w;
+      sheen.height = a.h;
+      const r = rng(17);
+      const cloudZ = new Float32Array(CLOUD_POINTS);
+      for (let i = 0; i < CLOUD_POINTS; i++) cloudZ[i] = r() * 2 - 1;
+
+      const hatch = document.createElement("canvas");
+      hatch.width = a.w;
+      hatch.height = a.h;
+      const hx = hatch.getContext("2d")!;
+      hx.strokeStyle = "rgba(35,35,40,0.75)";
+      hx.lineWidth = 1.2;
+      hx.beginPath();
+      for (let d = -a.h; d < a.w; d += 6) {
+        hx.moveTo(d, a.h);
+        hx.lineTo(d + a.h, 0);
+      }
+      hx.stroke();
+      hx.globalCompositeOperation = "destination-in";
+      hx.drawImage(mask, 0, 0);
+
+      const cols = 30;
+      const rows = Math.max(8, Math.round((cols * a.h) / a.w));
+      const small = document.createElement("canvas");
+      small.width = cols;
+      small.height = rows;
+      const sx = small.getContext("2d", { willReadFrequently: true })!;
+      sx.drawImage(mask, 0, 0, cols, rows);
+      const data = sx.getImageData(0, 0, cols, rows).data;
+      const on = new Uint8Array(cols * rows);
+      for (let i = 0; i < cols * rows; i++) on[i] = data[i * 4 + 3] > 70 ? 1 : 0;
+
+      // Kil: pembe yüze iç ışık (sol üst kenar) ve iç gölge (sağ alt kenar)
+      const clayFace = tintFrom(mask, "#ff7fb0");
+      {
+        const d = Math.round(a.w * 0.012);
+        const rim = (color: string, ox: number) => {
+          const c = tintFrom(mask, color);
+          const x = c.getContext("2d")!;
+          x.globalCompositeOperation = "destination-out";
+          x.drawImage(mask, ox, ox);
+          return c;
+        };
+        const cx2 = clayFace.getContext("2d")!;
+        cx2.globalCompositeOperation = "source-atop";
+        cx2.filter = `blur(${Math.max(2, d * 0.8)}px)`;
+        cx2.globalAlpha = 0.85;
+        cx2.drawImage(rim("#ffffff", d), 0, 0);
+        cx2.globalAlpha = 0.45;
+        cx2.drawImage(rim("#9c1f5a", -d), 0, 0);
+      }
+
+      const pad = Math.round(a.w * 0.02);
+      const neonTube = document.createElement("canvas");
+      neonTube.width = a.w + pad * 2;
+      neonTube.height = a.h + pad * 2;
+      {
+        const x = neonTube.getContext("2d")!;
+        x.drawImage(strokeFrom(mask, "#ff4fd8", Math.round(a.w * 0.008), pad), 0, 0);
+        x.globalCompositeOperation = "destination-out";
+        x.drawImage(strokeFrom(mask, "#000", 0, pad), 0, 0);
+      }
+      const neonCore = tintFrom(neonTube, "#ffe3fa");
+
+      extra = {
+        blueSides: ramp(["#2a5fe6", "#2150c8", "#1a42a8", "#14348a", "#0f286c", "#0a1d50"]),
+        graySides: ramp(["#b9bfcb", "#9ba2b0", "#808797", "#676e7d", "#4f5563", "#3a3f4b"]),
+        glowSides: ramp(["#ffb08a", "#ff8a5c", "#ff6a3d", "#e8532a", "#c4401e", "#9c2f14"]),
+        magentaSides: ramp(["#ff3fdc", "#d81fb8", "#ac1a93", "#80146f", "#56104c", "#330a2e"]),
+        chromeSides: ramp(["#d9dee8", "#b4bbc9", "#8d95a6", "#6a7283", "#4b5262", "#323846"]),
+        claySides: ramp(["#ff6aa2", "#f05592", "#dc4682", "#c43a72", "#a83062", "#8a2752"]),
+        faceCyan: tintFrom(mask, "#62f3ff"),
+        faceRed: tintFrom(mask, "#ff2a4d"),
+        faceTeal: tintFrom(mask, "#22e6ff"),
+        faceWhite: tintFrom(mask, "#f2f2f2"),
+        faceChrome: gradientFrom(mask, [[0, "#ffffff"], [0.3, "#b8c0d2"], [0.48, "#2a2f3a"], [0.54, "#6c7488"], [0.75, "#f1f4fa"], [1, "#9aa3b6"]]),
+        faceClay: clayFace,
+        faceBlack: tintFrom(mask, "#111111"),
+        facePink: tintFrom(mask, "#ff48b0"),
+        faceRisoBlue: tintFrom(mask, "#0078bf"),
+        risoDots: dotsFrom(mask, "#ff48b0", 9, 3.4),
+        popFace: tintFrom(mask, "#1f8bff"),
+        popDots: dotsFrom(mask, "#ffffff", 12, 2.6),
+        hatch,
+        pencil: tintFrom(a.outline, "#232327"),
+        sheen,
+        neonTube,
+        neonCore,
+        blackStroke: strokeFrom(mask, "#000000", Math.round(a.w * 0.014), pad),
+        whiteStroke: strokeFrom(mask, "#ffffff", Math.round(a.w * 0.018), pad),
+        pad,
+        cloud: sampleImage(logo, CLOUD_POINTS, 5),
+        cloudZ,
+        cells: { cols, rows, on },
+      };
+      assets = a;
+      start = performance.now();
+      if (reduced) draw(performance.now());
+      else run();
+    };
+    logo.src = "/images/logo.png";
+
+    layout();
+    const ro = new ResizeObserver(() => {
+      layout();
+      if (reduced) draw(performance.now());
+    });
+    ro.observe(host);
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) run();
+    });
+    io.observe(host);
+    const onVisibility = () => !document.hidden && visible && run();
+    document.addEventListener("visibilitychange", onVisibility);
+    const onMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    };
+    const onLeave = () => (pointer = null);
+    host.addEventListener("pointermove", onMove);
+    host.addEventListener("pointerleave", onLeave);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      logo.onload = null;
+      ro.disconnect();
+      io.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+      host.removeEventListener("pointermove", onMove);
+      host.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} aria-hidden className={cn("pointer-events-none block", className)} />;
+}
