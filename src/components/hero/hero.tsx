@@ -12,12 +12,16 @@ import { BrandFilmStyles, STYLE_WORDS } from "./stages/brand-film-styles";
 import { BrandFilmPop, POP_WORDS } from "./stages/brand-film-pop";
 import { BrandFilmStudio, STUDIO_WORDS } from "./stages/brand-film-studio";
 import { BrandFilmRef, REF_WORDS } from "./stages/brand-film-ref";
-import { BrandFilmSix, SIX_WORDS } from "./stages/brand-film-six";
+import { BrandFilmSix, FINAL_WORDS, SIX_WORDS } from "./stages/brand-film-six";
 import { BrandFilm3, FILM3_WORDS } from "./stages/brand-film-3";
 import { PREMIUM_WORDS, PremiumStage } from "./stages/premium-stage";
+import { SIGNATURE_WORDS, SignatureStage } from "./stages/signature-stage";
+import { ShowroomHero } from "./showroom-hero";
 
 // Hero denemeleri (video sonraya bırakıldı; eski geçici video: Cloudinary "reels/k9wv5dzwdcxfga6orb2o").
 // Solda hepsinde aynı metin (HeroCopy), sahne değişir:
+//   Vitrin, Signature, Final — Studio – Codex denemeleri (showroom-hero.tsx, signature-stage.tsx, brand-film-six refined); kullanılmayacak, karşılaştırma için duruyor
+//   Final – site sahibinin ekran görüntüleriyle seçtiği sahneler, Stiller 6 Tam yapısında (FINAL_SEQUENCE, brand-film-six.tsx)
 //   Stiller 6 Tam – Stiller 6 çerçevesiz: sahne bütün hero'yu kaplar, metnin arkasında sahne renginde örtü, açık sahnede metin koyulaşır
 //   Stiller 6 – ikinci referans seti: matematik, HUD, neon karalama, çizgi film, 8-bit oyun, blueprint, terminal (brand-film-six.tsx)
 //   Stiller 4 – site sahibinin referans görsellerinden türetilen üsluplar (brand-film-ref.tsx)
@@ -31,11 +35,11 @@ import { PREMIUM_WORDS, PremiumStage } from "./stages/premium-stage";
 //   Referans – Marka filmi (ilk hâli, olduğu gibi): site sahibinin verdiği referans videoya göre görüntüleme modları
 // Karar verilince yalnız seçilen kalır; DEFAULT o olur ve geliştirme seçicisi kaldırılır.
 
-type Variant = "Stiller 6 Tam" | "Stiller 6" | "Stiller 4" | "Stiller 3" | "Stiller 2" | "Stiller" | "Referans+" | "Premium" | "3D" | "Referans 2" | "Referans";
-const VARIANTS: Variant[] = ["Stiller 6 Tam", "Stiller 6", "Stiller 4", "Stiller 3", "Stiller 2", "Stiller", "Referans+", "Premium", "3D", "Referans 2", "Referans"];
+type Variant = "Final" | "Stiller 6 Tam" | "Stiller 6" | "Stiller 4" | "Stiller 3" | "Stiller 2" | "Stiller" | "Referans+" | "Premium" | "3D" | "Referans 2" | "Referans" | "Vitrin" | "Signature" | "Final — Studio";
+const VARIANTS: Variant[] = ["Final", "Stiller 6 Tam", "Stiller 6", "Stiller 4", "Stiller 3", "Stiller 2", "Stiller", "Referans+", "Premium", "3D", "Referans 2", "Referans", "Vitrin", "Signature", "Final — Studio"];
 // Seçici geliştirmede ve NOINDEX=1 test sitesinde açık (next.config.ts → HERO_DENEME); asıl sitede kapalı ve hep Referans 2
 const SWITCH = process.env.NODE_ENV === "development" || process.env.HERO_DENEME === "1";
-const DEFAULT: Variant = SWITCH ? "Stiller 6 Tam" : "Referans 2";
+const DEFAULT: Variant = SWITCH ? "Final" : "Referans 2";
 const STORE_KEY = "ox-hero-deneme";
 
 // Seçilen deneme tarayıcıda hatırlanır (seçici kapalıyken hep DEFAULT)
@@ -89,6 +93,13 @@ export function Hero() {
   return (
     // Alttaki beyaz bölüm, hero'nun son 48px'inin üstüne yuvarlak köşeli bir sayfa gibi biner.
     <section className="relative min-h-[calc(100svh+48px)] overflow-hidden bg-[#030304] text-white">
+      {variant === "Vitrin" && <ShowroomHero />}
+      {variant === "Signature" &&
+        fullBleed(<SignatureStage key="signature" onWord={setWord} className="absolute inset-0" />, SIGNATURE_WORDS, "pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#07080b_0%,transparent_57%)] max-lg:bg-[linear-gradient(180deg,transparent_30%,#07080b_54%)]")}
+      {variant === "Final" &&
+        fullBleed(<BrandFilmSix key="final" bleed final onTone={setTone} onWord={setWord} className="absolute inset-0" />, FINAL_WORDS, "")}
+      {variant === "Final — Studio" &&
+        fullBleed(<BrandFilmSix key="final-studio" bleed final refined onTone={setTone} onWord={setWord} className="absolute inset-0" />, FINAL_WORDS, "")}
       {variant === "Stiller 6 Tam" &&
         fullBleed(<BrandFilmSix key="stiller6tam" bleed onTone={setTone} onWord={setWord} className="absolute inset-0" />, SIX_WORDS, "")}
       {variant === "Stiller 6" && fullBleed(<BrandFilmSix key="stiller6" onWord={setWord} className="absolute inset-0" />, SIX_WORDS, SHADE_MOBILE)}
@@ -103,7 +114,7 @@ export function Hero() {
       {variant === "Referans" && fullBleed(<BrandFilm key="ref" onWord={setWord} className="absolute inset-0" />, FILM_WORDS)}
 
       {/* Alt satır: künye + kaydırma işareti (alttaki 48px'in hemen üstünde) */}
-      <motion.div
+      {variant !== "Vitrin" && <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.1, duration: 0.8 }}
@@ -119,7 +130,7 @@ export function Hero() {
             <PixelIcon variant="arrow" className="size-[9px] rotate-90" />
           </motion.span>
         </a>
-      </motion.div>
+      </motion.div>}
 
       {/* Geliştirmede ve test sitesinde: denemeler arasında geçiş */}
       {SWITCH && (

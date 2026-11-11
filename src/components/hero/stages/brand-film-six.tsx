@@ -16,13 +16,19 @@ type Mode =
   | "beauty" | "chrome" | "cyber" | "clay" | "pixel" | "riso" | "glitch" | "brutal"
   | "cloud" | "zine" | "neon" | "pop" | "sketch" | "tracking" | "nodes"
   | "glass" | "scanlines" | "bauhaus" | "pile" | "os" | "balloon" | "iso" | "eq" | "dither" | "grunge"
-  | "math" | "hud" | "doodle" | "cartoon" | "arcade" | "blueprint2" | "terminal";
+  | "math" | "hud" | "doodle" | "cartoon" | "arcade" | "blueprint2" | "terminal"
+  | "refnodes" | "reftracking" | "refcloud" | "refweb" | "refseo" | "posts" | "adchat" | "serp";
 const SEQUENCE: Mode[] = ["math", "hud", "doodle", "cartoon", "arcade", "blueprint2", "terminal"];
 /** Sol başlıkta moda eşlik eden kelimeler (SEQUENCE ile aynı sıra) */
 export const SIX_WORDS = ["SEO", "Reklam", "Sosyal Medya", "İçerik", "Kampanya", "Marka", "Yazılım"];
 
+/** Final hero: site sahibinin ekran görüntüleriyle seçtiği sahneler, sırayla (FINAL_WORDS aynı sıra) */
+const BLUE_REF = "#2f6bff";
+const FINAL_SEQUENCE: Mode[] = ["refnodes", "reftracking", "refcloud", "blueprint2", "refweb", "refseo", "posts", "adchat", "serp", "cyber", "glitch", "brutal", "clay", "glass", "scanlines", "pile", "os", "eq", "dither", "math", "cartoon", "arcade"];
+export const FINAL_WORDS = ["Yazılım", "Reklam", "SEO", "Marka", "Website", "SEO", "Sosyal Medya", "Reklam", "SEO", "Website", "Reels", "Website", "Logo", "Marka", "Sistem", "Sosyal Medya", "Yazılım", "Reels", "Logo", "SEO", "İçerik", "Kampanya"];
+
 const SHOT_MS = 2300;
-const TRANS_MS = 520;
+const TRANS_MS = 950;
 const LAYERS = 40;
 const CAMERA = 1500;
 const CLOUD_POINTS = 5200;
@@ -69,7 +75,7 @@ const POPS: Partial<Record<Mode, Pop[]>> = {
     { kind: "emoji", at: 0.5, chars: ["heart", "star"], n: 7 },
   ],
   arcade: [],
-  blueprint2: [{ kind: "sticker", at: 0.62, x: 0.6, y: -0.7, text: "ONAYLANDI", bg: "#ffffff", fg: "#1d4ea8", rot: -0.08 }],
+  blueprint2: [{ kind: "sticker", at: 0.62, x: -0.55, y: -0.78, text: "ONAYLANDI", bg: "#ffffff", fg: "#1d4ea8", rot: -0.08 }],
   terminal: [{ kind: "notif", at: 0.78, x: -0.45, y: 0.85, theme: "os", app: GREEN, glyph: "check", title: "DEPLOY TAMAM", body: "OXDIJITAL.COM · ŞİMDİ" }],
   glass: [{ kind: "notif", at: 0.3, x: 0.62, y: -0.66, theme: "dark", app: VIOLET, glyph: "star", title: "Marka kiti hazır", body: "Logo, renkler ve yazı tipleri" }],
   scanlines: [{ kind: "notif", at: 0.4, x: 0.62, y: 0.6, theme: "dark", app: SKY, glyph: "chart", title: "Analiz tamamlandı", body: "Panelde görüntüle" }],
@@ -96,7 +102,7 @@ const POPS: Partial<Record<Mode, Pop[]>> = {
     { kind: "sticker", at: 0.16, x: 0.62, y: -0.64, text: "YENİ LOGO", bg: "#ff4fa3", fg: "#fff", rot: -0.1 },
     { kind: "notif", at: 0.36, x: 0.62, y: 0.56, theme: "glass", app: VIOLET, glyph: "star", title: "Marka kiti hazır", body: "Logo, renkler ve yazı tipleri" },
   ],
-  cyber: [{ kind: "notif", at: 0.2, x: 0.66, y: -0.6, theme: "cyber", app: ["#ff2bd6", "#7a00ff"], glyph: "bolt", title: "SİSTEM ÇEVRİMİÇİ", body: "Tüm entegrasyonlar bağlı" }],
+  cyber: [{ kind: "notif", at: 0.2, x: 0.66, y: -0.6, theme: "cyber", app: ["#ff2bd6", "#7a00ff"], glyph: "globe", title: "SİTE YAYINDA", body: "oxdijital.com" }],
   clay: [
     { kind: "emoji", at: 0.12, chars: ["heart", "sparkle", "heart", "star"], n: 10 },
     { kind: "chat", at: 0.34, x: 0.6, y: -0.62, text: "Bu logo çok tatlı olmuş", bg: "#ff5fa2", fg: "#fff" },
@@ -107,12 +113,11 @@ const POPS: Partial<Record<Mode, Pop[]>> = {
     { kind: "emoji", at: 0.38, chars: ["fire", "star", "sparkle"], n: 8 },
   ],
   glitch: [
-    { kind: "emoji", at: 0.12, chars: ["fire", "heart", "sparkle"], n: 9 },
-    { kind: "notif", at: 0.34, x: 0.6, y: -0.64, theme: "glitch", app: ["#ff2a4d", "#22e6ff"], glyph: "play", title: "VİDEO YAYINDA", body: "REELS · ŞİMDİ" },
+    { kind: "notif", at: 0.34, x: 0.6, y: -0.64, theme: "glitch", app: ["#ff2a4d", "#22e6ff"], glyph: "play", title: "YENİ VİDEO YAYINDA", body: "REELS" },
   ],
   brutal: [
     { kind: "notif", at: 0.16, x: 0.6, y: -0.64, theme: "brutal", app: ORANGE, glyph: "globe", title: "Site yayında", body: "oxdijital.com" },
-    { kind: "sticker", at: 0.4, x: 0.7, y: 0.5, text: "CANLI", bg: "#3ee27a", fg: "#000", rot: 0.1 },
+    { kind: "sticker", at: 0.4, x: 0.7, y: 0.5, text: "CANLI ●", bg: "#3ee27a", fg: "#000", rot: 0.1 },
   ],
   cloud: [{ kind: "notif", at: 0.2, x: 0.62, y: -0.64, theme: "dark", app: SKY, glyph: "search", title: "Dizine eklendi", body: "Aramada görünür oldun" }],
   zine: [
@@ -306,10 +311,28 @@ function buildRef(a: Assets): RefAssets {
 
 /** Tam ekranda metnin arkasındaki örtü: sahnenin kendi zemin rengi (siyaha çamurlaşmasın) */
 const SCRIM: Partial<Record<Mode, string>> = {
+  refnodes: "#0b0c10",
+  reftracking: "#020203",
+  refcloud: "#08090c",
+  refweb: "#06070b",
+  refseo: "#07080c",
+  posts: "#050608",
+  adchat: "#050608",
+  serp: "#050608",
+  cyber: "#10031d",
+  brutal: "#ffdc45",
+  clay: "#f6dcd6",
+  glass: "#060608",
+  scanlines: "#000000",
+  pile: "#f0521a",
+  os: "#00a674",
+  eq: "#030303",
+  dither: "#ebe9e3",
+  glitch: "#050505",
   math: "#e4e2de", hud: "#050705", doodle: "#06030b", cartoon: "#2232c8", arcade: "#2a0b2e", blueprint2: "#1b48a3", terminal: "#090c0a",
 };
 /** Açık zeminli sahnelerde soldaki metin koyulaşır */
-const TONE: Partial<Record<Mode, "light" | "dark">> = { math: "light" };
+const TONE: Partial<Record<Mode, "light" | "dark">> = { math: "light", brutal: "light", clay: "light", dither: "light" };
 const withAlpha = (hex: string, a: number) => {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
@@ -319,6 +342,8 @@ export function BrandFilmSix({
   onWord,
   onTone,
   bleed = false,
+  final = false,
+  refined = false,
   className,
 }: {
   onWord?: (index: number) => void;
@@ -326,6 +351,10 @@ export function BrandFilmSix({
   onTone?: (tone: "light" | "dark") => void;
   /** true: çerçeve yok, sahne bütün hero'yu kaplar; logo ve süslemeler sağda, metnin arkasında sahne renginde örtü */
   bleed?: boolean;
+  /** true: Final hero sırası (FINAL_SEQUENCE) */
+  final?: boolean;
+  /** Final — Studio: aynı sekanslar, rafine malzeme, kompozisyon ve kurgu. */
+  refined?: boolean;
   className?: string;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -341,6 +370,8 @@ export function BrandFilmSix({
     const host = canvas?.parentElement;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !host || !ctx) return;
+    const shotMs = refined ? 3400 : SHOT_MS;
+    const transitionMs = refined ? 600 : TRANS_MS;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const mono =
       getComputedStyle(document.documentElement).getPropertyValue("--font-space-mono").trim() || "ui-monospace, monospace";
@@ -520,9 +551,9 @@ export function BrandFilmSix({
       ctx.fillStyle = v;
       ctx.fillRect(0, 0, width, height);
       ctx.save();
-      ctx.globalAlpha = grainAlpha;
+      ctx.globalAlpha = refined ? Math.min(grainAlpha * 0.25, 0.025) : grainAlpha;
       ctx.globalCompositeOperation = "overlay";
-      ctx.translate((t * 9301) % 160, (t * 4973) % 160);
+      ctx.translate(refined ? 0 : (t * 9301) % 160, refined ? 0 : (t * 4973) % 160);
       ctx.fillStyle = grainPattern;
       ctx.fillRect(-160, -160, width + 320, height + 320);
       ctx.restore();
@@ -1103,7 +1134,9 @@ export function BrandFilmSix({
     };
 
     const cyber = (angle: number, t: number, p: number) => {
-      const { x0, x1, y1 } = region;
+      // Tam ekranda neon zemin bütün hero boyunca uzanır
+      const y1 = region.y1;
+      const x0 = bleed ? 40 : region.x0, x1 = bleed ? width - 40 : region.x1;
       const bg = ctx.createLinearGradient(0, 0, 0, height);
       bg.addColorStop(0, "#0a0214");
       bg.addColorStop(0.6, "#1a0430");
@@ -1146,7 +1179,7 @@ export function BrandFilmSix({
       ctx.strokeStyle = "rgba(255,43,214,0.7)";
       ctx.lineWidth = 1;
       ctx.shadowColor = "#ff2bd6";
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = refined ? 2 : 8;
       ctx.beginPath();
       const phase = (t * 0.8) % 1;
       for (let i = 0; i < 12; i++) {
@@ -1171,14 +1204,15 @@ export function BrandFilmSix({
       ctx.restore();
       reset();
       drawSolid(angle, sheenFace(extra!.faceCyan, p, 0.6), extra!.magentaSides);
+      if (!refined) label("NEO-İSTANBUL · 2077", region.x1 - 4, region.y0 + 4, "rgba(255,111,230,0.8)", "right");
       finish(0.08, t, 0.45);
     };
 
     // Şişkin kil: pastel zemin, yumuşak gölgeli pembe sembol, süzülen kil damlaları
     const clay = (angle: number, t: number) => {
-      fill("#ffe0cf", "#e4d2ff");
+      fill(refined ? "#efdfdc" : "#ffe0cf", refined ? "#d7c8d1" : "#e4d2ff");
       const r = rng(31);
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < (refined ? 2 : 5); i++) {
         const bx = cx + (r() - 0.5) * size * 2.1;
         const by = cy + (r() - 0.5) * size * 1.6 + Math.sin(t * 1.4 + i) * 6;
         const br = size * (0.06 + r() * 0.08);
@@ -1281,7 +1315,7 @@ export function BrandFilmSix({
       const view = angle;
       const tick = Math.floor(t * 12);
       const r = rng(tick);
-      const amt = 4 + (tick % 4 === 0 ? 10 : 0);
+      const amt = refined ? 1.2 + (tick % 16 === 0 ? 4 : 0) : 4 + (tick % 4 === 0 ? 10 : 0);
       ctx.globalCompositeOperation = "lighter";
       drawFlat(extra!.faceRed, view, -amt, 0, 0.9);
       drawFlat(extra!.faceTeal, view, amt, 0, 0.9);
@@ -1290,7 +1324,7 @@ export function BrandFilmSix({
       const { h } = dims();
       ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < (refined ? 0 : 5); i++) {
         const sx = Math.floor((cx + (r() - 0.5) * size * 0.9) * dpr);
         const sy = Math.floor((cy + (r() - 0.2) * h * 0.5) * dpr);
         const sw = Math.floor((6 + r() * 40) * dpr);
@@ -1298,7 +1332,7 @@ export function BrandFilmSix({
         ctx.drawImage(canvas, sx, sy, sw, 1, sx, sy, sw, Math.floor((40 + r() * 120) * dpr));
       }
       ctx.globalAlpha = 1;
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < (refined ? (tick % 16 === 0 ? 2 : 0) : 7); i++) {
         const y = Math.floor((cy - h / 2 + r() * h) * dpr);
         const bh = Math.floor((3 + r() * 22) * dpr);
         const dx = Math.floor((r() - 0.5) * 70 * dpr);
@@ -1307,14 +1341,17 @@ export function BrandFilmSix({
       ctx.restore();
       ctx.fillStyle = "rgba(0,0,0,0.25)";
       for (let y = region.y0; y < region.y1; y += 3) ctx.fillRect(region.x0, y, region.x1 - region.x0, 1);
-      emit(angle, p, "line", 8);
+      if (!refined) emit(angle, p, "line", 8);
+      label(`REC ● ${String(Math.floor((t / 60) % 60)).padStart(2, "0")}:${String(Math.floor(t % 60)).padStart(2, "0")}`, region.x1 - 4, region.y0 + 4, "rgba(255,80,100,0.9)", "right");
       finish(0.14, t, 0.6);
     };
 
     // Neo-brutalizm: sarı zemin, siyah kalın kenar, sert gölge, basit şekiller
     const brutal = (angle: number, t: number) => {
       fill("#ffe14d", "#ffd23a");
-      const { x0, y0, x1, y1 } = region;
+      // Tam ekranda ızgara bütün hero boyunca
+      const { y0, y1 } = region;
+      const x0 = bleed ? 0 : region.x0, x1 = bleed ? width : region.x1;
       ctx.strokeStyle = "rgba(0,0,0,0.08)";
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1753,7 +1790,7 @@ export function BrandFilmSix({
       fill("#0b0b0e", "#000000");
       const R = extra!.ref;
       const r = rng(19);
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < (refined ? 2 : 6); i++) {
         const gx = cx + (r() - 0.5) * size * 2.2;
         const gy = cy + (r() - 0.5) * size * 1.7 + Math.sin(t * 0.9 + i) * 8;
         glassShape(i % 3, gx, gy, size * (0.12 + r() * 0.1), r() * 3 + t * 0.2 * (i % 2 ? 1 : -1));
@@ -2169,7 +2206,7 @@ export function BrandFilmSix({
       ctx.globalAlpha = 0.16;
       ctx.lineWidth = 2;
       ctx.beginPath();
-      for (let x = region.x0; x < region.x1; x += 7) {
+      for (let x = bleed ? 0 : region.x0; x < (bleed ? width : region.x1); x += 7) {
         const a = (Math.sin(x * 0.012 + t * 1.6) * 0.5 + 0.5) * size * 0.25;
         ctx.moveTo(x, region.y0 + size * 0.1);
         ctx.lineTo(x, region.y0 + size * 0.1 + a);
@@ -2826,8 +2863,8 @@ export function BrandFilmSix({
       ctx.lineTo(cx, cy - H * 0.75 + H * 1.5 * k);
       ctx.stroke();
       ctx.setLineDash([]);
-      // Derinlik hattı (arka kopya) ve ön logo, çizilerek
-      for (const [ox, oy, a, lw] of [[size * 0.07, -size * 0.05, 0.45, 0.004], [0, 0, 1, 0.006]] as const) {
+      // Logo, çizilerek (tek çizim; arkadaki soluk kopya "iki logo" gibi duruyordu)
+      for (const [ox, oy, a, lw] of [[0, 0, 1, 0.006]] as const) {
         logoT(angle, 0.86, ox, oy);
         ctx.setLineDash([22 * k, 22]);
         ctx.lineWidth = lw;
@@ -2868,7 +2905,7 @@ export function BrandFilmSix({
       }
       // Pafta
       const tb = { w: 200, h: 54 };
-      const tx = x1 - tb.w - 6, tyy = y1 - tb.h - 4;
+      const tx = x0 + 6, tyy = y1 - tb.h - 4;
       ctx.strokeStyle = "rgba(255,255,255,0.85)";
       ctx.lineWidth = 1.2;
       ctx.strokeRect(tx + 0.5, tyy + 0.5, tb.w, tb.h);
@@ -2878,6 +2915,57 @@ export function BrandFilmSix({
       ctx.stroke();
       label("OX DİJİTAL · SEMBOL", tx + 10, tyy + 18, "#ffffff");
       label("MARKA KİMLİĞİ · PAFTA 02", tx + 10, tyy + 44, "rgba(255,255,255,0.75)", "left", 9);
+      // Koruma alanı: logonun çevresinde kesik çizgili kutu ve köşelerde "x"
+      {
+        const ck = easeOut(span(p, 0.25, 0.5));
+        if (ck > 0) {
+          const pad = H * 0.18;
+          ctx.globalAlpha = ck;
+          ctx.setLineDash([4, 5]);
+          ctx.strokeStyle = "rgba(255,255,255,0.5)";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(cx - W / 2 - pad, cy - H / 2 - pad, W + pad * 2, H + pad * 2);
+          ctx.setLineDash([]);
+          label("x", cx - W / 2 - pad / 2, cy - H / 2 - pad / 2 + 3, "rgba(255,255,255,0.85)", "center", 10);
+          label("x", cx + W / 2 + pad / 2, cy + H / 2 + pad / 2 + 3, "rgba(255,255,255,0.85)", "center", 10);
+          ctx.globalAlpha = 1;
+        }
+      }
+      // Renkler (sağ üst, sırayla belirir)
+      const swatches: [string, string][] = [["#2F6BFF", "OX MAVİ"], ["#0A1430", "GECE"], ["#E8EEFC", "SİS"], ["#111111", "MÜREKKEP"]];
+      const sx = x1 - 128, sy = y0 + 6;
+      label("RENKLER", sx, sy, "rgba(255,255,255,0.75)", "left", 9);
+      swatches.forEach(([hex, name], i) => {
+        const k = easeOut(span(p, 0.35 + i * 0.07, 0.5 + i * 0.07));
+        if (!k) return;
+        ctx.globalAlpha = k;
+        ctx.fillStyle = hex;
+        ctx.fillRect(sx, sy + 12 + i * 34, 26, 26);
+        ctx.strokeStyle = "rgba(255,255,255,0.45)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(sx + 0.5, sy + 12.5 + i * 34, 26, 26);
+        label(hex, sx + 34, sy + 24 + i * 34, "rgba(255,255,255,0.95)", "left", 9);
+        label(name, sx + 34, sy + 36 + i * 34, "rgba(255,255,255,0.6)", "left", 8);
+      });
+      ctx.globalAlpha = 1;
+      // Yazı tipleri (sağ alt)
+      {
+        const fk = easeOut(span(p, 0.6, 0.8));
+        if (fk) {
+          ctx.globalAlpha = fk;
+          const fx = x1 - 170;
+          ctx.textAlign = "left";
+          ctx.fillStyle = "rgba(255,255,255,0.95)";
+          ctx.font = `600 40px ${sans}`;
+          ctx.fillText("Aa", fx, y1 - 92);
+          label("INTER · BAŞLIK VE METİN", fx, y1 - 72, "rgba(255,255,255,0.65)", "left", 8);
+          ctx.fillStyle = "rgba(255,255,255,0.85)";
+          ctx.font = `26px ${mono}`;
+          ctx.fillText("Aa", fx, y1 - 30);
+          label("SPACE MONO · ETİKET", fx, y1 - 12, "rgba(255,255,255,0.65)", "left", 8);
+          ctx.globalAlpha = 1;
+        }
+      }
       finish(0.14, t, 0.3);
     };
 
@@ -2947,10 +3035,942 @@ export function BrandFilmSix({
       finish(0.1, t, 0.5);
     };
 
+    // İlk Referans'ın "ağ" sahnesi: gri metal sembol, perspektif zemin ızgarası, veri kutuları ve logoya eğri bağlantılar
+    const nodeRand = rng(21);
+    const REF_NODES = Array.from({ length: 11 }, (_, i) => ({
+      angle: (i / 11) * Math.PI * 2 + nodeRand() * 0.4,
+      radius: 0.95 + nodeRand() * 0.45,
+      rows: 3 + Math.floor(nodeRand() * 5),
+      seed: nodeRand(),
+    }));
+    const refText = (str: string, x: number, y: number, px: number, color: string) => {
+      ctx.font = `${px}px ${mono}`;
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.fillText(str, x, y);
+    };
+    const refnodes = (angle: number, t: number) => {
+      ctx.fillStyle = "#0b0c10";
+      ctx.fillRect(0, 0, width, height);
+      // Perspektif zemin ızgarası
+      ctx.strokeStyle = "rgba(255,255,255,0.06)";
+      ctx.lineWidth = 1;
+      const horizon = cy - size * 0.2;
+      for (let i = 1; i < 14; i++) {
+        const y = horizon + (height - horizon) * (i / 14) ** 1.8;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+      for (let i = -16; i <= 16; i++) {
+        ctx.beginPath();
+        ctx.moveTo(cx + i * 18, horizon);
+        ctx.lineTo(cx + i * 160, height);
+        ctx.stroke();
+      }
+      drawSolid(angle, assets!.faceGray, [assets!.sideGray]);
+      // Veri kutuları ve bağlantıları
+      const rxx = (region.x1 - region.x0) * 0.42;
+      const ryy = (region.y1 - region.y0) * 0.42;
+      ctx.lineWidth = 1;
+      REF_NODES.forEach((n, i) => {
+        const a = n.angle + Math.sin(t * 0.4 + i) * 0.05;
+        const nx = cx + Math.cos(a) * rxx * n.radius;
+        const ny = cy + Math.sin(a) * ryy * n.radius;
+        const pnt = project(((i * 0.37) % 1) * 1.6 - 0.8, ((i * 0.61) % 1) * 1.6 - 0.8, angle);
+        ctx.strokeStyle = "rgba(255,255,255,0.28)";
+        ctx.beginPath();
+        ctx.moveTo(nx, ny);
+        ctx.bezierCurveTo(nx + (cx - nx) * 0.2, ny - 60, pnt.x + (nx - pnt.x) * 0.3, pnt.y + 40, pnt.x, pnt.y);
+        ctx.stroke();
+        const bw = 64, bh = 12 + n.rows * 9;
+        ctx.fillStyle = "rgba(10,14,30,0.78)";
+        ctx.fillRect(nx - bw / 2, ny - bh / 2, bw, bh);
+        ctx.strokeStyle = "rgba(47,107,255,0.75)";
+        ctx.strokeRect(nx - bw / 2 + 0.5, ny - bh / 2 + 0.5, bw - 1, bh - 1);
+        for (let r = 0; r < n.rows; r++) {
+          const v = Math.floor((n.seed * 9973 + r * 131 + Math.floor(t * 4) * 7) % 999);
+          refText(`${String.fromCharCode(97 + ((r + i) % 6))}: ${v}`, nx - bw / 2 + 5, ny - bh / 2 + 13 + r * 9, 8, "rgba(220,228,255,0.7)");
+        }
+        refText(`x: ${Math.round(nx)} y: ${Math.round(ny)}`, nx - bw / 2, ny + bh / 2 + 11, 9, "rgba(255,255,255,0.5)");
+      });
+      refText("nesne: 00 · ox sembol · ağ", cx - size * 0.45, cy - size * 0.62, 10, "rgba(255,255,255,0.78)");
+      finish(0.16, t, 0.35);
+    };
+
+    // İlk Referans'ın "takip" sahnesi: beyaz yüzlü, mavi kenarlı ışıyan sembol; köşe işaretleri, takip noktaları, kenarlara çizgiler
+    const reftracking = (angle: number, t: number) => {
+      ctx.fillStyle = "#020203";
+      ctx.fillRect(0, 0, width, height);
+      const { w, h, depth } = dims();
+      const cos = Math.cos(angle);
+      const zf = (-depth / 2) * cos;
+      const f = CAMERA / (CAMERA + zf);
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.filter = "blur(18px)";
+      ctx.setTransform(dpr * ac(angle) * f, 0, 0, dpr * f, dpr * (cx + (-depth / 2) * Math.sin(angle) * f), dpr * cy);
+      ctx.drawImage(assets!.sideGlow, -w / 2, -h / 2, w, h);
+      ctx.restore();
+      reset();
+      drawSolid(angle, assets!.faceGlow, [assets!.sideGlow]);
+      // Takip noktaları ve koordinatlar (değerler ekrandaki gerçek konum)
+      const pts = assets!.points;
+      const marks = [0, 1, 2, 3, 4, 5].map((k) => project(pts[k * 431 * 2], pts[k * 431 * 2 + 1], angle));
+      ctx.lineWidth = 1;
+      marks.forEach((m, k) => {
+        ctx.strokeStyle = "rgba(255,255,255,0.85)";
+        ctx.strokeRect(m.x - 4, m.y - 4, 8, 8);
+        if (k % 2 === 0) {
+          ctx.fillStyle = BLUE_REF;
+          ctx.fillRect(m.x + 8, m.y - 12, 7, 7);
+        }
+        refText(`x: ${Math.round(m.x)} y: ${Math.round(m.y)}`, m.x + 10, m.y + 3, 9, "rgba(255,255,255,0.85)");
+      });
+      // Kenarlara uzanan ince çizgiler
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.beginPath();
+      ctx.moveTo(marks[0].x, marks[0].y);
+      ctx.lineTo(cx + (region.x1 - cx) * 0.2, 0);
+      ctx.moveTo(marks[3].x, marks[3].y);
+      ctx.lineTo(region.x0 - 120, height);
+      ctx.moveTo(marks[5].x, marks[5].y);
+      ctx.lineTo(width, cy + size * 0.1);
+      ctx.stroke();
+      // Köşe işaretleri: logonun ekrandaki kutusu
+      const bw = (w * ac(angle) + depth * Math.abs(Math.sin(angle))) / 2 + 14;
+      const bh = h / 2 + 14;
+      ctx.strokeStyle = "rgba(255,255,255,0.9)";
+      ctx.lineWidth = 1.5;
+      for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+        ctx.beginPath();
+        ctx.moveTo(cx + sx * bw, cy + sy * (bh - 16));
+        ctx.lineTo(cx + sx * bw, cy + sy * bh);
+        ctx.lineTo(cx + sx * (bw - 16), cy + sy * bh);
+        ctx.stroke();
+      }
+      finish(0.05, t, 0.3);
+    };
+
+    // İlk Referans'ın "nokta bulutu" sahnesi (tel kafes kutu, bilgi satırları, ölçek çubuğu); noktalar derinliğe göre
+    // maviden yeşilimsi turkuaza ve beyaza (yakın noktalar parlak ve iri)
+    const REFCLOUD_COLORS = ["rgba(80,120,255,0.35)", "rgba(80,200,255,0.55)", "rgba(120,255,220,0.75)", "rgba(230,255,250,0.95)"];
+    const refcloud = (angle: number, t: number) => {
+      ctx.fillStyle = "#08090c";
+      ctx.fillRect(0, 0, width, height);
+      const rg = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.5);
+      rg.addColorStop(0, "rgba(40,200,180,0.07)");
+      rg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = rg;
+      ctx.fillRect(0, 0, width, height);
+      const { w, h, depth, half } = dims();
+      const pts = extra!.cloud;
+      const zs = extra!.cloudZ;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      for (let b = 0; b < 4; b++) {
+        ctx.fillStyle = REFCLOUD_COLORS[b];
+        const sz = 1.1 + b * 0.4;
+        for (let i = 0; i < CLOUD_POINTS; i++) {
+          const z = zs[i] * depth * 0.5;
+          const X = pts[i * 2] * half;
+          const xr = X * cos + z * sin;
+          const zr = -X * sin + z * cos;
+          const near = Math.min(3, Math.max(0, Math.floor(((-zr / (half * 0.6)) * 0.5 + 0.5) * 4)));
+          if (near !== b) continue;
+          const f = CAMERA / (CAMERA + zr);
+          ctx.fillRect(cx + xr * f - sz / 2, cy + pts[i * 2 + 1] * half * f - sz / 2, sz, sz);
+        }
+      }
+      // Tel kafes kutu
+      const corners3: [number, number][] = [];
+      for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) {
+        const X = (sx * w) / 2 + sx * 18;
+        const Y = (sy * h) / 2 + sy * 18;
+        const z = (sz * depth) / 2 + sz * 18;
+        const xr = X * cos + z * sin;
+        const zr = -X * sin + z * cos;
+        const f = CAMERA / (CAMERA + zr);
+        corners3.push([cx + xr * f, cy + Y * f]);
+      }
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let a = 0; a < 8; a++)
+        for (let b = a + 1; b < 8; b++) {
+          const diff = a ^ b;
+          if (diff === 1 || diff === 2 || diff === 4) {
+            ctx.moveTo(corners3[a][0], corners3[a][1]);
+            ctx.lineTo(corners3[b][0], corners3[b][1]);
+          }
+        }
+      ctx.stroke();
+      // Bilgi satırları (değerler gerçek: nokta sayısı, dönüş açısı)
+      const lx = region.x0 + 4, ly = region.y0 + 6;
+      const degNow = ((((angle * 180) / Math.PI) % 360) + 360) % 360;
+      ["NOKTA BULUTU", `NOKTA     ${CLOUD_POINTS}`, `DÖNÜŞ     ${degNow.toFixed(1)}°`, "MOD       TEL KAFES"].forEach((str, i) =>
+        refText(str, lx, ly + i * 13, 9, i ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.85)"),
+      );
+      // Ölçek çubuğu
+      ctx.strokeStyle = "rgba(255,255,255,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(region.x1 - 150, region.y1 - 14.5);
+      ctx.lineTo(region.x1 - 20, region.y1 - 14.5);
+      ctx.stroke();
+      refText("0.0", region.x1 - 150, region.y1 - 2, 8, "rgba(255,255,255,0.45)");
+      ctx.textAlign = "right";
+      ctx.fillText("10.0", region.x1 - 20, region.y1 - 2);
+      ctx.textAlign = "left";
+      finish(0.1, t, 0.35);
+    };
+
+    // Referans 2'nin "Website" sekansı: site tarayıcıda kurulur; pencere masaüstü → tablet → telefon olarak daralır
+    const refweb = (angle: number, t: number, p: number) => {
+      ctx.fillStyle = "#06070b";
+      ctx.fillRect(0, 0, width, height);
+      const glowR = size * 1.6;
+      const gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
+      gg.addColorStop(0, "rgba(47,107,255,0.1)");
+      gg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gg;
+      ctx.fillRect(cx - glowR, cy - glowR, glowR * 2, glowR * 2);
+      const { x0, y0, x1, y1 } = region;
+      const full = (x1 - x0) * 0.9;
+      const fh = (y1 - y0) * 0.86;
+      const toTablet = easeOut(span(p, 0.5, 0.66));
+      const toPhone = easeOut(span(p, 0.74, 0.9));
+      const fw = full - (full - fh * 0.75) * toTablet - (fh * 0.75 - fh * 0.48) * toPhone;
+      const fx = cx - fw / 2, fy = cy - fh / 2;
+      const phone = toPhone > 0.5;
+      const narrow = toTablet > 0.5;
+      const rr = (x: number, y: number, w: number, h: number, r: number) => {
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, r);
+      };
+      // Çerçeve
+      rr(fx, fy, fw, fh, phone ? 26 : 14);
+      ctx.fillStyle = "#0d0f16";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.save();
+      rr(fx, fy, fw, fh, phone ? 26 : 14);
+      ctx.clip();
+      // Üst çubuk
+      ctx.fillStyle = "rgba(255,255,255,0.05)";
+      ctx.fillRect(fx, fy, fw, 26);
+      for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = "rgba(255,255,255,0.2)";
+        ctx.beginPath();
+        ctx.arc(fx + 14 + i * 12, fy + 13, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      rr(fx + 56, fy + 6, Math.min(220, fw - 70), 14, 7);
+      ctx.fillStyle = "rgba(255,255,255,0.07)";
+      ctx.fill();
+      refText("oxdijital.com", fx + 64, fy + 16, 8, "rgba(255,255,255,0.6)");
+      const ix = fx + 18, iy = fy + 40, iw = fw - 36;
+      const show = (a: number) => easeOut(span(p, a, a + 0.12));
+      // Menü
+      ctx.globalAlpha = show(0.05);
+      ctx.drawImage(assets!.faceBlue, ix, iy, 22 * (assets!.w / assets!.h), 22);
+      if (!narrow)
+        for (let i = 0; i < 4; i++) {
+          ctx.fillStyle = "rgba(255,255,255,0.25)";
+          ctx.fillRect(ix + iw - 220 + i * 46, iy + 9, 34, 4);
+        }
+      else
+        for (let i = 0; i < 3; i++) {
+          ctx.fillStyle = "rgba(255,255,255,0.4)";
+          ctx.fillRect(ix + iw - 18, iy + 4 + i * 6, 18, 2.5);
+        }
+      ctx.globalAlpha = 1;
+      // Hero: geniş ekranda yazı solda logo sağda, dar ekranda logo üstte
+      const heroH = fh * (phone ? 0.5 : 0.48);
+      const logoS = Math.min(heroH * (narrow ? 0.46 : 0.62), iw * (narrow ? 0.42 : 0.28));
+      const logoX = narrow ? ix + iw / 2 : ix + iw * 0.72;
+      const logoY = narrow ? iy + 40 + logoS * 0.55 : iy + 40 + heroH / 2;
+      {
+        const keep = { cx, cy, size };
+        cx = logoX;
+        cy = logoY;
+        size = logoS;
+        drawSolid(angle, assets!.faceBlue, extra!.blueSides, show(0.15));
+        cx = keep.cx;
+        cy = keep.cy;
+        size = keep.size;
+      }
+      const tx = narrow ? ix + iw * 0.1 : ix;
+      const ty = narrow ? logoY + logoS * 0.75 : iy + 40 + heroH * 0.28;
+      const tw = narrow ? iw * 0.8 : iw * 0.46;
+      ctx.globalAlpha = show(0.22);
+      ctx.fillStyle = "rgba(255,255,255,0.92)";
+      if (refined) {
+        const fontSize = Math.min(phone ? 21 : 32, tw / 5.7);
+        ctx.font = `500 ${fontSize}px ${sans}`;
+        ctx.textAlign = "left";
+        ctx.fillText("Daha etkili.", tx, ty + fontSize * .7);
+        ctx.fillText("Daha sen.", tx, ty + fontSize * 1.75);
+        ctx.font = `${Math.max(7, fontSize * .3)}px ${sans}`;
+        ctx.fillStyle = "rgba(255,255,255,.46)";
+        ctx.fillText("Fikirden dijital deneyime.", tx, ty + (phone ? 44 : 63));
+      } else {
+        ctx.fillRect(tx, ty, tw * 0.9, phone ? 8 : 12);
+        ctx.fillRect(tx, ty + (phone ? 14 : 20), tw * 0.6, phone ? 8 : 12);
+        ctx.fillStyle = "rgba(255,255,255,0.22)";
+        ctx.fillRect(tx, ty + (phone ? 32 : 46), tw * 0.85, 4);
+        ctx.fillRect(tx, ty + (phone ? 40 : 56), tw * 0.7, 4);
+      }
+      ctx.globalAlpha = show(0.3);
+      rr(tx, ty + (phone ? 52 : 74), phone ? 70 : 96, phone ? 18 : 26, 13);
+      ctx.fillStyle = "#2f6bff";
+      ctx.fill();
+      ctx.font = `600 ${phone ? 8 : 10}px ${sans}`;
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
+      ctx.fillText("Teklif al", tx + (phone ? 35 : 48), ty + (phone ? 64 : 91));
+      ctx.textAlign = "left";
+      // Kartlar
+      ctx.globalAlpha = show(0.38);
+      const cols = phone ? 1 : narrow ? 2 : 3;
+      const cardY = fy + fh * (phone ? 0.8 : narrow ? 0.76 : 0.7);
+      const cw = (iw - (cols - 1) * 10) / cols;
+      for (let c = 0; c < cols; c++) {
+        rr(ix + c * (cw + 10), cardY, cw, fh * 0.22, 8);
+        ctx.fillStyle = "rgba(255,255,255,0.05)";
+        ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.fillRect(ix + c * (cw + 10) + 10, cardY + 12, cw * 0.5, 4);
+      }
+      ctx.globalAlpha = 1;
+      ctx.restore();
+      // Kırılım etiketi
+      const bp = phone ? "TELEFON · 390" : narrow ? "TABLET · 768" : "MASAÜSTÜ · 1440";
+      ctx.font = `8px ${mono}`;
+      ctx.textAlign = "right";
+      ctx.fillStyle = "rgba(170,198,255,0.85)";
+      ctx.fillText(bp, fx + fw, fy - 10);
+      ctx.textAlign = "left";
+      refText("MOBİL UYUMLU · HIZLI · SEO HAZIR", fx, fy - 10, 8, "rgba(255,255,255,0.45)");
+      finish(0.05, t, 0.35);
+    };
+
+    // Referans 2'nin "SEO" sekansı: arama yazılır, site haritası sayfa sayfa dizine eklenir, nokta bulutu logo taranır
+    const REF_PAGES = ["/", "/hizmetler", "/hizmetler/website", "/hizmetler/seo", "/paketler", "/blog", "/iletisim"];
+    const refseo = (angle: number, t: number, p: number) => {
+      const { x0, y0, x1 } = region;
+      const ox = cx + (x1 - x0) * 0.14;
+      ctx.fillStyle = "#07080c";
+      ctx.fillRect(0, 0, width, height);
+      const gR = size * 1.6;
+      const gg = ctx.createRadialGradient(ox, cy, 0, ox, cy, gR);
+      gg.addColorStop(0, "rgba(47,107,255,0.06)");
+      gg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gg;
+      ctx.fillRect(ox - gR, cy - gR, gR * 2, gR * 2);
+      const sLogo = size * 0.85;
+      const a = assets!;
+      const half = Math.max((sLogo * a.w) / a.h, sLogo) / 2;
+      const depth = half * 2 * 0.13;
+      const pts = a.points;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      // Tarama çizgisi soldan sağa geçer; geçtiği noktalar parlar
+      const scanX = ox - half * 1.2 + half * 2.4 * easeOut(span(p, 0.08, 0.7));
+      for (let i = 0; i < pts.length / 2; i++) {
+        const X = pts[i * 2] * half;
+        const Y = pts[i * 2 + 1] * half;
+        const z = ((i % 3) - 1) * (depth / 2);
+        const xr = X * cos + z * sin;
+        const zr = -X * sin + z * cos;
+        const f = CAMERA / (CAMERA + zr);
+        const px = ox + xr * f;
+        const scanned = px < scanX;
+        ctx.fillStyle = scanned ? "rgba(140,175,255,0.95)" : "rgba(200,216,255,0.35)";
+        ctx.fillRect(px, cy + Y * f, scanned ? 2 : 1.4, scanned ? 2 : 1.4);
+      }
+      if (p > 0.08 && p < 0.72) {
+        const grad = ctx.createLinearGradient(scanX - 40, 0, scanX, 0);
+        grad.addColorStop(0, "rgba(47,107,255,0)");
+        grad.addColorStop(1, "rgba(47,107,255,0.35)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(scanX - 40, cy - half * 1.1, 40, half * 2.2);
+        ctx.strokeStyle = "rgba(170,198,255,0.9)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(scanX, cy - half * 1.1);
+        ctx.lineTo(scanX, cy + half * 1.1);
+        ctx.stroke();
+      }
+      // Arama çubuğu (yazılır)
+      const q = "web tasarım ajansı";
+      const typed = q.slice(0, Math.round(q.length * easeOut(span(p, 0, 0.3))));
+      ctx.beginPath();
+      ctx.roundRect(x0 + 14, y0 + 6, 250, 32, 16);
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      ctx.fill();
+      icon("search", x0 + 34, y0 + 22, 14, "rgba(255,255,255,0.55)");
+      ctx.font = `12px ${sans}`;
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.textAlign = "left";
+      ctx.fillText(typed + (Math.floor(t * 2) % 2 ? "" : "|"), x0 + 52, y0 + 26);
+      // Site ağacı: gerçek sayfalar, tarandıkça işaretlenir
+      const tx = x0 + 20, ty = y0 + 68;
+      refText("SİTE HARİTASI", tx, ty, 8, "rgba(255,255,255,0.5)");
+      REF_PAGES.forEach((pg, i) => {
+        const k = easeOut(span(p, 0.15 + i * 0.06, 0.25 + i * 0.06));
+        if (!k) return;
+        const lvl = pg.split("/").length - 2;
+        const lx = tx + Math.max(0, lvl) * 14;
+        const ly = ty + 18 + i * 21;
+        ctx.globalAlpha = k;
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.beginPath();
+        ctx.moveTo(tx + 3, ly - 14);
+        ctx.lineTo(tx + 3, ly - 4);
+        ctx.lineTo(lx - 4, ly - 4);
+        ctx.stroke();
+        refText(`oxdijital.com${pg === "/" ? "" : pg}`, lx, ly, 10, "rgba(230,236,255,0.85)");
+        const done = p > 0.3 + i * 0.07;
+        refText(done ? "✓ DİZİNE EKLENDİ" : "TARANIYOR…", tx + 260, ly, 8, done ? "rgba(120,170,255,0.95)" : "rgba(255,255,255,0.35)");
+        ctx.globalAlpha = 1;
+      });
+      finish(0.08, t, 0.35);
+    };
+
+    // Premium'un "Sosyal Medya" sahnesi: üç gönderi kartı (kâğıt "Daha etkili.", mavi + beyaz logo, siyah + mavi logo);
+    // kartlar sırayla yükselir, ortadaki beğenilir (büyük kalp, kalp ikonu kırmızıya döner)
+    const heartPath = (x: number, y: number, s: number) => {
+      ctx.beginPath();
+      ctx.moveTo(x, y + s * 0.35);
+      ctx.bezierCurveTo(x - s * 0.95, y - s * 0.25, x - s * 0.45, y - s * 0.9, x, y - s * 0.38);
+      ctx.bezierCurveTo(x + s * 0.45, y - s * 0.9, x + s * 0.95, y - s * 0.25, x, y + s * 0.35);
+      ctx.closePath();
+    };
+    const postCard = (w: number, kind: 0 | 1 | 2, liked: number, angle: number) => {
+      const head = w * 0.17, img = w * 1.25, foot = w * 0.17;
+      const h = head + img + foot;
+      const x0 = -w / 2, y0 = -h / 2;
+      ctx.shadowColor = "rgba(0,0,0,0.75)";
+      ctx.shadowBlur = 50;
+      ctx.shadowOffsetY = 24;
+      ctx.fillStyle = "#121214";
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, w, h, w * 0.08);
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      ctx.strokeStyle = "rgba(255,255,255,0.08)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      // Başlık: avatar + ad
+      const av = head * 0.62;
+      const ag = ctx.createLinearGradient(x0 + 16, y0, x0 + 16 + av, y0 + av);
+      ag.addColorStop(0, "#4f84ff");
+      ag.addColorStop(1, "#2152dc");
+      ctx.fillStyle = ag;
+      ctx.beginPath();
+      ctx.arc(x0 + w * 0.06 + av / 2, y0 + head / 2, av / 2, 0, Math.PI * 2);
+      ctx.fill();
+      const lw = av * 0.62 * (assets!.w / assets!.h);
+      ctx.drawImage(extra!.faceWhite, x0 + w * 0.06 + av / 2 - lw / 2, y0 + head / 2 - av * 0.31, lw, av * 0.62);
+      ctx.font = `600 ${Math.round(w * 0.055)}px ${sans}`;
+      ctx.fillStyle = "#ffffff";
+      ctx.textAlign = "left";
+      ctx.fillText("oxdijital", x0 + w * 0.06 + av + w * 0.04, y0 + head / 2 + w * 0.02);
+      // Görsel
+      const iy = y0 + head;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x0, iy, w, img);
+      ctx.clip();
+      if (kind === 0) {
+        const pg = ctx.createLinearGradient(x0, 0, x0 + w, 0);
+        pg.addColorStop(0, "#d9d6cf");
+        pg.addColorStop(0.5, "#f2f0eb");
+        pg.addColorStop(1, "#cfccc4");
+        ctx.fillStyle = pg;
+        ctx.fillRect(x0, iy, w, img);
+        ctx.fillStyle = "#0b0b0c";
+        ctx.font = `500 ${Math.round(w * 0.16)}px ${sans}`;
+        ctx.letterSpacing = `${-w * 0.008}px`;
+        ctx.fillText("Daha", x0 + w * 0.12, iy + img * 0.8);
+        ctx.fillText("etkili.", x0 + w * 0.12, iy + img * 0.8 + w * 0.15);
+        ctx.letterSpacing = "0px";
+      } else {
+        if (kind === 1) {
+          const bg = ctx.createLinearGradient(x0, iy, x0 + w * 0.3, iy + img);
+          bg.addColorStop(0, "#4f84ff");
+          bg.addColorStop(0.45, "#2f6bff");
+          bg.addColorStop(1, "#2152dc");
+          ctx.fillStyle = bg;
+        } else ctx.fillStyle = "#0b0b0c";
+        ctx.fillRect(x0, iy, w, img);
+        const lh = w * 0.42, lwi = lh * (assets!.w / assets!.h) * (kind === 1 ? ac(angle) : 1);
+        ctx.drawImage(kind === 1 ? extra!.faceWhite : assets!.faceBlue, -lwi / 2, iy + img / 2 - lh / 2, lwi, lh);
+        if (kind === 1 && liked > 0 && liked < 1) {
+          // Büyük kalp (çift dokunuş)
+          const sc = liked < 0.25 ? easeBack(liked / 0.25) : 1;
+          ctx.globalAlpha = liked > 0.7 ? (1 - liked) / 0.3 : 1;
+          ctx.fillStyle = "#ffffff";
+          ctx.shadowColor = "rgba(0,0,0,0.35)";
+          ctx.shadowBlur = 30;
+          heartPath(0, iy + img / 2 + w * 0.04, w * 0.32 * sc);
+          ctx.fill();
+          ctx.shadowColor = "transparent";
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1;
+        }
+      }
+      ctx.restore();
+      // Alt: beğen, yorum, gönder
+      const fy = iy + img + foot / 2, isz = foot * 0.36;
+      const red = kind === 1 && liked > 0;
+      ctx.lineWidth = Math.max(1.6, w * 0.007);
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = red ? "#ff3b5c" : "rgba(255,255,255,0.85)";
+      ctx.fillStyle = "#ff3b5c";
+      const hb = red && liked < 0.3 ? 1 + Math.sin((liked / 0.3) * Math.PI) * 0.35 : 1;
+      heartPath(x0 + w * 0.1, fy + isz * 0.1, isz * 1.15 * hb);
+      if (red) ctx.fill();
+      else ctx.stroke();
+      ctx.strokeStyle = "rgba(255,255,255,0.85)";
+      ctx.beginPath();
+      ctx.arc(x0 + w * 0.22, fy, isz * 0.62, Math.PI * 0.75, Math.PI * 2.55);
+      ctx.lineTo(x0 + w * 0.22 - isz * 0.7, fy + isz * 0.7);
+      ctx.closePath();
+      ctx.stroke();
+      const px = x0 + w * 0.33;
+      ctx.beginPath();
+      ctx.moveTo(px - isz * 0.6, fy - isz * 0.1);
+      ctx.lineTo(px + isz * 0.7, fy - isz * 0.7);
+      ctx.lineTo(px + isz * 0.1, fy + isz * 0.7);
+      ctx.lineTo(px - isz * 0.05, fy + isz * 0.05);
+      ctx.closePath();
+      ctx.moveTo(px - isz * 0.05, fy + isz * 0.05);
+      ctx.lineTo(px + isz * 0.7, fy - isz * 0.7);
+      ctx.stroke();
+      return h;
+    };
+    const posts = (angle: number, t: number, p: number) => {
+      ctx.fillStyle = "#050608";
+      ctx.fillRect(0, 0, width, height);
+      const gR = size * 1.8;
+      const gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, gR);
+      gg.addColorStop(0, "rgba(47,107,255,0.1)");
+      gg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gg;
+      ctx.fillRect(cx - gR, cy - gR, gR * 2, gR * 2);
+      const rw = region.x1 - region.x0, rh = region.y1 - region.y0;
+      const w = Math.min(rw * 0.33, (rh * 0.88) / 1.59);
+      const liked = refined ? 0 : span(p, 0.55, 0.95);
+      // Sol, sağ, sonra ortadaki (önde)
+      const cards: { kind: 0 | 1 | 2; dx: number; dy: number; rot: number; sc: number; at: number }[] = [
+        { kind: 0, dx: -w * 0.95, dy: w * 0.1, rot: -0.07, sc: 1, at: 0.08 },
+        { kind: 2, dx: w * 0.95, dy: w * 0.1, rot: 0.07, sc: 1, at: 0.16 },
+        { kind: 1, dx: 0, dy: -w * 0.04, rot: 0, sc: 1.12, at: 0 },
+      ];
+      for (const c of cards) {
+        const k = easeOut(span(p, c.at, c.at + 0.32));
+        if (k <= 0) continue;
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, k * 1.5);
+        ctx.translate(cx + c.dx, cy + c.dy + (1 - k) * w * 0.35 + Math.sin(t * 1.4 + c.dx) * 3);
+        ctx.rotate(c.rot);
+        ctx.scale(c.sc * (0.96 + 0.04 * k), c.sc * (0.96 + 0.04 * k));
+        postCard(w, c.kind, liked, angle);
+        ctx.restore();
+      }
+      finish(0.05, t, 0.35);
+    };
+
+    // Premium'un "Reklam" sahnesi: sponsorlu gönderi → "Mesaj gönder"e dokunuş → sohbet penceresi, mesajlar, yazıyor
+    const avatar = (x: number, y: number, r: number) => {
+      const ag = ctx.createLinearGradient(x - r, y - r, x + r, y + r);
+      ag.addColorStop(0, "#4f84ff");
+      ag.addColorStop(1, "#2152dc");
+      ctx.fillStyle = ag;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      const lh = r * 1.2, lw = lh * (assets!.w / assets!.h);
+      ctx.drawImage(extra!.faceWhite, x - lw / 2, y - lh / 2, lw, lh);
+    };
+    const softShadow = (on: boolean) => {
+      ctx.shadowColor = on ? "rgba(0,0,0,0.7)" : "transparent";
+      ctx.shadowBlur = on ? 50 : 0;
+      ctx.shadowOffsetY = on ? 24 : 0;
+    };
+    const adchat = (angle: number, t: number, p: number) => {
+      ctx.fillStyle = "#050608";
+      ctx.fillRect(0, 0, width, height);
+      const gR = size * 1.8;
+      const gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, gR);
+      gg.addColorStop(0, "rgba(47,107,255,0.1)");
+      gg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gg;
+      ctx.fillRect(cx - gR, cy - gR, gR * 2, gR * 2);
+      const rw = region.x1 - region.x0, rh = region.y1 - region.y0;
+      const aw = Math.min(rw * 0.44, (rh * 0.9) / 1.4);
+      const head = aw * 0.19, img = aw, foot = aw * 0.19;
+      const ah = head + img + foot;
+      // Reklam kartı
+      const ak = easeOut(span(p, 0, 0.3));
+      const ax = cx - rw * 0.2 - aw / 2, ay = cy - ah / 2 - aw * 0.06 + (1 - ak) * aw * 0.3;
+      ctx.save();
+      ctx.globalAlpha = ak;
+      softShadow(true);
+      ctx.fillStyle = "#121214";
+      ctx.beginPath();
+      ctx.roundRect(ax, ay, aw, ah, aw * 0.08);
+      ctx.fill();
+      softShadow(false);
+      ctx.strokeStyle = "rgba(255,255,255,0.08)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.roundRect(ax, ay, aw, ah, aw * 0.08);
+      ctx.clip();
+      avatar(ax + aw * 0.1, ay + head / 2, head * 0.32);
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#fff";
+      ctx.font = `600 ${Math.round(aw * 0.05)}px ${sans}`;
+      ctx.fillText("oxdijital", ax + aw * 0.18, ay + head * 0.45);
+      ctx.fillStyle = "rgba(255,255,255,0.45)";
+      ctx.font = `${Math.round(aw * 0.042)}px ${sans}`;
+      ctx.fillText("Sponsorlu", ax + aw * 0.18, ay + head * 0.78);
+      const iy = ay + head;
+      const bg = ctx.createLinearGradient(ax, iy, ax + aw * 0.4, iy + img);
+      bg.addColorStop(0, "#4f84ff");
+      bg.addColorStop(0.45, "#2f6bff");
+      bg.addColorStop(1, "#2152dc");
+      ctx.fillStyle = bg;
+      ctx.fillRect(ax, iy, aw, img);
+      const lh = aw * 0.17, lw = lh * (assets!.w / assets!.h) * ac(angle);
+      ctx.drawImage(extra!.faceWhite, ax + aw * 0.09, iy + aw * 0.09, lw, lh);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `500 ${Math.round(aw * 0.1)}px ${sans}`;
+      ctx.letterSpacing = `${-aw * 0.005}px`;
+      ctx.fillText("Markanı birlikte", ax + aw * 0.07, iy + img * 0.8);
+      ctx.fillText("kuralım.", ax + aw * 0.07, iy + img * 0.8 + aw * 0.1);
+      ctx.letterSpacing = "0px";
+      // CTA çubuğu + dokunuş dalgası
+      const fy = iy + img;
+      ctx.fillStyle = "#1b1b1f";
+      ctx.fillRect(ax, fy, aw, foot);
+      const tap = span(p, 0.32, 0.5);
+      if (tap > 0 && tap < 1) {
+        ctx.fillStyle = `rgba(255,255,255,${0.35 * (1 - tap)})`;
+        ctx.beginPath();
+        ctx.arc(ax + aw * 0.4, fy + foot / 2, aw * 0.5 * easeOut(tap), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = "#ffffff";
+      ctx.font = `600 ${Math.round(aw * 0.048)}px ${sans}`;
+      ctx.fillText("Mesaj gönder", ax + aw * 0.07, fy + foot * 0.6);
+      ctx.strokeStyle = "rgba(255,255,255,0.6)";
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(ax + aw * 0.9, fy + foot * 0.36);
+      ctx.lineTo(ax + aw * 0.93, fy + foot * 0.5);
+      ctx.lineTo(ax + aw * 0.9, fy + foot * 0.64);
+      ctx.stroke();
+      ctx.restore();
+      // Sohbet penceresi
+      const ck = easeOut(span(p, 0.42, 0.65));
+      if (ck > 0) {
+        const cw = aw * 1.02, ch = aw * 0.68;
+        const chx = cx + rw * 0.2 - cw / 2 + (1 - ck) * aw * 0.25, chy = cy - ch / 2 + aw * 0.22;
+        ctx.save();
+        ctx.globalAlpha = ck;
+        softShadow(true);
+        ctx.fillStyle = "#f2f2ee";
+        ctx.beginPath();
+        ctx.roundRect(chx, chy, cw, ch, aw * 0.07);
+        ctx.fill();
+        softShadow(false);
+        const hh = ch * 0.27;
+        avatar(chx + cw * 0.1, chy + hh / 2, hh * 0.3);
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#0b0b0c";
+        ctx.font = `600 ${Math.round(aw * 0.05)}px ${sans}`;
+        ctx.fillText("OX Dijital", chx + cw * 0.19, chy + hh * 0.48);
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = `${Math.round(aw * 0.04)}px ${sans}`;
+        ctx.fillText("çevrimiçi", chx + cw * 0.19, chy + hh * 0.78);
+        ctx.fillStyle = "rgba(0,0,0,0.07)";
+        ctx.fillRect(chx, chy + hh, cw, 1);
+        const bubble = (text: string, by: number, k: number) => {
+          if (k <= 0) return;
+          ctx.font = `${Math.round(aw * 0.047)}px ${sans}`;
+          const tw = ctx.measureText(text).width;
+          const bw = tw + aw * 0.1, bh = aw * 0.105;
+          const bx = chx + cw - cw * 0.05 - bw;
+          ctx.globalAlpha = ck * Math.min(1, k * 2);
+          ctx.fillStyle = "#2f6bff";
+          ctx.beginPath();
+          ctx.roundRect(bx, by + (1 - k) * 8, bw, bh, [bh / 2, bh / 2, bh * 0.15, bh / 2]);
+          ctx.fill();
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(text, bx + aw * 0.05, by + (1 - k) * 8 + bh * 0.66);
+          ctx.globalAlpha = ck;
+        };
+        bubble("Merhaba, reklamınızı gördüm.", chy + hh + ch * 0.08, easeOut(span(p, 0.55, 0.65)));
+        bubble("Bilgi alabilir miyim?", chy + hh + ch * 0.08 + aw * 0.13, easeOut(span(p, 0.65, 0.75)));
+        // Yazıyor noktaları
+        const tk = span(p, 0.78, 0.85);
+        if (tk > 0) {
+          const dx = chx + cw * 0.05, dy = chy + ch - ch * 0.16;
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.roundRect(dx, dy - aw * 0.045, aw * 0.16, aw * 0.09, aw * 0.045);
+          ctx.fill();
+          for (let i = 0; i < 3; i++) {
+            ctx.fillStyle = `rgba(0,0,0,${0.25 + 0.4 * (0.5 + 0.5 * Math.sin(t * 6 - i * 0.8))})`;
+            ctx.beginPath();
+            ctx.arc(dx + aw * 0.045 + i * aw * 0.035, dy, aw * 0.011, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        ctx.restore();
+      }
+      finish(0.05, t, 0.35);
+    };
+
+    // Premium'un "SEO" sahnesi: arama yazılır, OX Dijital'in sonucu ve alt bağlantıları bulanıktan netleşerek belirir
+    const SERP_LINKS: [string, string][] = [
+      ["Hizmetler", "Website, SEO, sosyal medya, reklam"],
+      ["Paketler", "İhtiyaca göre hazırlanan planlar"],
+      ["Çalışmalar", "Yaptığımız işler"],
+      ["İletişim", "Ücretsiz görüşme ayarla"],
+    ];
+    const serp = (_angle: number, t: number, p: number) => {
+      ctx.fillStyle = "#050608";
+      ctx.fillRect(0, 0, width, height);
+      const gR = size * 1.8;
+      const gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, gR);
+      gg.addColorStop(0, "rgba(47,107,255,0.1)");
+      gg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = gg;
+      ctx.fillRect(cx - gR, cy - gR, gR * 2, gR * 2);
+      const rw = region.x1 - region.x0;
+      const w = Math.min(rw * 0.96, 640);
+      const u = w / 600;
+      const h = 375 * u;
+      const k0 = easeOut(span(p, 0, 0.25));
+      const x0 = cx - w / 2, y0 = cy - h / 2 - 20 * u + (1 - k0) * 30 * u;
+      // Arkadaki soluk kart
+      ctx.globalAlpha = easeOut(span(p, 0.08, 0.35));
+      ctx.fillStyle = "rgba(255,255,255,0.04)";
+      ctx.strokeStyle = "rgba(255,255,255,0.06)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.roundRect(x0 + 26 * u, y0 + 48 * u, w - 52 * u, h, 26 * u);
+      ctx.fill();
+      ctx.stroke();
+      // Ana kart
+      ctx.globalAlpha = k0;
+      ctx.shadowColor = "rgba(0,0,0,0.7)";
+      ctx.shadowBlur = 60;
+      ctx.shadowOffsetY = 26;
+      const cg = ctx.createLinearGradient(x0, y0, x0 + w, y0 + h);
+      cg.addColorStop(0, "#d8d6d0");
+      cg.addColorStop(0.35, "#f4f3ef");
+      cg.addColorStop(1, "#e6e4de");
+      ctx.fillStyle = cg;
+      ctx.beginPath();
+      ctx.roundRect(x0, y0, w, h, 26 * u);
+      ctx.fill();
+      ctx.shadowColor = "transparent";
+      ctx.shadowBlur = 0;
+      ctx.shadowOffsetY = 0;
+      // Arama kutusu, yazılır
+      const pad = 24 * u;
+      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.strokeStyle = "rgba(0,0,0,0.08)";
+      ctx.beginPath();
+      ctx.roundRect(x0 + pad, y0 + pad, w - pad * 2, 48 * u, 24 * u);
+      ctx.fill();
+      ctx.stroke();
+      icon("search", x0 + pad + 28 * u, y0 + pad + 24 * u, 16 * u, "rgba(0,0,0,0.45)");
+      const q = "istanbul dijital ajans";
+      const typed = q.slice(0, Math.round(q.length * span(p, 0.06, 0.38)));
+      ctx.font = `${Math.round(16 * u)}px ${sans}`;
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#0b0b0c";
+      const qx = x0 + pad + 50 * u, qy = y0 + pad + 30 * u;
+      ctx.fillText(typed, qx, qy);
+      if (Math.floor(t * 2.2) % 2 === 0) {
+        ctx.fillStyle = "#2f6bff";
+        ctx.fillRect(qx + ctx.measureText(typed).width + 2, qy - 14 * u, 1.5, 18 * u);
+      }
+      // Sonuç (bulanıktan netleşir)
+      const rise = (a: number) => easeOut(span(p, a, a + 0.18));
+      const blurIn = (k: number) => (ctx.filter = k < 1 ? `blur(${((1 - k) * 8).toFixed(1)}px)` : "none");
+      const rk = rise(0.4);
+      const ry = y0 + pad + 72 * u;
+      if (rk > 0) {
+        ctx.save();
+        ctx.globalAlpha = k0 * rk;
+        ctx.translate(0, (1 - rk) * 12 * u);
+        blurIn(rk);
+        avatar(x0 + pad + 20 * u, ry + 20 * u, 20 * u);
+        ctx.fillStyle = "#0b0b0c";
+        ctx.font = `500 ${Math.round(14 * u)}px ${sans}`;
+        ctx.fillText("OX Dijital", x0 + pad + 54 * u, ry + 16 * u);
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = `${Math.round(13 * u)}px ${sans}`;
+        ctx.fillText("oxdijital.com", x0 + pad + 54 * u, ry + 34 * u);
+        ctx.fillStyle = "#1d3fbf";
+        ctx.font = `500 ${Math.round(22 * u)}px ${sans}`;
+        ctx.letterSpacing = `${-0.4 * u}px`;
+        ctx.fillText("OX Dijital · Website, SEO ve Reklam", x0 + pad, ry + 82 * u);
+        ctx.letterSpacing = "0px";
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
+        ctx.font = `${Math.round(14 * u)}px ${sans}`;
+        ctx.fillText("İstanbul merkezli dijital ajans. Website, sosyal medya, SEO ve reklam tek çatı", x0 + pad, ry + 112 * u);
+        ctx.fillText("altında; tek ekip, tek plan.", x0 + pad, ry + 134 * u);
+        ctx.fillStyle = "rgba(0,0,0,0.08)";
+        ctx.fillRect(x0 + pad, ry + 156 * u, w - pad * 2, 1);
+        ctx.restore();
+        // Alt bağlantılar
+        SERP_LINKS.forEach(([title, desc], i) => {
+          const lk = rise(0.55 + i * 0.07);
+          if (lk <= 0) return;
+          ctx.save();
+          ctx.globalAlpha = k0 * lk;
+          blurIn(lk);
+          const lx = x0 + pad + (i % 2) * (w - pad * 2) * 0.52;
+          const ly = ry + 188 * u + Math.floor(i / 2) * 64 * u + (1 - lk) * 8 * u;
+          ctx.fillStyle = "#1d3fbf";
+          ctx.font = `500 ${Math.round(16 * u)}px ${sans}`;
+          ctx.fillText(title, lx, ly);
+          ctx.fillStyle = "rgba(0,0,0,0.5)";
+          ctx.font = `${Math.round(13.5 * u)}px ${sans}`;
+          ctx.fillText(desc, lx, ly + 22 * u);
+          ctx.restore();
+        });
+      }
+      ctx.globalAlpha = 1;
+      ctx.filter = "none";
+      finish(0.05, t, 0.35);
+    };
+
+    // Studio uses the same logo assets and scene vocabulary as Final.
+    // These shots receive dedicated art direction; the remaining shots use
+    // the original renderers with the shared restrained motion/finishing pass.
+    const studioCaption = (title: string, detail: string) => {
+      if (width < 600) return;
+      const y = region.y1 - 8;
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(region.x0 + 24, y - 22); ctx.lineTo(region.x1 - 24, y - 22); ctx.stroke();
+      label(title, region.x0 + 24, y, "rgba(255,255,255,0.65)", "left", 9);
+      label(detail, region.x1 - 24, y, "rgba(255,255,255,0.3)", "right", 8);
+    };
+
+    const studioNodes = (angle: number, t: number, p: number) => {
+      fill("#0b0c10", "#08090c", "rgba(91,117,163,0.09)");
+      const rw = region.x1 - region.x0, rh = region.y1 - region.y0;
+      const compact = width < 600;
+      const names = ["Website", "Otomasyon", "Veri", "İçerik", "SEO", "Reklam"];
+      const offsets = [[-.34, -.29], [.33, -.29], [.39, .04], [.29, .32], [-.31, .29], [-.4, -.02]];
+      offsets.forEach(([x, y], i) => {
+        const nx = cx + rw * x, ny = cy + rh * y;
+        const point = project(x * 1.7, y * 1.8, angle);
+        const k = easeOut(span(p, i * .035, .26 + i * .035));
+        const controlX = nx * .45 + point.x * .55;
+        ctx.save();
+        ctx.globalAlpha = k;
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(174,194,226,0.23)";
+        ctx.beginPath(); ctx.moveTo(nx, ny); ctx.bezierCurveTo(controlX, ny, controlX, point.y, point.x, point.y); ctx.stroke();
+        const q = (t * .22 + i / 6) % 1, u = 1 - q;
+        const sx = u ** 3 * nx + 3 * u * u * q * controlX + 3 * u * q * q * controlX + q ** 3 * point.x;
+        const sy = u ** 3 * ny + 3 * u * u * q * ny + 3 * u * q * q * point.y + q ** 3 * point.y;
+        ctx.fillStyle = "#9dbdff"; ctx.beginPath(); ctx.arc(sx, sy, 1.8, 0, Math.PI * 2); ctx.fill();
+        const bw = compact ? 58 : 92, bh = compact ? 28 : 39;
+        ctx.shadowColor = "rgba(0,0,0,0.4)"; ctx.shadowBlur = 18; ctx.shadowOffsetY = 8;
+        ctx.fillStyle = "#12161d"; ctx.beginPath(); ctx.roundRect(nx - bw / 2, ny - bh / 2, bw, bh, 5); ctx.fill();
+        ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+        ctx.strokeStyle = "rgba(190,209,238,0.17)"; ctx.stroke();
+        ctx.font = `500 ${compact ? 8 : 11}px ${sans}`; ctx.textAlign = "center"; ctx.fillStyle = "#c5cfdf"; ctx.fillText(names[i], nx, ny + 4);
+        ctx.restore();
+      });
+      ctx.save(); ctx.globalAlpha = .2; ctx.filter = "blur(20px)";
+      drawFlat(extra!.faceBlack, angle, 12, size * .13); ctx.restore(); reset();
+      drawSolid(angle, sheenFace(extra!.faceChrome, p * .7 + .15, .2), extra!.chromeSides);
+      studioCaption("BAĞLANTILI BİR SİSTEM", "STRATEJİ → UYGULAMA");
+      finish(.035, t, .28);
+    };
+
+    const studioTracking = (angle: number, t: number, p: number) => {
+      fill("#080a10", "#050609", "rgba(47,107,255,0.075)");
+      const { w, h } = dims();
+      const bw = w * ac(angle) / 2 + 26, bh = h / 2 + 26;
+      ctx.strokeStyle = "rgba(153,178,219,0.09)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - bw, region.y0 + 36); ctx.lineTo(cx - bw, region.y1 - 48);
+      ctx.moveTo(cx + bw, region.y0 + 36); ctx.lineTo(cx + bw, region.y1 - 48);
+      ctx.moveTo(region.x0 + 20, cy - bh); ctx.lineTo(region.x1 - 20, cy - bh);
+      ctx.moveTo(region.x0 + 20, cy + bh); ctx.lineTo(region.x1 - 20, cy + bh); ctx.stroke();
+      drawSolid(angle, sheenFace(extra!.faceWhite, p, .12), extra!.blueSides);
+      corners(cx - bw, cy - bh, cx + bw, cy + bh, 14, "rgba(157,188,255,0.65)");
+      for (let i = 0; i < 3; i++) {
+        const pt = project(assets!.points[i * 862], assets!.points[i * 862 + 1], angle);
+        ctx.fillStyle = "#2f6bff"; ctx.beginPath(); ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2); ctx.fill();
+        if (width >= 600) label(`0${i + 1}`, pt.x + 10, pt.y - 9, "rgba(180,199,230,.65)", "left", 8);
+      }
+      studioCaption("DOĞRU ODAK. NET ETKİ.", "REKLAM / TAKİP");
+      finish(.025, t, .25);
+    };
+
+    const studioCloud = (angle: number, t: number, p: number) => {
+      fill("#08090c", "#050609", "rgba(47,107,255,0.07)");
+      const { half, depth } = dims();
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      const settle = 1 - easeOut(span(p, 0, .38));
+      const palette = ["rgba(70,105,180,.3)", "rgba(100,151,232,.5)", "rgba(166,206,255,.75)", "rgba(236,246,255,.95)"];
+      for (let band = 0; band < 4; band++) {
+        ctx.fillStyle = palette[band];
+        ctx.beginPath();
+        for (let i = 0; i < CLOUD_POINTS; i++) {
+          const z = extra!.cloudZ[i] * depth;
+          const x = extra!.cloud[i * 2] * half;
+          const zz = -x * sin + z * cos;
+          const near = Math.min(3, Math.max(0, Math.floor((.5 - zz / half * .5) * 4)));
+          if (near !== band) continue;
+          const f = CAMERA / (CAMERA + zz);
+          const px = cx + (x * cos + z * sin) * f + Math.sin(i * 2.3) * settle * size * .16;
+          const py = cy + extra!.cloud[i * 2 + 1] * half * f + Math.cos(i * 1.7) * settle * size * .1;
+          const radius = Math.max(.45, size / 310) * (.45 + band * .2);
+          ctx.moveTo(px + radius, py); ctx.arc(px, py, radius, 0, Math.PI * 2);
+        }
+        ctx.fill();
+      }
+      studioCaption("HER DETAY BİR BÜTÜNÜ KURAR", `${CLOUD_POINTS} NOKTA / OX`);
+      finish(.025, t, .3);
+    };
+
+    const STUDIO_RENDER: Partial<Record<Mode, (angle: number, t: number, p: number) => void>> = {
+      refnodes: studioNodes, reftracking: studioTracking, refcloud: studioCloud,
+    };
+
     const RENDER: Record<Mode, (angle: number, t: number, p: number) => void> = {
       beauty, chrome, cyber, clay, pixel, riso, glitch, brutal, cloud, zine, neon, pop, sketch, tracking, nodes,
       glass, scanlines, bauhaus, pile, os, balloon, iso, eq, dither, grunge,
       math, hud, doodle, cartoon, arcade, blueprint2, terminal,
+      refnodes,
+      reftracking,
+      refcloud,
+      refweb,
+      refseo,
+      posts,
+      adchat,
+      serp,
     };
 
     let forced = -1;
@@ -2958,35 +3978,61 @@ export function BrandFilmSix({
       if (process.env.NODE_ENV === "development") forced = Number(localStorage.getItem("ox-film-sekans") ?? -1);
     } catch {}
 
+    const seq = final ? FINAL_SEQUENCE : SEQUENCE;
     let start = performance.now();
     let lastShot = -1;
+    let lastTone = "";
+    // Geçiş: önceki sahnenin son karesi yakalanır, yeni sahnenin üstünde yumuşak maskeyle çözülür
+    const lastFrame = document.createElement("canvas");
+    const mask = document.createElement("canvas");
+    const maskCtx = mask.getContext("2d")!;
+    let snapReady = false;
     const draw = (now: number) => {
       if (!assets || !extra) return;
       const elapsed = Math.max(0, now - start);
-      let shot = reduced ? 0 : Math.floor(elapsed / SHOT_MS) % SEQUENCE.length;
-      if (forced >= 0 && forced < SEQUENCE.length) shot = forced;
+      let shot = reduced ? 0 : Math.floor(elapsed / shotMs) % seq.length;
+      if (forced >= 0 && forced < seq.length) shot = forced;
       if (shot !== lastShot) {
+        if (lastShot >= 0 && !reduced && forced < 0) {
+          // Tuvalde hâlâ önceki sahnenin son karesi var
+          for (const c of [lastFrame, mask])
+            if (c.width !== canvas.width || c.height !== canvas.height) {
+              c.width = canvas.width;
+              c.height = canvas.height;
+            }
+          lastFrame.getContext("2d")!.drawImage(canvas, 0, 0);
+          snapReady = true;
+        }
         lastShot = shot;
         onWordRef.current?.(shot);
-        onToneRef.current?.(TONE[SEQUENCE[shot]] ?? "dark");
       }
-      const p = reduced ? 0.85 : (elapsed % SHOT_MS) / SHOT_MS;
+      // Soldaki metnin rengi geçişin ortasında döner (zemin o an değişiyor)
+      const sinceCut = elapsed % shotMs;
+      if (!snapReady || sinceCut > transitionMs * 0.45) {
+        const tone = TONE[seq[shot]] ?? "dark";
+        if (tone !== lastTone) {
+          lastTone = tone;
+          onToneRef.current?.(tone);
+        }
+      }
+      const p = reduced ? 0.85 : (elapsed % shotMs) / shotMs;
       const target = pointer ? ((pointer.x - baseX) / width) * 0.8 : 0;
       tilt += (target - tilt) * 0.05;
-      const t = elapsed / 1000;
-      const angle = reduced ? 0.3 : Math.sin(t * 0.6) * 0.52 + tilt * 0.3;
+      const t = elapsed / 1000 * (refined ? 0.65 : 1);
+      const angle = reduced ? 0.3 : Math.sin(t * (refined ? 0.42 : 0.6)) * (refined ? 0.32 : 0.52) + tilt * 0.3;
       curAngle = angle;
-      const mode = SEQUENCE[shot];
+      const mode = seq[shot];
       const fw = frame.x1 - frame.x0, fh = frame.y1 - frame.y0;
       const scene = (m: Mode, pp: number) => {
-        size = baseSize * (FRAMING[m] ?? 1) * (1 + pp * 0.035);
+        const studioScale = ["refnodes", "reftracking", "refcloud", "clay", "glass", "dither"].includes(m) ? 1.12 : 1;
+        size = baseSize * (FRAMING[m] ?? 1) * (refined ? studioScale * (1 + easeOut(pp) * 0.018) : 1 + pp * 0.035);
         cx = baseX;
         cy = baseY;
         reset();
         ctx.globalCompositeOperation = "source-over";
         ctx.globalAlpha = 1;
         ctx.filter = "none";
-        RENDER[m](angle, t, pp);
+        (refined && STUDIO_RENDER[m] ? STUDIO_RENDER[m]! : RENDER[m])(angle, t, pp);
       };
 
       reset();
@@ -3006,55 +4052,67 @@ export function BrandFilmSix({
       ctx.beginPath();
       ctx.roundRect(frame.x0, frame.y0, fw, fh, bleed ? 0 : 28);
       ctx.clip();
-      const since = elapsed % SHOT_MS;
-      const transit = !reduced && forced < 0 && elapsed > SHOT_MS && since < TRANS_MS;
-      if (transit) {
-        // Önceki üslup altta, yenisi tasarlanmış bir şekille açılır
-        const prev = SEQUENCE[(shot - 1 + SEQUENCE.length) % SEQUENCE.length];
-        scene(prev, 1);
-        const k = since / TRANS_MS;
-        const e = k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2;
-        const kind = shot % 3;
-        const irisR = e * Math.hypot(fw, fh) * 0.75;
-        const d = (fw + fh) * e;
-        reset();
-        ctx.save();
-        ctx.beginPath();
-        if (kind === 0) ctx.arc(baseX, baseY, irisR, 0, Math.PI * 2);
-        else if (kind === 1) {
-          ctx.moveTo(frame.x0 - fh, frame.y0);
-          ctx.lineTo(frame.x0 + d, frame.y0);
-          ctx.lineTo(frame.x0 + d - fh, frame.y1);
-          ctx.lineTo(frame.x0 - fh, frame.y1);
-          ctx.closePath();
-        } else {
-          const bands = 7;
-          const bh = fh / bands;
-          for (let i = 0; i < bands; i++) ctx.rect(frame.x0, frame.y0 + i * bh, fw * clamp01(e * 1.5 - i * 0.07), bh + 1);
-        }
-        ctx.clip();
-        scene(mode, p);
-        pops(mode, p, t, angle);
-        ctx.restore();
-        // Geçiş kenarında ince ışık
-        reset();
-        if (kind !== 2) {
-          ctx.strokeStyle = "rgba(255,255,255,0.75)";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          if (kind === 0) ctx.arc(baseX, baseY, irisR, 0, Math.PI * 2);
-          else {
-            ctx.moveTo(frame.x0 + d, frame.y0);
-            ctx.lineTo(frame.x0 + d - fh, frame.y1);
-          }
-          ctx.stroke();
-        }
-      } else {
-        scene(mode, p);
-        pops(mode, p, t, angle);
-      }
+      scene(mode, p);
+      if (!refined) pops(mode, p, t, angle);
 
       ctx.restore();
+
+      /** Önceki sahne, yeni sahnenin üstünde tüylü kenarlı iris, eğik silme ya da büyüyüp bulanıklaşarak çözülür */
+      const overlay = () => {
+        if (!snapReady || reduced || forced >= 0 || sinceCut >= transitionMs) return;
+        const k = sinceCut / transitionMs;
+        const e = 0.5 - 0.5 * Math.cos(Math.PI * k);
+        if (refined) {
+          // The registered logo stays in place across a clean optical dissolve.
+          ctx.save();
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.globalAlpha = 1 - e;
+          ctx.drawImage(lastFrame, 0, 0);
+          ctx.restore();
+          return;
+        }
+        const W = canvas.width, H = canvas.height;
+        const kind = shot % 3;
+        const m = maskCtx;
+        m.setTransform(1, 0, 0, 1, 0, 0);
+        m.globalCompositeOperation = "source-over";
+        m.globalAlpha = 1;
+        m.filter = "none";
+        m.clearRect(0, 0, W, H);
+        if (kind === 2) {
+          const sc = 1 + 0.06 * e;
+          m.globalAlpha = 1 - e;
+          m.filter = `blur(${(e * 10 * dpr).toFixed(1)}px)`;
+          m.drawImage(lastFrame, (W * (1 - sc)) / 2, (H * (1 - sc)) / 2, W * sc, H * sc);
+        } else {
+          const sc = 1 + 0.035 * e;
+          m.drawImage(lastFrame, (W * (1 - sc)) / 2, (H * (1 - sc)) / 2, W * sc, H * sc);
+          m.globalCompositeOperation = "destination-out";
+          const feather = Math.max(W, H) * 0.2;
+          let g: CanvasGradient;
+          if (kind === 0) {
+            const ox = baseX * dpr, oy = baseY * dpr;
+            const maxR = Math.hypot(Math.max(ox, W - ox), Math.max(oy, H - oy)) + feather;
+            const r = e * maxR;
+            g = m.createRadialGradient(ox, oy, Math.max(0, r - feather), ox, oy, Math.max(1, r));
+          } else {
+            const a = 0.32, dx = Math.cos(a), dy = Math.sin(a);
+            const pos = e * (W * dx + H * dy + feather);
+            g = m.createLinearGradient(dx * (pos - feather), dy * (pos - feather), dx * pos, dy * pos);
+          }
+          g.addColorStop(0, "rgba(0,0,0,1)");
+          g.addColorStop(1, "rgba(0,0,0,0)");
+          m.fillStyle = g;
+          m.fillRect(0, 0, W, H);
+        }
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = "source-over";
+        ctx.filter = "none";
+        ctx.drawImage(mask, 0, 0);
+        ctx.restore();
+      };
 
       reset();
       if (bleed) {
@@ -3072,6 +4130,7 @@ export function BrandFilmSix({
         }
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, width, height);
+        overlay();
         return;
       }
 
@@ -3081,6 +4140,7 @@ export function BrandFilmSix({
       ctx.beginPath();
       ctx.roundRect(frame.x0 + 0.5, frame.y0 + 0.5, fw - 1, fh - 1, 28);
       ctx.stroke();
+      overlay();
     };
 
     let raf = 0;
@@ -3132,7 +4192,7 @@ export function BrandFilmSix({
       for (let i = 0; i < cols * rows; i++) on[i] = data[i * 4 + 3] > 70 ? 1 : 0;
 
       // Kil: pembe yüze iç ışık (sol üst kenar) ve iç gölge (sağ alt kenar)
-      const clayFace = tintFrom(mask, "#ff7fb0");
+      const clayFace = tintFrom(mask, refined ? "#caa6ae" : "#ff7fb0");
       {
         const d = Math.round(a.w * 0.012);
         const rim = (color: string, ox: number) => {
@@ -3169,7 +4229,7 @@ export function BrandFilmSix({
         glowSides: ramp(["#ffb08a", "#ff8a5c", "#ff6a3d", "#e8532a", "#c4401e", "#9c2f14"]),
         magentaSides: ramp(["#ff3fdc", "#d81fb8", "#ac1a93", "#80146f", "#56104c", "#330a2e"]),
         chromeSides: ramp(["#d9dee8", "#b4bbc9", "#8d95a6", "#6a7283", "#4b5262", "#323846"]),
-        claySides: ramp(["#ff6aa2", "#f05592", "#dc4682", "#c43a72", "#a83062", "#8a2752"]),
+        claySides: ramp(refined ? ["#b99099", "#ad828e", "#9d7481", "#8b6573", "#795664", "#684957"] : ["#ff6aa2", "#f05592", "#dc4682", "#c43a72", "#a83062", "#8a2752"]),
         faceCyan: tintFrom(mask, "#62f3ff"),
         faceRed: tintFrom(mask, "#ff2a4d"),
         faceTeal: tintFrom(mask, "#22e6ff"),
@@ -3233,7 +4293,7 @@ export function BrandFilmSix({
       host.removeEventListener("pointermove", onMove);
       host.removeEventListener("pointerleave", onLeave);
     };
-  }, [bleed]);
+  }, [bleed, final, refined]);
 
   return <canvas ref={canvasRef} aria-hidden className={cn("pointer-events-none block", className)} />;
 }
