@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { About } from "@/components/about/about";
 import { Blog } from "@/components/blog/blog";
 import { Cta } from "@/components/cta/cta";
-import { Difference } from "@/components/difference/difference";
 import { Faq } from "@/components/faq/faq";
 import { Footer } from "@/components/footer/footer";
 import { Hero } from "@/components/hero/hero";
@@ -10,7 +9,7 @@ import { Navbar } from "@/components/navbar/navbar";
 import { Packages } from "@/components/packages/packages";
 import { References } from "@/components/references/references";
 import { Services } from "@/components/services/services";
-import { Solutions } from "@/components/solutions/solutions";
+import { Workflow } from "@/components/workflow/workflow";
 import { pageOpenGraph } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -28,10 +27,9 @@ export default function Home() {
       <main>
         <Hero />
         <About />
-        <Solutions />
         <Services />
+        <Workflow />
         <References />
-        <Difference />
         <Packages />
         <Blog />
         <Faq schema />

@@ -192,7 +192,7 @@ const STATUS_ROWS = [
   },
 ];
 
-const ROLE_AVATARS = [
+export const ROLE_AVATARS = [
   { bg: "#C9B8F2", fg: "#1A1A1A", d: "M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" }, // tasarım
   { bg: "#1A1A1A", fg: "#ffffff", d: "m8 8-4 4 4 4M16 8l4 4-4 4" }, // yazılım
   { bg: "#F9A8D4", fg: "#1A1A1A", d: "M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1ZM15 9a3 3 0 0 1 0 6" }, // reklam
