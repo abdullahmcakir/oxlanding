@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, type Variants } from "motion/react";
 import { useLenis } from "lenis/react";
 import { useMeasuredHeight } from "@/hooks/use-measured-height";
-import { talepUrl } from "@/lib/links";
+import { PANEL_PAUSED, panelUrl, talepUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { ServicesPanel, WorkPanel } from "./mega-panels";
@@ -183,6 +183,13 @@ export function Navbar() {
               <span aria-hidden className="w-[96px]" />
 
               <div className="flex items-center justify-end gap-4" onMouseEnter={scheduleClose}>
+                {/* Mevcut müşteri: panele giriş (yeni talep değil); ikincil, sakin buton. Panel kapalıyken gizli (502 göstermesin) */}
+                {!PANEL_PAUSED && <a
+                  href={panelUrl()}
+                  className="-mr-2 hidden h-8 items-center rounded-full bg-white/10 px-3.5 text-[14px] font-medium tracking-[-0.01em] text-white transition-colors hover:bg-white/[0.16] md:inline-flex"
+                >
+                  Müşteri girişi
+                </a>}
                 {/* Ana hedef: OX Panel'de ücretsiz görüşme (panel adresi tanımlı değilse iletişim sayfası) */}
                 <a
                   href={talepUrl()}

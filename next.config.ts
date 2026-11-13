@@ -43,8 +43,6 @@ const nextConfig: NextConfig = {
   output: "standalone",
   // Yanıtlarda "X-Powered-By: Next.js" gönderilmesin
   poweredByHeader: false,
-  // Hero deneme seçicisi: yalnız NOINDEX=1 ile kurulan test sitesinde görünür (asıl sitede gizli). Bkz. hero.tsx
-  env: { HERO_DENEME: process.env.NOINDEX === "1" ? "1" : "" },
   cacheComponents: true,
   partialPrefetching: true,
   images: {

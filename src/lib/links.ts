@@ -17,7 +17,8 @@ const PANEL_SERVICE: Record<string, string> = {
 
 /**
  * Panel geçici olarak kapalıyken true: bütün "Ücretsiz görüşme" butonları panel yerine hazır mesajlı WhatsApp'a gider
- * (mesajda butonun hizmet / paket / konu bilgisi yazar). Panel tekrar açılınca false yapılıp site yeniden derlenmeli.
+ * (mesajda butonun hizmet / paket / konu bilgisi yazar) ve "Müşteri girişi" butonları gizlenir.
+ * Panel tekrar açılınca false yapılıp site yeniden derlenmeli.
  */
 export const PANEL_PAUSED = true;
 
@@ -57,6 +58,14 @@ export function talepUrl({ hizmet, ...params }: Record<string, string> = {}) {
   const url = new URL(service ? `${PANEL_TALEP_PATH}/${service}` : PANEL_TALEP_PATH, PANEL_URL);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   return url.toString();
+}
+
+/**
+ * Mevcut müşterinin OX Panel girişi: yeni talep değil, hesabına girmek isteyen için panelin ana adresi
+ * (oturum yoksa panel kendi giriş ekranını açar). Env tanımlı değilse panelin bilinen adresi.
+ */
+export function panelUrl() {
+  return PANEL_URL ?? "https://panel.oxdijital.com";
 }
 
 /**

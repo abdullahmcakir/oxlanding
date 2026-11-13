@@ -38,36 +38,29 @@ export function HeroCopy({
   className?: string;
 }) {
   const light = tone === "light";
+
   return (
     <div className={cn("relative z-10", className)}>
-      <h1 className="sr-only">OX Dijital: daha etkili {words.join(", ")}</h1>
-
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15, duration: 0.8, ease: EASE_OUT }}
-        className={cn(
-          "flex items-center gap-2.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] transition-colors duration-500",
-          light ? "text-black/55" : "text-white/50",
-        )}
-      >
-        <span className="size-2 rounded-[2px] bg-accent" aria-hidden />
-        OX Dijital · Dijital ajans
-      </motion.p>
-
+      {/* Çark: "Daha etkili" ortadaki satırla hizalı, üst ve alttaki kelimeler sönerek görünür (ilk hero'daki gibi yatay).
+          H1 görünen "Daha etkili" + dönen kelimelerin yerine okunan sabit tamamlama (sahneden bağımsız, liste değil);
+          çark kendisi aria-hidden. */}
       <motion.div
-        aria-hidden
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25, duration: 1, ease: EASE_OUT }}
-        className="mt-5 flex min-w-0 flex-col items-start text-[40px] font-medium leading-[0.91] tracking-[-0.06em] sm:text-[52px] lg:text-[clamp(58px,5.5vw,90px)]"
+        className="flex min-w-0 flex-col items-start text-[34px] font-medium leading-[1] tracking-[-0.045em] sm:flex-row sm:items-center sm:gap-[0.32em] sm:text-[clamp(32px,2.9vw,52px)]"
       >
-        <span className={cn("whitespace-nowrap transition-colors duration-500", light ? "text-black/60" : "text-white/65")}>Daha etkili</span>
+        <h1 className={cn("whitespace-nowrap transition-colors duration-500", light ? "text-black/55" : "text-white/55")}>
+          Daha etkili<span className="sr-only"> web sitesi, SEO, sosyal medya ve reklam</span>
+        </h1>
         <WordCarousel
           words={words}
-          visibleRows={3}
+          visibleRows={5}
           index={wordIndex}
-          className={cn("mt-1 transition-colors duration-500 [--word-rows:1] lg:[--word-rows:3]", light ? "text-[#0b0b0c]" : "text-white")}
+          className={cn(
+            "transition-colors duration-500 [--word-rows:1] sm:[--word-rows:5]",
+            light ? "text-[#0b0b0c]" : "text-white",
+          )}
         />
       </motion.div>
 
@@ -75,19 +68,23 @@ export function HeroCopy({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.9, ease: EASE_OUT }}
-        className="mt-7 max-w-[500px]"
+        className="mt-6 max-w-[480px] sm:mt-4"
       >
+        {/* Tanım: parçalar sönük, onları bağlayan "sistem" satırı parlak */}
         <p
           className={cn(
-            "max-w-[460px] text-[clamp(15px,1.05vw,18px)] leading-[1.55] tracking-[-0.015em] transition-colors duration-500",
-            light ? "text-black/65" : "text-white/62",
+            "text-[clamp(19px,1.45vw,24px)] font-medium leading-[1.3] tracking-[-0.035em] transition-colors duration-500",
+            light ? "text-black/40" : "text-white/40",
           )}
         >
-          İstanbul merkezli, Türkiye geneline hizmet veren dijital ajans. Reklam, tasarım ve yazılım tek çatı altında;
-          tek ekip, tek plan.
+          Bir site, bir reklam, bir logo değil;
+          <br className="hidden sm:block" />{" "}
+          <span className={cn("transition-colors duration-500", light ? "text-[#0b0b0c]" : "text-white")}>
+            hepsini birbirine bağlayan bir sistem.
+          </span>
         </p>
 
-        <div className="mt-7 flex flex-wrap items-center gap-3">
+        <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
           <a
             href={talepUrl()}
             className="group flex h-14 items-center gap-4 rounded-full bg-accent py-2 pl-6 pr-2 text-[15px] font-semibold tracking-[-0.02em] text-accent-ink outline-none focus-visible:ring-2 focus-visible:ring-white/70"
@@ -97,19 +94,32 @@ export function HeroCopy({
               <PixelIcon variant="arrow" className="size-[10px]" cellClassName="fill-white" />
             </span>
           </a>
+          {/* İkinci yol hap değil, altı çizili bağlantı: iki eş ağırlıklı buton yerine net bir öncelik */}
           <Link
             href="#hizmetler"
             className={cn(
-              "flex h-14 items-center rounded-full px-6 text-[15px] font-semibold tracking-[-0.02em] ring-1 outline-none transition-colors duration-500 focus-visible:ring-2",
-              light
-                ? "text-[#0b0b0c] ring-black/20 hover:bg-black/[0.05] focus-visible:ring-black/50"
-                : "text-white ring-white/20 hover:bg-white/[0.06] focus-visible:ring-white/60",
+              "group relative flex items-center gap-2.5 py-2 text-[15px] font-semibold tracking-[-0.02em] outline-none transition-colors duration-500",
+              light ? "text-[#0b0b0c]" : "text-white",
             )}
           >
             Hizmetleri gör
+            <PixelIcon
+              variant="arrow"
+              className="size-[9px] rotate-90 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0.5"
+              cellClassName={light ? "fill-[#0b0b0c]" : "fill-white"}
+            />
+            <span
+              aria-hidden
+              className={cn(
+                "absolute inset-x-0 bottom-0.5 h-px origin-left transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-0 group-focus-visible:scale-x-0",
+                light ? "bg-black/30" : "bg-white/30",
+              )}
+            />
           </Link>
         </div>
+
       </motion.div>
     </div>
   );
 }
+

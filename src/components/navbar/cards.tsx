@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL, SOCIALS as SOCIAL_LINKS, talepUrl } from "@/lib/links";
+import { CONTACT_EMAIL, PANEL_PAUSED, SOCIALS as SOCIAL_LINKS, panelUrl, talepUrl } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { PixelIcon } from "./pixel-icon";
 import { BehanceIcon, InstagramIcon, LinkedinIcon } from "./social-icons";
@@ -86,19 +86,26 @@ export function AvailabilityCard({
         </div>
       </div>
 
-      <a
-        href={talepUrl()}
-        onClick={onNavigate}
-        className="group flex items-center gap-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em]"
-      >
-        <span>
-          <span className="text-neutral-400">Ücretsiz</span>{" "}
-          <span className="text-white">görüşme</span>
-        </span>
-        <span className="grid size-[30px] place-items-center rounded-full bg-[#1c2a14] transition-transform duration-300 group-hover:translate-x-1">
-          <PixelIcon variant="arrow" className="size-[9px]" />
-        </span>
-      </a>
+      <div className="flex flex-col gap-4">
+        <a
+          href={talepUrl()}
+          onClick={onNavigate}
+          className="group flex items-center gap-3 font-mono text-[13px] font-bold uppercase tracking-[0.06em]"
+        >
+          <span>
+            <span className="text-neutral-400">Ücretsiz</span>{" "}
+            <span className="text-white">görüşme</span>
+          </span>
+          <span className="grid size-[30px] place-items-center rounded-full bg-[#1c2a14] transition-transform duration-300 group-hover:translate-x-1">
+            <PixelIcon variant="arrow" className="size-[9px]" />
+          </span>
+        </a>
+        {/* Mevcut müşteri için ayrı yol: panele giriş (yeni talep değil). Panel kapalıyken gizli */}
+        {!PANEL_PAUSED && <a href={panelUrl()} onClick={onNavigate} className="text-[12px] text-neutral-500 transition-colors hover:text-white">
+          Zaten müşterimiz misin?{" "}
+          <span className="text-white underline decoration-white/30 underline-offset-4">Panele gir</span>
+        </a>}
+      </div>
     </Card>
   );
 }

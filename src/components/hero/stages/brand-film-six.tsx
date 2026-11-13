@@ -25,7 +25,7 @@ export const SIX_WORDS = ["SEO", "Reklam", "Sosyal Medya", "İçerik", "Kampanya
 /** Final hero: site sahibinin ekran görüntüleriyle seçtiği sahneler, sırayla (FINAL_WORDS aynı sıra) */
 const BLUE_REF = "#2f6bff";
 const FINAL_SEQUENCE: Mode[] = ["refnodes", "reftracking", "refcloud", "blueprint2", "refweb", "refseo", "posts", "adchat", "serp", "cyber", "glitch", "brutal", "clay", "glass", "scanlines", "pile", "os", "eq", "dither", "math", "cartoon", "arcade"];
-export const FINAL_WORDS = ["Yazılım", "Reklam", "SEO", "Marka", "Website", "SEO", "Sosyal Medya", "Reklam", "SEO", "Website", "Reels", "Website", "Logo", "Marka", "Sistem", "Sosyal Medya", "Yazılım", "Reels", "Logo", "SEO", "İçerik", "Kampanya"];
+export const FINAL_WORDS = ["Sistem", "Reklam", "Tasarım", "Marka", "Website", "SEO", "Sosyal Medya", "Dönüşüm", "Görünürlük", "Deneyim", "Video", "Lansman", "Etkileşim", "Kimlik", "Analiz", "İletişim", "Yazılım", "Reels", "Logo", "Strateji", "İçerik", "Kampanya"];
 
 const SHOT_MS = 2300;
 const TRANS_MS = 950;
@@ -64,24 +64,24 @@ const ORANGE: [string, string] = ["#ffb347", "#ff6a1f"];
 const SKY: [string, string] = ["#5fd0ff", "#2f6bff"];
 
 const POPS: Partial<Record<Mode, Pop[]>> = {
-  math: [{ kind: "notif", at: 0.5, x: 0.6, y: 0.62, theme: "glass", app: SKY, glyph: "search", title: "Analiz hazır", body: "Anahtar kelime haritası" }],
+  math: [{ kind: "notif", at: 0.5, x: 0.6, y: 0.62, theme: "glass", app: SKY, glyph: "target", title: "Plan hazır", body: "Önce SEO, sonra reklam" }],
   hud: [{ kind: "notif", at: 0.4, x: 0.66, y: -0.98, theme: "os", app: GREEN, glyph: "target", title: "HEDEF KİLİTLENDİ", body: "KAMPANYA AKTİF" }],
   doodle: [
     { kind: "emoji", at: 0.3, chars: ["heart", "star", "sparkle"], n: 9 },
     { kind: "chat", at: 0.45, x: 0.55, y: 0.62, text: "Bunu paylaşmam lazım", bg: "#ff2bd6", fg: "#fff" },
   ],
   cartoon: [
-    { kind: "sticker", at: 0.35, x: 0.62, y: -0.66, text: "YENİ BÖLÜM!", bg: "#ffd21f", fg: "#111", rot: -0.1 },
+    { kind: "notif", at: 0.35, x: 0.62, y: -0.66, theme: "dark", app: ["#ffd21f", "#ff9f1c"], glyph: "play", title: "Yeni bölüm", body: "Haftanın içerikleri hazır" },
     { kind: "emoji", at: 0.5, chars: ["heart", "star"], n: 7 },
   ],
   arcade: [],
-  blueprint2: [{ kind: "sticker", at: 0.62, x: -0.55, y: -0.78, text: "ONAYLANDI", bg: "#ffffff", fg: "#1d4ea8", rot: -0.08 }],
+  blueprint2: [{ kind: "notif", at: 0.5, x: -0.55, y: -0.78, theme: "dark", app: SKY, glyph: "check", title: "Kılavuz onaylandı", body: "Kurallar tek dosyada" }],
   terminal: [{ kind: "notif", at: 0.78, x: -0.45, y: 0.85, theme: "os", app: GREEN, glyph: "check", title: "DEPLOY TAMAM", body: "OXDIJITAL.COM · ŞİMDİ" }],
-  glass: [{ kind: "notif", at: 0.3, x: 0.62, y: -0.66, theme: "dark", app: VIOLET, glyph: "star", title: "Marka kiti hazır", body: "Logo, renkler ve yazı tipleri" }],
-  scanlines: [{ kind: "notif", at: 0.4, x: 0.62, y: 0.6, theme: "dark", app: SKY, glyph: "chart", title: "Analiz tamamlandı", body: "Panelde görüntüle" }],
+  glass: [{ kind: "notif", at: 0.3, x: 0.62, y: -0.66, theme: "dark", app: VIOLET, glyph: "star", title: "Kimlik hazır", body: "Logo, renk ve yazı tipi" }],
+  scanlines: [{ kind: "notif", at: 0.4, x: 0.62, y: 0.6, theme: "dark", app: SKY, glyph: "chart", title: "Aylık rapor hazır", body: "Neyin işe yaradığı belli" }],
   bauhaus: [{ kind: "sticker", at: 0.5, x: 0.66, y: -0.62, text: "YENİ TASARIM", bg: "#1f56e0", fg: "#fff", rot: -0.08 }],
   pile: [],
-  os: [{ kind: "notif", at: 0.5, x: 0.55, y: 0.5, theme: "os", app: GREEN, glyph: "check", title: "YENİ TALEP", body: "OX.EXE · ŞİMDİ" }],
+  os: [{ kind: "notif", at: 0.5, x: 0.55, y: 0.5, theme: "os", app: GREEN, glyph: "check", title: "Yeni talep geldi", body: "Doğrudan panelde" }],
   balloon: [
     { kind: "emoji", at: 0.2, chars: ["sparkle", "heart", "star"], n: 8 },
     { kind: "chat", at: 0.4, x: 0.62, y: -0.66, text: "Kampanya harika olmuş", bg: "#ffffff", fg: "#111" },
@@ -89,9 +89,9 @@ const POPS: Partial<Record<Mode, Pop[]>> = {
   iso: [{ kind: "notif", at: 0.42, x: 0.62, y: -0.7, theme: "brutal", app: ORANGE, glyph: "globe", title: "Site yayında", body: "oxdijital.com" }],
   eq: [
     { kind: "emoji", at: 0.3, chars: ["heart", "fire", "sparkle"], n: 9 },
-    { kind: "notif", at: 0.45, x: 0.62, y: -0.7, theme: "dark", app: PINK, glyph: "play", title: "Video yayında", body: "Reels · şimdi" },
+    { kind: "notif", at: 0.45, x: 0.62, y: -0.7, theme: "dark", app: PINK, glyph: "play", title: "Reels yayında", body: "Keşfet'e düştü" },
   ],
-  dither: [{ kind: "sticker", at: 0.4, x: 0.64, y: -0.66, text: "LOGO ONAYLANDI", bg: "#111", fg: "#fff", rot: 0.06 }],
+  dither: [{ kind: "notif", at: 0.3, x: 0.64, y: -0.66, theme: "dark", app: ["#e6e3db", "#9a978f"], glyph: "check", title: "Logo onaylandı", body: "Son hâli teslim edildi" }],
   grunge: [{ kind: "notif", at: 0.4, x: 0.6, y: 0.62, theme: "glass", app: ["#e2ff6b", "#9bc400"], glyph: "target", title: "Yeni talep", body: "Reklamdan geldi" }],
   beauty: [
     { kind: "notif", at: 0.14, x: 0.62, y: -0.66, theme: "glass", app: GREEN, glyph: "comment", title: "Yeni müşteri", body: "Ayşe: Fiyat alabilir miyim?" },
@@ -102,10 +102,10 @@ const POPS: Partial<Record<Mode, Pop[]>> = {
     { kind: "sticker", at: 0.16, x: 0.62, y: -0.64, text: "YENİ LOGO", bg: "#ff4fa3", fg: "#fff", rot: -0.1 },
     { kind: "notif", at: 0.36, x: 0.62, y: 0.56, theme: "glass", app: VIOLET, glyph: "star", title: "Marka kiti hazır", body: "Logo, renkler ve yazı tipleri" },
   ],
-  cyber: [{ kind: "notif", at: 0.2, x: 0.66, y: -0.6, theme: "cyber", app: ["#ff2bd6", "#7a00ff"], glyph: "globe", title: "SİTE YAYINDA", body: "oxdijital.com" }],
+  cyber: [{ kind: "notif", at: 0.2, x: 0.66, y: -0.6, theme: "cyber", app: ["#ff2bd6", "#7a00ff"], glyph: "globe", title: "Yeni arayüz canlıda", body: "Her ekranda aynı his" }],
   clay: [
     { kind: "emoji", at: 0.12, chars: ["heart", "sparkle", "heart", "star"], n: 10 },
-    { kind: "chat", at: 0.34, x: 0.6, y: -0.62, text: "Bu logo çok tatlı olmuş", bg: "#ff5fa2", fg: "#fff" },
+    { kind: "notif", at: 0.3, x: 0.6, y: -0.62, theme: "dark", app: PINK, glyph: "comment", title: "Yeni yorum", body: "“Bunu kaydettim, harika”" },
   ],
   pixel: [{ kind: "notif", at: 0.3, x: 0.62, y: -0.66, theme: "pixel", app: PINK, glyph: "heart", title: "YENİ TAKİPÇİ", body: "SENİ TAKİP ETMEYE BAŞLADI" }],
   riso: [
@@ -113,11 +113,10 @@ const POPS: Partial<Record<Mode, Pop[]>> = {
     { kind: "emoji", at: 0.38, chars: ["fire", "star", "sparkle"], n: 8 },
   ],
   glitch: [
-    { kind: "notif", at: 0.34, x: 0.6, y: -0.64, theme: "glitch", app: ["#ff2a4d", "#22e6ff"], glyph: "play", title: "YENİ VİDEO YAYINDA", body: "REELS" },
+    { kind: "notif", at: 0.34, x: 0.6, y: -0.64, theme: "glitch", app: ["#ff2a4d", "#22e6ff"], glyph: "play", title: "Çekim tamam", body: "Kurguya geçildi" },
   ],
   brutal: [
     { kind: "notif", at: 0.16, x: 0.6, y: -0.64, theme: "brutal", app: ORANGE, glyph: "globe", title: "Site yayında", body: "oxdijital.com" },
-    { kind: "sticker", at: 0.4, x: 0.7, y: 0.5, text: "CANLI ●", bg: "#3ee27a", fg: "#000", rot: 0.1 },
   ],
   cloud: [{ kind: "notif", at: 0.2, x: 0.62, y: -0.64, theme: "dark", app: SKY, glyph: "search", title: "Dizine eklendi", body: "Aramada görünür oldun" }],
   zine: [
@@ -710,20 +709,6 @@ export function BrandFilmSix({
       });
     };
 
-    const sketchRect = (x: number, y: number, w: number, h: number, seed: number) => {
-      const r = rng(seed);
-      const j = () => (r() - 0.5) * 3;
-      for (let pass = 0; pass < 2; pass++) {
-        ctx.beginPath();
-        ctx.moveTo(x + j(), y + j());
-        ctx.lineTo(x + w + j(), y + j());
-        ctx.lineTo(x + w + j(), y + h + j());
-        ctx.lineTo(x + j(), y + h + j());
-        ctx.closePath();
-        ctx.stroke();
-      }
-    };
-
     /* ───────────── Çıkışlar: bildirim, sohbet, sticker, emoji ───────────── */
 
     /** Sembolden fırlayıp yerine yaylanarak oturma: konum, ölçek, dönüş, saydamlık */
@@ -738,125 +723,94 @@ export function BrandFilmSix({
       return { x, y, s: 0.55 + 0.45 * easeBack(k), rot: 0, a: Math.min(1, k * 4) };
     };
 
-    const notif = (pop: Extract<Pop, { kind: "notif" }>, t: number) => {
-      const w = 276, h = 68;
+    /* Bildirimler "dinamik ada": düz siyah, tam yuvarlak hap; solda zeminsiz renkli ikon, sağda tek satır kalın beyaz yazı.
+       Boş hap olarak belirir → yaylanarak başlığa açılır → biraz büyüyüp alt satıra geçer → boş hapa toplanıp kaybolur.
+       Bütün sahnelerde aynı görünüm (sahnenin üslubu değil, adanın kendisi). */
+    /** Sönümlü yay (stiffness 400, damping 26): 0'dan 1'e, hafif taşmayla oturur; x saniye */
+    const spring = (x: number) => {
+      if (x <= 0) return 0;
+      const w0 = 20, z = 0.65, wd = w0 * Math.sqrt(1 - z * z);
+      return 1 - Math.exp(-z * w0 * x) * (Math.cos(wd * x) + ((z * w0) / wd) * Math.sin(wd * x));
+    };
+    const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+
+    type IslandState = { w: number; h: number; icon: number; font: number };
+    const islandFont = (px: number) => `800 ${px}px ${sans}`;
+    const islandState = (text: string, h: number, iconPx: number, fontPx: number): IslandState => {
+      ctx.font = islandFont(fontPx);
+      ctx.letterSpacing = `${(-fontPx * 0.045).toFixed(2)}px`;
+      const tw = ctx.measureText(text).width;
+      ctx.letterSpacing = "0px";
+      const pad = h * 0.42;
+      return { w: Math.max(h * 3.6, pad + iconPx + Math.max(48, h * 0.9) + tw + pad), h, icon: iconPx, font: fontPx };
+    };
+
+    const island = (pop: Extract<Pop, { kind: "notif" }>, p: number, t: number, tx: number, ty: number) => {
+      if (p < pop.at) return;
+      const sec = shotMs / 1000;
+      // Tamamı büyük harf olan metinler cümle düzenine iner (adada bağırmasın)
+      const calm = (x: string) => (/\p{Ll}/u.test(x) ? x : x.charAt(0) + x.slice(1).toLocaleLowerCase("tr"));
+      const title = calm(pop.title);
+      const body = calm(pop.body);
+      const empty: IslandState = { w: 132, h: 40, icon: 0, font: 16 };
+      const a = islandState(title, 48, 22, 18);
+      const b = islandState(body, 64, 32, 23);
+      const tA = pop.at + 0.07;
+      const tB = pop.at + 0.34;
+      const tC = Math.max(pop.at + 0.62, 0.9);
+      const kA = spring((p - tA) * sec), kB = spring((p - tB) * sec), kC = spring((p - tC) * sec);
+      // Ölçüler sırayla yaylanır: boş → başlık → alt satır → boş (taşmalar korunur)
+      const geo = (f: (s: IslandState) => number) => lerp(lerp(lerp(f(empty), f(a), kA), f(b), kB), f(empty), kC);
+      const w = geo((s) => s.w), h = geo((s) => s.h);
+      const r = h / 2;
+      const born = spring((p - pop.at) * sec);
+      const gone = span(p, tC + 0.07, tC + 0.11);
+      if (gone >= 1) return;
+
+      ctx.save();
+      ctx.globalAlpha = span(p, pop.at, pop.at + 0.03) * (1 - gone);
+      ctx.translate(tx, ty + (1 - born) * 10 + Math.sin(t * 1.7) * 1.5);
+      const s = (0.6 + 0.4 * born) * (1 - gone * 0.4);
+      ctx.scale(s, s);
       const x0 = -w / 2, y0 = -h / 2;
-      const th = pop.theme;
-      const pixel = th === "pixel" || th === "os";
-      const r = th === "glass" || th === "dark" ? 20 : th === "brutal" ? 14 : th === "neon" ? 16 : pixel || th === "sketch" ? 0 : 6;
-      const bg: Record<Theme, string> = {
-        glass: "rgba(255,255,255,0.9)",
-        dark: "rgba(22,23,28,0.95)",
-        sketch: "#f6f3ec",
-        cyber: "rgba(14,4,26,0.94)",
-        pixel: "#0b0f2a",
-        brutal: "#ffffff",
-        glitch: "#050505",
-        neon: "rgba(26,8,20,0.92)",
-        os: "#034d47",
-      };
-      const fg = th === "os" ? "#19ff9a" : th === "glass" || th === "brutal" || th === "sketch" ? "#0b0b0c" : "#ffffff";
-      const sub = th === "glass" || th === "brutal" || th === "sketch" ? "rgba(0,0,0,0.55)" : th === "cyber" ? "#ff8bea" : th === "neon" ? "#ffb3ef" : "rgba(255,255,255,0.6)";
-      // Gölge / ışıma
-      if (th === "brutal") {
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.roundRect(x0 + 7, y0 + 7, w, h, r);
-        ctx.fill();
-      } else if (th === "cyber" || th === "neon") {
-        ctx.shadowColor = th === "cyber" ? "#33f0ff" : "#ff4fd8";
-        ctx.shadowBlur = 26;
-      } else if (!pixel) {
-        ctx.shadowColor = "rgba(0,0,0,0.45)";
-        ctx.shadowBlur = 34;
-        ctx.shadowOffsetY = 14;
-      }
-      ctx.fillStyle = bg[th];
+      ctx.shadowColor = "rgba(0,0,0,0.5)";
+      ctx.shadowBlur = 30;
+      ctx.shadowOffsetY = 12;
+      ctx.fillStyle = "#000";
       ctx.beginPath();
       ctx.roundRect(x0, y0, w, h, r);
       ctx.fill();
       ctx.shadowColor = "transparent";
       ctx.shadowBlur = 0;
       ctx.shadowOffsetY = 0;
-      // Kenar
-      if (th === "brutal") {
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 3;
-        ctx.stroke();
-      } else if (th === "cyber" || th === "neon") {
-        ctx.strokeStyle = th === "cyber" ? "#33f0ff" : "#ff4fd8";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      } else if (pixel) {
-        ctx.fillStyle = th === "os" ? "#19ff9a" : "#fff";
-        ctx.fillRect(x0 + 3, y0, w - 6, 3);
-        ctx.fillRect(x0 + 3, y0 + h - 3, w - 6, 3);
-        ctx.fillRect(x0, y0 + 3, 3, h - 6);
-        ctx.fillRect(x0 + w - 3, y0 + 3, 3, h - 6);
-      } else if (th === "sketch") {
-        ctx.strokeStyle = "#232327";
-        ctx.lineWidth = 1.4;
-        sketchRect(x0, y0, w, h, Math.floor(t * 8));
-      } else if (th === "glitch") {
-        ctx.strokeStyle = "rgba(255,255,255,0.8)";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      } else if (th === "dark") {
-        ctx.strokeStyle = "rgba(255,255,255,0.1)";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-      // Uygulama ikonu
-      const ix = x0 + 13, iy = y0 + 13, is = 42;
-      if (th === "os") {
-        ctx.fillStyle = "#19ff9a";
-        ctx.fillRect(ix, iy, is, is);
-        icon(pop.glyph, ix + is / 2, iy + is / 2, 22, "#034d47");
-      } else if (pixel) {
-        bitmap(PIX_HEART, ix + 7, iy + 9, 4, "#ff4d6d");
-      } else {
-        const gr = ctx.createLinearGradient(ix, iy, ix + is, iy + is);
-        gr.addColorStop(0, pop.app[0]);
-        gr.addColorStop(1, pop.app[1]);
-        ctx.fillStyle = gr;
-        ctx.beginPath();
-        ctx.roundRect(ix, iy, is, is, th === "brutal" ? 10 : th === "sketch" ? 0 : 12);
-        ctx.fill();
-        if (th === "brutal") {
-          ctx.strokeStyle = "#000";
-          ctx.lineWidth = 2.5;
-          ctx.stroke();
-        }
-        icon(pop.glyph, ix + is / 2, iy + is / 2, 22, "#fff");
-      }
-      // Yazılar
-      const tx = x0 + 68;
-      const titleFont =
-        th === "pixel" || th === "os" || th === "cyber" || th === "glitch" ? `700 13px ${mono}` : th === "sketch" ? `italic 650 15px ${sans}` : `650 15px ${sans}`;
-      const bodyFont = th === "pixel" || th === "os" || th === "cyber" || th === "glitch" ? `10.5px ${mono}` : th === "sketch" ? `italic 13px ${sans}` : `13px ${sans}`;
-      const drawText = (col: string, subCol: string, ox = 0) => {
-        ctx.textAlign = "left";
-        ctx.font = titleFont;
-        ctx.fillStyle = col;
-        ctx.fillText(pop.title, tx + ox, y0 + 29);
-        ctx.font = bodyFont;
-        ctx.fillStyle = subCol;
-        ctx.fillText(pop.body, tx + ox, y0 + 49);
-        if (!pixel && th !== "glitch" && th !== "cyber") {
-          ctx.font = `11px ${sans}`;
-          ctx.textAlign = "right";
-          ctx.fillStyle = subCol;
-          ctx.fillText("şimdi", x0 + w - 14, y0 + 27);
-        }
+      ctx.strokeStyle = "rgba(255,255,255,0.07)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.clip();
+
+      // İçerik: her durum kendi yerine bulanıktan netleşerek gelir, sonraki gelirken bulanıklaşıp çekilir
+      const color = pop.theme === "os" ? "#19ff9a" : pop.app[0];
+      const layer = (st: IslandState, text: string, alpha: number) => {
+        if (alpha <= 0.01) return;
+        const pad = h * 0.42;
+        ctx.save();
+        ctx.globalAlpha *= alpha;
+        if (alpha < 1) ctx.filter = `blur(${((1 - alpha) * 8).toFixed(1)}px)`;
+        const sc = 0.9 + 0.1 * alpha;
+        icon(pop.glyph, x0 + pad + (st.icon * sc) / 2, (1 - alpha) * 4, st.icon * sc, color);
+        ctx.font = islandFont(st.font * sc);
+        ctx.letterSpacing = `${(-st.font * 0.045).toFixed(2)}px`;
+        ctx.fillStyle = "#fff";
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, x0 + w - pad, 1 + (1 - alpha) * 4);
+        ctx.restore();
       };
-      if (th === "glitch") {
-        const j = Math.floor(t * 14) % 3 === 0 ? 3 : 1;
-        ctx.globalCompositeOperation = "lighter";
-        drawText("#ff2a4d", "#ff2a4d", -j);
-        drawText("#22e6ff", "#22e6ff", j);
-        ctx.globalCompositeOperation = "source-over";
-      }
-      drawText(fg, sub);
+      layer(a, title, clamp01(kA) * (1 - clamp01(kB * 1.8)));
+      layer(b, body, clamp01((kB - 0.35) / 0.65) * (1 - clamp01(kC * 2)));
+      ctx.restore();
+      ctx.letterSpacing = "0px";
+      ctx.textBaseline = "alphabetic";
     };
 
     const chat = (pop: Extract<Pop, { kind: "chat" }>) => {
@@ -1052,6 +1006,7 @@ export function BrandFilmSix({
         const half = pop.kind === "notif" ? 146 : pop.kind === "chat" ? 150 : 110;
         const tx = Math.min(frame.x1 - half - 14, Math.max(frame.x0 + half + 14, cx + pop.x * size));
         const ty = Math.min(frame.y1 - 56, Math.max(frame.y0 + 64, cy + pop.y * size));
+        if (pop.kind === "notif") return island(pop, p, t, tx, ty);
         const m = launch(p, pop.at, tx, ty, t, i);
         if (!m) return;
         ctx.save();
@@ -1059,8 +1014,7 @@ export function BrandFilmSix({
         ctx.translate(m.x, m.y);
         ctx.rotate(m.rot);
         ctx.scale(m.s, m.s);
-        if (pop.kind === "notif") notif(pop, t);
-        else if (pop.kind === "chat") chat(pop);
+        if (pop.kind === "chat") chat(pop);
         else sticker(pop);
         ctx.restore();
       });
